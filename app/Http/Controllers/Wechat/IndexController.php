@@ -16,7 +16,7 @@ class IndexController extends Controller
 
     public function user()
     {
-        return 'user';
+        phpinfo();
     }
 
 }
