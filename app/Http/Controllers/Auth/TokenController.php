@@ -45,8 +45,6 @@ class TokenController extends Controller
                 $user->createWeChatUser($openId,$userInfo);
             }
 
-            dd($userInfo);
-
             $tokenCreate = new Token();
 
             $token = $tokenCreate->getWecChatToken($openId);
