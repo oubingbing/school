@@ -54,12 +54,10 @@ class LoginController extends Controller
     {
         $code = request()->input('code');
 
-        return request()->input();
-
         $appId = env('WE_CHAT_APP_ID');
         $secret = env('WE_CHAT_SECRET');
 
-        $url = $this->weChatLoginUrl.'appid='.$appId.'&secret='.$secret.'&js_code='.$code.'&grant_type=authorization_code';
+        $url = $this->weChatLoginUrl.'?appid='.$appId.'&secret='.$secret.'&js_code='.$code.'&grant_type=authorization_code';
 
         $http = new Client;
         $response = $http->get($url);
