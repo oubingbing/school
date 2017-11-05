@@ -23,7 +23,7 @@ $api->version('v1', function ($api) {
     $api->group(['prefix' => 'wechat'], function ($api) {
 
 
-        $api->group(['prefix' => 'auth', 'middleware' => 'before'], function ($api) {
+        $api->group(['prefix' => 'auth', 'middleware' => ''], function ($api) {
 
             /** 登录 */
             $api->post('login', LoginController::class . '@login');
