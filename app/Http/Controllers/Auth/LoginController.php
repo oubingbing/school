@@ -65,7 +65,8 @@ class LoginController extends Controller
         $http = new Client;
         $response = $http->get($url);
 
-        return $response->getBody();
+        $result = json_decode((string) $response->getBody(), true);
 
+        return $result['openid'];
     }
 }
