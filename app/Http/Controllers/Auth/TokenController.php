@@ -41,13 +41,13 @@ class TokenController extends Controller
 
             $user = User::where(User::FIELD_ID_OPENID,$openId)->first();
             if(!$user){
-                $user = new UserLogic();
-                $user->createWeChatUser($openId,$userInfo);
+                $userLogin = new UserLogic();
+                $user = $userLogin->createWeChatUser($openId,$userInfo);
             }
 
             $tokenCreate = new Token();
 
-            $token = $tokenCreate->getWecChatToken($openId);
+            $token = $tokenCreate->getWecChatToken($user);
 
             DB::commit();
 

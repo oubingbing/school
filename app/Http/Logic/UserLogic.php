@@ -17,6 +17,7 @@ class UserLogic
     public function createWeChatUser($openId, $data)
     {
         $result = User::create([
+            User::FIELD_ID_OPENID => $openId,
             User::FIELD_NICKNAME => $data['nickName'],
             User::FIELD_GENDER => $data['gender'],
             User::FIELD_AVATAR => $data['avatarUrl'],

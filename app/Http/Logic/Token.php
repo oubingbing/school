@@ -8,9 +8,10 @@ use Tymon\JWTAuth\Facades\JWTFactory;
 
 class Token
 {
-    public function getWecChatToken($openid)
+    public function getWecChatToken($user)
     {
-        $user = User::where(User::FIELD_ID_OPENID,$openid)->first();
+
+        return $user;
 
         $token = JWTAuth::fromUser($user);
 
