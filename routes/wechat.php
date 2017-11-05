@@ -29,7 +29,7 @@ $api->version('v1', function ($api) {
             $api->post('login', LoginController::class . '@login');
 
             /** 获取微信token */
-            $api->post('token', TokenController::class . '@getToken');
+            $api->post('token', TokenController::class . '@createToken');
 
             /** 刷新微信token */
             $api->get('refresh_token', TokenController::class . '@refreshToken');
