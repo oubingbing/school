@@ -54,6 +54,8 @@ class LoginController extends Controller
     {
         $code = request()->input('code');
 
+        return request()->input();
+
         $appId = env('WE_CHAT_APP_ID');
         $secret = env('WE_CHAT_SECRET');
 
