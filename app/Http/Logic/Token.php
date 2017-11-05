@@ -10,8 +10,7 @@ class Token
 {
     public function getWecChatToken($user)
     {
-
-        return $user;
+        $user = collect($user)->only(['nickname','avatar','openid']);
 
         $token = JWTAuth::fromUser($user);
 
