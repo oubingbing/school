@@ -62,7 +62,7 @@ class LoginController extends Controller
         $http = new Client;
         $response = $http->get($url);
 
-        return $response->getBody();
+        return collect($response->getBody())->toArray();
 
     }
 }
