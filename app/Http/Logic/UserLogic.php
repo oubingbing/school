@@ -19,7 +19,7 @@ class UserLogic
         $result = User::create([
             User::FIELD_ID_OPENID => $openId,
             User::FIELD_NICKNAME => $data['nickName'],
-            User::FIELD_GENDER => $data['gender'],
+            User::FIELD_GENDER => $data['gender']?$data['gender']:0,
             User::FIELD_AVATAR => $data['avatarUrl'],
             User::FIELD_CITY => $data['city']?$data['city']:'无',
             User::FIELD_COUNTRY => $data['country']?$data['country']:'无',
