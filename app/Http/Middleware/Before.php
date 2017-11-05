@@ -32,7 +32,7 @@ class Before
     public function addResponseMate($response)
     {
         return [
-            'data'=>collect($response->original)->toArray(),
+            'data'=>$response->original,
             'json_api'=>[
                 'mate'=>[
                     'name'=>'Json Api note',
