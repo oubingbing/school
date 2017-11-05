@@ -34,6 +34,8 @@ $api->version('v1', function ($api) {
             /** 刷新微信token */
             $api->get('refresh_token', TokenController::class . '@refreshToken');
 
+            $api->get('access_token',TokenController::class . '@getAccessToken');
+
         });
 
         $api->get('info', IndexController::class . '@user');

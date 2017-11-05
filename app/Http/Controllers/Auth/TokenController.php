@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Logic\Token;
 use App\Http\Logic\UserLogic;
 use App\User;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use League\Flysystem\Exception;
 
@@ -56,6 +57,23 @@ class TokenController extends Controller
         }
 
         return $token;
+    }
+
+    public function getAccessToken()
+    {
+
+        $http = new Client;
+        $response = $http->get('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.env('WE_CHAT_APP_ID').'&secret='.env('WE_CHAT_SECRET'));
+
+        $result = json_decode((string) $response->getBody(), true);
+
+        $accessToken = $result['access_token'];
+
+        $response = $http->get('https://api.weixin.qq.com/cgi-bin/user/info?access_token='.$accessToken.'&openid=orTQA0YMb1nAZG95aoCwA4D8I7tI&lang=zh_CN');
+
+        $userInfo = json_decode((string) $response->getBody(), true);
+
+        return $userInfo;
     }
 
 }
