@@ -64,7 +64,7 @@ class LoginController extends Controller
 
         $data = $response->getBody();
 
-        return $data->openid;
+        return $data['openid'];
 
     }
 }
