@@ -13,7 +13,11 @@ class Token
         $token = JWTAuth::fromUser($user);
 
         return $token;
+    }
 
+    public function refreshWeChatToken()
+    {
+        
     }
 
 

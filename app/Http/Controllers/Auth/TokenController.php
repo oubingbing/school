@@ -16,6 +16,8 @@ use App\User;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use League\Flysystem\Exception;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Facades\JWTFactory;
 
 class TokenController extends Controller
 {
@@ -57,6 +59,14 @@ class TokenController extends Controller
         }
 
         return $token;
+    }
+
+    public function test()
+    {
+        //$payload = JWTFactory::sub(123)->aud('foo')->foo(['bar' => 'baz'])->make();
+        //$token = JWTAuth::encode($payload);
+
+        
     }
 
 }

@@ -14,7 +14,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\TokenController;
 use App\Http\Wechat\IndexController;
-
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 $api = app('Dingo\Api\Routing\Router');
 
@@ -33,6 +33,8 @@ $api->version('v1', function ($api) {
 
             /** 刷新微信token */
             $api->get('refresh_token', TokenController::class . '@refreshToken');
+
+            $api->get('test', TokenController::class . '@test');
 
         });
 
