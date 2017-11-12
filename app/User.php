@@ -37,6 +37,9 @@ class User extends Authenticatable
     /** field gender 性别 */
     const FIELD_GENDER = 'gender';
 
+    /** field college 学校 */
+    const FIELD_ID_COLLEGE = 'college_id';
+
     /** field city 所在城市 */
     const FIELD_CITY = 'city';
 
@@ -92,7 +95,8 @@ class User extends Authenticatable
         self::FIELD_LANGUAGE,
         self::FIELD_PROVINCE,
         self::FIELD_TYPE,
-        self::FIELD_STATUS
+        self::FIELD_STATUS,
+        self::FIELD_ID_COLLEGE
     ];
 
     /**
@@ -103,5 +107,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function college()
+    {
+        return $this->belongsTo(Colleges::class,self::FIELD_ID_COLLEGE);
+    }
 
 }

@@ -44,7 +44,17 @@ $api->version('v1', function ($api) {
 
         $api->group(['middleware' => ['wechat', 'after', 'before']], function ($api) {
 
+            /** 获取个人学校 */
             $api->get('/school', UserController::class . '@school');
+
+            /** 获取随机学校 */
+            $api->get('/recommend_school',UserController::class . '@recommendSchool');
+
+            /** 设置学校 */
+            $api->patch('/set/{id}/college',UserController::class . '@setCollege');
+
+            /** 搜索学校 */
+            $api->get('search/{name}/college',UserController::class . '@searchCollege');
 
         });
 
