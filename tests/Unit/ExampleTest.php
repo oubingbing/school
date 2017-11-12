@@ -27,21 +27,6 @@ class ExampleTest extends TestCase
      */
     public function demo()
     {
-        $schools = DB::table('school')->get();
-
-        $arr = [];
-        foreach ($schools as $item){
-            array_push($arr,[
-                Colleges::FIELD_NAME=>$item->name,
-                Colleges::FIELD_TYPE=>$item->type,
-                Colleges::FIELD_PROVINCE=>$item->province,
-                Colleges::FIELD_PROPERTIES=>$item->properties,
-                Colleges::FIELD_CREATED_AT=>Carbon::now(),
-                Colleges::FIELD_UPDATED_AT=>Carbon::now()
-            ]);
-        }
-
-        Colleges::insert($arr);
 
     }
 }

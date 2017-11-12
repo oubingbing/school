@@ -2,40 +2,31 @@
 
 namespace App\Http\Middleware;
 
+use App\Exceptions\ApiException;
 use App\User;
 use Closure;
-use League\Flysystem\Exception;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class Wechat
 {
     /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param $request
+     * @param Closure $next
      * @return mixed
+     * @throws ApiException
      */
     public function handle($request, Closure $next)
     {
         try {
-
             if (! $user = JWTAuth::parseToken()->authenticate()) {
-                return response()->json(['user_not_found'], 404);//无权限用户
+                throw new ApiException('无权限用户',4004);
             }
-
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
-
-            return response()->json(['token_expired'], $e->getStatusCode());//401
-
+            throw new ApiException('token过期',4001);
         } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
-
-            return response()->json(['token_invalid'], $e->getStatusCode());//400
-
+            throw new ApiException('token非法',4000);
         } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
-
-            return response()->json(['token_absent'], $e->getStatusCode());//500没有提供token
-
+            throw new ApiException('token缺失',5000);
         }
 
         $user = User::where(User::FIELD_ID_OPENID,$user->{User::FIELD_ID_OPENID})->first();

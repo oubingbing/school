@@ -34,8 +34,8 @@ class Before
         return [
             'data'=>$response->original,
             'json_api'=>[
-                'mate'=>[
-                    'name'=>'Json Api note',
+                'meta'=>[
+                    'name'=>'Json Api School',
                     'copyright'=>Carbon::now()->year.' ouzhibing@outlook.com',
                     'power_by'=>'yezi'
                 ]

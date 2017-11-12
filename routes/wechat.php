@@ -13,10 +13,14 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\TokenController;
-use App\Http\Wechat\IndexController;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Http\Wechat\UserController;
 
 $api = app('Dingo\Api\Routing\Router');
+
+app('api.exception')->register(function (Exception $exception) {
+    $request = Illuminate\Http\Request::capture();
+    return app('App\Exceptions\Handler')->render($request, $exception);
+});
 
 $api->version('v1', function ($api) {
 
@@ -38,11 +42,9 @@ $api->version('v1', function ($api) {
 
         });
 
-        $api->get('info', IndexController::class . '@user');
+        $api->group(['middleware' => ['wechat', 'after', 'before']], function ($api) {
 
-        $api->group(['middleware' => ['wechat', 'jwt.auth', 'after', 'before']], function ($api) {
-
-            $api->get('test', IndexController::class . '@index');
+            $api->get('/school', UserController::class . '@school');
 
         });
 

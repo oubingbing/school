@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class After
 {
@@ -15,7 +16,7 @@ class After
      */
     public function handle($request, Closure $next)
     {
-        $request->offsetSet('user','test');
+
 
         return $next($request);
     }
