@@ -9,12 +9,9 @@
 namespace App;
 
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Colleges extends Model
+class Colleges extends BaseModel
 {
-    use SoftDeletes;
 
     protected $table = 'colleges';
 
