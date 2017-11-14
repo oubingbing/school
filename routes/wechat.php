@@ -13,6 +13,8 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\TokenController;
+use App\Http\Controllers\QiNiuController;
+use App\Http\Wechat\PostController;
 use App\Http\Wechat\UserController;
 
 $api = app('Dingo\Api\Routing\Router');
@@ -38,8 +40,6 @@ $api->version('v1', function ($api) {
             /** 刷新微信token */
             $api->get('refresh_token', TokenController::class . '@refreshToken');
 
-            $api->get('test', TokenController::class . '@test');
-
         });
 
         $api->group(['middleware' => ['wechat', 'after', 'before']], function ($api) {
@@ -55,6 +55,12 @@ $api->version('v1', function ($api) {
 
             /** 搜索学校 */
             $api->get('search/{name}/college',UserController::class . '@searchCollege');
+
+            /** 获取七牛上传token */
+            $api->get('upload_token',QiNiuController::class . '@getUploadToken');
+
+            /** 发表贴子 */
+            $api->post('post',PostController::class . '@store');
 
         });
 

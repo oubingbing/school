@@ -49,6 +49,10 @@ class Comment extends BaseModel
     /** field deleted_at */
     const FIELD_DELETED_AT = 'deleted_at';
 
+    protected $casts = [
+        self::FIELD_ATTACHMENTS => 'array',
+    ];
+
     protected $fillable = [
         self::FIELD_ID,
         self::FIELD_ID_COMMENTER,
