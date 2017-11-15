@@ -37,6 +37,9 @@ class Post extends BaseModel
     /** field status */
     const FIELD_STATUS = 'status';
 
+    /** field private 是否匿名 */
+    const FIELD_PRIVATE = 'private';
+
     /** field created_at */
     const FIELD_CREATED_AT = 'created_at';
 
@@ -59,6 +62,7 @@ class Post extends BaseModel
         self::FIELD_ATTACHMENTS,
         self::FIELD_TYPE,
         self::FIELD_STATUS,
+        self::FIELD_PRIVATE,
         self::CREATED_AT,
         self::FIELD_UPDATED_AT
     ];

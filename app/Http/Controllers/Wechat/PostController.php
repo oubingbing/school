@@ -26,15 +26,15 @@ class PostController
     {
         $user = request()->input('user');
         $content = request()->input('content');
-        $imageUrls = request()->input('image_urls');
+        $imageUrls = request()->input('attachments');
         $location = request()->input('location');
-        $type = request()->input('secret');
+        $private = request()->input('private');
 
         if(empty($content)){
             throw new ApiException('内容不能为空',6000);
         }
 
-        $result = app(PostLogic::class)->save($user,$content,$imageUrls,$location,$type);
+        $result = app(PostLogic::class)->save($user,$content,$imageUrls,$location,$private);
 
         return collect($result)->toArray();
     }

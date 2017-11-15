@@ -11,7 +11,7 @@ class User extends Authenticatable
     use Notifiable,SoftDeletes;
 
     /** field id 用户Id */
-    const FIELD_ID = 'ID';
+    const FIELD_ID = 'id';
 
     /** field nickname 用户昵称 */
     const FIELD_NICKNAME = 'nickname';

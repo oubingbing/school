@@ -26,9 +26,11 @@ class CreatePostsTable extends Migration
 
             $table->string('topic',1024)->default('无')->comment('主题,预留字段');
 
-            $table->tinyInteger('type')->default(0)->comment('公开还是匿名');
+            $table->tinyInteger('type')->default(0)->comment('');
 
             $table->tinyInteger('status')->default(0)->comment('预留字段');
+
+            $table->boolean('private')->comment('公开还是匿名');
 
             $table->timestamp('created_at')->nullable()->index();
             $table->timestamp('updated_at')->nullable()->index();

@@ -16,8 +16,8 @@ class CreateInboxesTable extends Migration
         Schema::create('inboxes', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->bigIncrements('owner_id')->index()->comment('信箱的所有者');
-            $table->bigIncrements('college_id')->index()->nullable()->comment('评论所属的学校');
+            $table->bigInteger('owner_id')->index()->comment('信箱的所有者');
+            $table->bigInteger('college_id')->index()->nullable()->comment('评论所属的学校');
 
             $table->string('content',1024)->comment('信箱的内容');
 
