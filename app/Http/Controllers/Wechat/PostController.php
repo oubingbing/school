@@ -39,4 +39,13 @@ class PostController
         return collect($result)->toArray();
     }
 
+    public function postList()
+    {
+        $user = request()->input('user');
+
+        $posts = app(PostLogic::class)->getPostList($user);
+
+        return collect($posts)->toArray();
+    }
+
 }

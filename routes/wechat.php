@@ -62,6 +62,9 @@ $api->version('v1', function ($api) {
             /** 发表贴子 */
             $api->post('post',PostController::class . '@store');
 
+            /** 贴子列表 */
+            $api->get('/post',PostController::class . '@postList');
+
         });
 
     });
