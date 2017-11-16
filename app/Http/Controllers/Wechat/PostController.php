@@ -45,6 +45,21 @@ class PostController
 
         $posts = app(PostLogic::class)->getPostList($user);
 
+        $posts = collect($posts)->map(function ($post){
+
+            $poster = $post['poster'];
+            $post = collect($post)->forget('poster');
+            $post['poster']  = [
+                'id'=>$poster->id,
+                'nickname'=>$poster->nickname,
+                'avatar'=>$poster->avatar,
+                'college_id'=>$poster->college_id,
+                'created_at'=>$poster->created_at,
+            ];
+
+            return $post;
+        });
+
         return collect($posts)->toArray();
     }
 
