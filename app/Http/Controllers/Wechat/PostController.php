@@ -10,9 +10,10 @@ namespace App\Http\Wechat;
 
 
 use App\Exceptions\ApiException;
+use App\Http\Controllers\Controller;
 use App\Http\PostLogic\PostLogic;
 
-class PostController
+class PostController extends Controller
 {
     /**
      * 发表贴子

@@ -14,6 +14,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\TokenController;
 use App\Http\Controllers\QiNiuController;
+use App\Http\Wechat\CommentController;
 use App\Http\Wechat\PostController;
 use App\Http\Wechat\UserController;
 
@@ -64,6 +65,9 @@ $api->version('v1', function ($api) {
 
             /** 贴子列表 */
             $api->get('/post',PostController::class . '@postList');
+
+            /** 评论 */
+            $api->post('/comment',CommentController::class . '@store');
 
         });
 
