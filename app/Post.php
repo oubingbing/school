@@ -103,4 +103,16 @@ class Post extends BaseModel
         return $this->hasMany(Praise::class,Praise::FIELD_ID_OBJ,self::FIELD_ID);
     }
 
+    /**
+     * 贴子评论
+     *
+     * @author yezi
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class,Comment::FIELD_ID_OBJ,self::FIELD_ID);
+    }
+
 }

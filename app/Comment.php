@@ -67,16 +67,35 @@ class Comment extends BaseModel
         self::FIELD_UPDATED_AT
     ];
 
+    /**
+     * 评论人
+     *
+     * @author yezi
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function commenter()
     {
-        return $this->belongsTo(User::class,self::FIELD_ID_COMMENTER);
+        return $this->belongsTo(User::class,self::FIELD_ID_COMMENTER,User::FIELD_ID);
     }
 
+    /**
+     * 评论所属学校
+     *
+     * @author yezi
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function college()
     {
         return $this->belongsTo(Colleges::class,self::FIELD_ID_COLLEGE);
     }
 
+    /**
+     * 获取被评论的评论
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function refComment()
     {
         return $this->belongsTo(self::class,self::FIELD_ID_REF_COMMENT);

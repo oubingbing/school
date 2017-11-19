@@ -9,11 +9,13 @@
 namespace App\Http\Wechat;
 
 
+use App\Comment;
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\PostLogic\PostLogic;
 use App\Praise;
 use App\User;
+use phpDocumentor\Reflection\DocBlock\Tags\Return_;
 
 class PostController extends Controller
 {
@@ -79,6 +81,20 @@ class PostController extends Controller
                     'nickname'=>$praiseUser->{User::FIELD_NICKNAME},
                     'avatar'=>$praiseUser->{User::FIELD_AVATAR}
                 ];
+
+            });
+
+            $post['comments'] = collect($post['comments'])->map(function($item){
+
+                $commenter = User::find($item['commenter_id']);
+
+                $item['commenter'] = [
+                    'id'=>$commenter->{User::FIELD_ID},
+                    'nickname'=>$commenter->{User::FIELD_NICKNAME},
+                    'avatar'=>$commenter->{User::FIELD_AVATAR}
+                ];
+
+                return $item;
 
             });
 

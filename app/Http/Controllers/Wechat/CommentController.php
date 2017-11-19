@@ -25,13 +25,13 @@ class CommentController extends Controller
     public function store()
     {
         $user = request()->input('user');
-        $commenterId = request()->input('commenter_id');
+        $commenterId = $user->{User::FIELD_ID};
+        $collegeId = $user->{User::FIELD_ID_COLLEGE};
         $objId = request()->input('obj_id');
         $content = request()->input('content');
         $type = request()->input('type');
-        $refCommentId = request()->input('ref_comment_id');
-        $attachments = request()->input('attachments');
-        $collegeId = $user->{User::FIELD_ID_COLLEGE};
+        $refCommentId = request()->input('ref_comment_id',null);
+        $attachments = request()->input('attachments',null);
 
         $result = app(CommentLogic::class)->saveComment($commenterId, $objId, $content, $type, $refCommentId, $attachments, $collegeId);
 
