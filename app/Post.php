@@ -67,14 +67,40 @@ class Post extends BaseModel
         self::FIELD_UPDATED_AT
     ];
 
+    /**
+     * 发帖人
+     *
+     * @author yezi
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function poster()
     {
         return $this->belongsTo(User::class,self::FIELD_ID_POSTER);
     }
 
+    /**
+     * 所属大学
+     *
+     * @author yezi
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function college()
     {
         return $this->belongsTo(Colleges::class,self::FIELD_ID_COLLEGE);
+    }
+
+    /**
+     * 点赞人
+     *
+     * @author yezi
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function praises()
+    {
+        return $this->hasMany(Praise::class,Praise::FIELD_ID_OBJ,self::FIELD_ID);
     }
 
 }

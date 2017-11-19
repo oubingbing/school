@@ -14,7 +14,7 @@ class CreatePraisesTable extends Migration
     public function up()
     {
         Schema::create('praises', function (Blueprint $table) {
-            $table->bigInteger('id');
+            $table->bigIncrements('id');
 
             $table->bigInteger('owner_id')->index()->comment('点赞人');
 

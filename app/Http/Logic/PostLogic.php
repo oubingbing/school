@@ -41,7 +41,7 @@ class PostLogic
 
     public function getPostList($user)
     {
-        $posts = Post::with('poster')->where(Post::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE})
+        $posts = Post::with(['poster','praises'])->where(Post::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE})
             ->orderBy(Post::FIELD_CREATED_AT,'desc')
             ->get();
 

@@ -16,6 +16,7 @@ use App\Http\Controllers\Auth\TokenController;
 use App\Http\Controllers\QiNiuController;
 use App\Http\Wechat\CommentController;
 use App\Http\Wechat\PostController;
+use App\Http\Wechat\PraiseController;
 use App\Http\Wechat\UserController;
 
 $api = app('Dingo\Api\Routing\Router');
@@ -68,6 +69,9 @@ $api->version('v1', function ($api) {
 
             /** 评论 */
             $api->post('/comment',CommentController::class . '@store');
+
+            /** 点赞 */
+            $api->post('/praise',PraiseController::class . '@store');
 
         });
 

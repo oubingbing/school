@@ -10,7 +10,7 @@ namespace App\Http\Wechat;
 
 
 use App\Http\Controllers\Controller;
-use App\Praise;
+use App\Http\Logic\PraiseLogic;
 use App\User;
 
 class PraiseController extends Controller
@@ -22,15 +22,15 @@ class PraiseController extends Controller
      *
      * @return array
      */
-    public function save()
+    public function store()
     {
         $user = request()->input('user');
         $ownerId = $user->{User::FIELD_ID};
         $objId = request()->input('obj_id');
-        $objType = request()->input('obj_type');
-        $collegeId = request()->input('college_id');
+            $objType = request()->input('obj_type');
+        $collegeId = $user->{User::FIELD_ID_COLLEGE};
 
-        $result = app(Praise::class)->createPraise($ownerId, $objId, $objType, $collegeId);
+        $result = app(PraiseLogic::class)->createPraise($ownerId, $objId, $objType, $collegeId);
 
         return collect($result)->toArray();
     }

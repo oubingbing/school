@@ -12,6 +12,8 @@ namespace App\Http\Wechat;
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\PostLogic\PostLogic;
+use App\Praise;
+use App\User;
 
 class PostController extends Controller
 {
@@ -40,6 +42,13 @@ class PostController extends Controller
         return collect($result)->toArray();
     }
 
+    /**
+     * 获取帖子列表
+     *
+     * @author yezi
+     *
+     * @return array
+     */
     public function postList()
     {
         $user = request()->input('user');
@@ -57,6 +66,21 @@ class PostController extends Controller
                 'college_id'=>$poster->college_id,
                 'created_at'=>$poster->created_at,
             ];
+
+           $post['praises'] = collect($post['praises'])->map(function ($item){
+
+               $praiseUser = User::find($item['owner_id']);
+               return [
+                    'id'=>$item['id'],
+                    'owner_id'=>$item[Praise::FIELD_ID_OWNER],
+                    'obj_type'=>$item[Praise::FIELD_OBJ_TYPE],
+                    'college_id'=>$item[Praise::FIELD_ID_COLLEGE],
+                    'user_id'=>$praiseUser->id,
+                    'nickname'=>$praiseUser->{User::FIELD_NICKNAME},
+                    'avatar'=>$praiseUser->{User::FIELD_AVATAR}
+                ];
+
+            });
 
             return $post;
         });

@@ -26,7 +26,7 @@ class Praise extends BaseModel
     const FIELD_OBJ_TYPE = 'obj_type';
 
     /** field college_id 学校 */
-    const FIELD_ID_COLLEGE = 'college';
+    const FIELD_ID_COLLEGE = 'college_id';
 
     /** field created_at */
     const FIELD_CREATED_AT = 'created_at';
@@ -36,6 +36,15 @@ class Praise extends BaseModel
 
     /** field deleted_at */
     const FIELD_DELETED_AT = 'deleted_at';
+
+    /** type - 表白点赞 */
+    const ENUM_OBJ_TYPE_POST = 1;
+
+    /** type - 卖舍友点赞 */
+    const ENUM_OBJ_TYPE_SALE = 2;
+
+    /** type - 暗恋匹配点赞 */
+    const ENUM_OBJ_TYPE_LOVE = 3;
     
     protected $fillable = [
         self::FIELD_ID,
@@ -49,6 +58,6 @@ class Praise extends BaseModel
 
     public function user()
     {
-        return $this->belongsTo(User::class,self::FIELD_ID_OWNER);
+        return $this->belongsTo(User::class,self::FIELD_ID_OWNER,User::FIELD_ID);
     }
 }
