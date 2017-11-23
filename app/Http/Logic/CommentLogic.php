@@ -10,6 +10,7 @@ namespace App\Http\Logic;
 
 
 use App\Comment;
+use App\User;
 
 class CommentLogic
 {
@@ -55,7 +56,15 @@ class CommentLogic
 
     public function formatComments($comments)
     {
+        $commenter = User::find($comments['commenter_id']);
 
+        $comments['commenter'] = [
+            'id'=>$commenter->{User::FIELD_ID},
+            'nickname'=>$commenter->{User::FIELD_NICKNAME},
+            'avatar'=>$commenter->{User::FIELD_AVATAR}
+        ];
+
+        return $comments;
     }
 
 }

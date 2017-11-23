@@ -49,6 +49,11 @@ class Comment extends BaseModel
     /** field deleted_at */
     const FIELD_DELETED_AT = 'deleted_at';
 
+    /** 评论表白墙 */
+    const ENUM_COMMENT_POST_TYPE = 1;
+    /** 评论别人在表白墙的评论 */
+    const ENUM_COMMENT_POST_COMMENT_TYPE = 2;
+
     protected $casts = [
         self::FIELD_ATTACHMENTS => 'array',
     ];

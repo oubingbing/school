@@ -27,12 +27,12 @@ class PraiseController extends Controller
         $user = request()->input('user');
         $ownerId = $user->{User::FIELD_ID};
         $objId = request()->input('obj_id');
-            $objType = request()->input('obj_type');
+        $objType = request()->input('obj_type');
         $collegeId = $user->{User::FIELD_ID_COLLEGE};
 
         $result = app(PraiseLogic::class)->createPraise($ownerId, $objId, $objType, $collegeId);
 
-        return collect($result)->toArray();
+        return app(PraiseLogic::class)->formatPraise($result);
     }
 
 }

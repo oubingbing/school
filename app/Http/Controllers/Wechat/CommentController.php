@@ -9,6 +9,7 @@
 namespace App\Http\Wechat;
 
 
+use App\Comment;
 use App\Http\Controllers\Controller;
 use App\Http\Logic\CommentLogic;
 use App\User;
@@ -35,7 +36,7 @@ class CommentController extends Controller
 
         $result = app(CommentLogic::class)->saveComment($commenterId, $objId, $content, $type, $refCommentId, $attachments, $collegeId);
 
-        return collect($result)->toArray();
+        return app(CommentLogic::class)->formatComments($result);
     }
 
 }

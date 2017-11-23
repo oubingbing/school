@@ -12,6 +12,8 @@ namespace App\Http\Wechat;
 use App\Comment;
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
+use App\Http\Logic\CommentLogic;
+use App\Http\Logic\PraiseLogic;
 use App\Http\PostLogic\PostLogic;
 use App\Praise;
 use App\User;
@@ -71,30 +73,13 @@ class PostController extends Controller
 
            $post['praises'] = collect($post['praises'])->map(function ($item){
 
-               $praiseUser = User::find($item['owner_id']);
-               return [
-                    'id'=>$item['id'],
-                    'owner_id'=>$item[Praise::FIELD_ID_OWNER],
-                    'obj_type'=>$item[Praise::FIELD_OBJ_TYPE],
-                    'college_id'=>$item[Praise::FIELD_ID_COLLEGE],
-                    'user_id'=>$praiseUser->id,
-                    'nickname'=>$praiseUser->{User::FIELD_NICKNAME},
-                    'avatar'=>$praiseUser->{User::FIELD_AVATAR}
-                ];
+               return app(PraiseLogic::class)->formatPraise($item);
 
             });
 
             $post['comments'] = collect($post['comments'])->map(function($item){
 
-                $commenter = User::find($item['commenter_id']);
-
-                $item['commenter'] = [
-                    'id'=>$commenter->{User::FIELD_ID},
-                    'nickname'=>$commenter->{User::FIELD_NICKNAME},
-                    'avatar'=>$commenter->{User::FIELD_AVATAR}
-                ];
-
-                return $item;
+               return app(CommentLogic::class)->formatComments($item);
 
             });
 
