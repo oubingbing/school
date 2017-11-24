@@ -64,6 +64,14 @@ class CommentLogic
             'avatar'=>$commenter->{User::FIELD_AVATAR}
         ];
 
+        if($comments[Comment::FIELD_ID_REF_COMMENT]){
+            $refComment = Comment::find($comments[Comment::FIELD_ID_REF_COMMENT]);
+            $refComment->refCommenter = User::where(User::FIELD_ID,$refComment->{Comment::FIELD_ID_COMMENTER})->select('id','nickname','avatar')->first();
+            $comments['ref_comment'] = $refComment;
+        }else{
+            $comments['ref_comment'] = '';
+        }
+
         return $comments;
     }
 
