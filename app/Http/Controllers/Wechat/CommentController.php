@@ -57,13 +57,6 @@ class CommentController extends Controller
             throw new ApiException('404',6000);
         }
 
-        return [
-            'id'=>$id,
-            'user'=>$user
-        ];
-
-        return Comment::where(Comment::FIELD_ID,$id)->where(Comment::FIELD_ID_COMMENTER,$user->{User::FIELD_ID})->first();
-
         $result = Comment::where(Comment::FIELD_ID,$id)->where(Comment::FIELD_ID_COMMENTER,$user->{User::FIELD_ID})->delete();
         return $result;
     }
