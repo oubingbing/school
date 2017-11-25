@@ -82,9 +82,13 @@ class PostController extends Controller
             throw new ApiException('参数错误',60001);
         }
 
-        $post = app(PostLogic::class)->getPostList($user,$time);
+        $posts = app(PostLogic::class)->getPostList($user,$time);
 
-        return app(PostLogic::class)->formatSinglePost($post,$user);
+        $posts = collect($posts)->map(function ($post)use($user){
+           return app(PostLogic::class)->formatSinglePost($post,$user);
+        });
+
+        return $posts;
     }
 
     /**
