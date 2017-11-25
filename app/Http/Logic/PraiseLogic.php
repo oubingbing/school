@@ -14,6 +14,17 @@ use App\User;
 
 class PraiseLogic
 {
+    /**
+     * 点赞
+     *
+     * @author yezi
+     *
+     * @param $ownerId
+     * @param $objId
+     * @param $objType
+     * @param null $collegeId
+     * @return mixed
+     */
     public function createPraise($ownerId, $objId, $objType, $collegeId = null)
     {
         $praise = Praise::create([
@@ -26,6 +37,15 @@ class PraiseLogic
         return $praise;
     }
 
+    /**
+     * 获取点赞
+     *
+     * @author yezi
+     *
+     * @param $objId
+     * @param $objType
+     * @return mixed
+     */
     public function praise($objId,$objType)
     {
         $praise = Praise::where(Praise::FIELD_ID_OBJ,$objId)
@@ -33,6 +53,15 @@ class PraiseLogic
             ->get();
 
         return $praise;
+    }
+
+    public function formatBatchPraise($praises)
+    {
+        return collect($praises)->map(function ($item){
+
+            return $this->formatSinglePraise($item);
+
+        });
     }
 
     /**
@@ -43,7 +72,7 @@ class PraiseLogic
      * @param $praise
      * @return array
      */
-    public function formatPraise($praise)
+    public function formatSinglePraise($praise)
     {
         $praiseUser = User::find($praise['owner_id']);
         return [

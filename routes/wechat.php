@@ -73,6 +73,12 @@ $api->version('v1', function ($api) {
             /** 点赞 */
             $api->post('/praise',PraiseController::class . '@store');
 
+            /** 删除表白墙 */
+            $api->delete('/delete/{id}/post',PostController::class . '@delete');
+
+            /** 删除评论 */
+            $api->delete('/delete/{id}/comment',CommentController::class . '@delete');
+
         });
 
     });

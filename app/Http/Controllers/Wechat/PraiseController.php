@@ -32,7 +32,7 @@ class PraiseController extends Controller
 
         $result = app(PraiseLogic::class)->createPraise($ownerId, $objId, $objType, $collegeId);
 
-        return app(PraiseLogic::class)->formatPraise($result);
+        return app(PraiseLogic::class)->formatSinglePraise($result);
     }
 
 }

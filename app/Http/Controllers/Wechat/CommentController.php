@@ -10,6 +10,7 @@ namespace App\Http\Wechat;
 
 
 use App\Comment;
+use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Logic\CommentLogic;
 use App\User;
@@ -36,7 +37,28 @@ class CommentController extends Controller
 
         $result = app(CommentLogic::class)->saveComment($commenterId, $objId, $content, $type, $refCommentId, $attachments, $collegeId);
 
-        return app(CommentLogic::class)->formatComments($result);
+        return app(CommentLogic::class)->formatSingleComments($result,$user);
+    }
+
+    /**
+     * 删除评论
+     *
+     * @author yezi
+     *
+     * @param $id
+     * @return mixed
+     * @throws ApiException
+     */
+    public function delete($id)
+    {
+        $user = request()->input('user');
+
+        if(empty($id)){
+            throw new ApiException('404',6000);
+        }
+
+        $result = Comment::where(Comment::FIELD_ID,$id)->where(Comment::FIELD_ID_COMMENTER,$user->{User::FIELD_ID})->delete();
+        return $result;
     }
 
 }

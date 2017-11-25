@@ -15,6 +15,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Logic\CommentLogic;
 use App\Http\Logic\PraiseLogic;
 use App\Http\PostLogic\PostLogic;
+use App\Post;
 use App\Praise;
 use App\User;
 use phpDocumentor\Reflection\DocBlock\Tags\Return_;
@@ -59,7 +60,7 @@ class PostController extends Controller
 
         $posts = app(PostLogic::class)->getPostList($user);
 
-        $posts = collect($posts)->map(function ($post){
+        $posts = collect($posts)->map(function ($post)use($user){
 
             $poster = $post['poster'];
             $post = collect($post)->forget('poster');
@@ -71,22 +72,42 @@ class PostController extends Controller
                 'created_at'=>$poster->created_at,
             ];
 
-           $post['praises'] = collect($post['praises'])->map(function ($item){
+            $post['praises'] = app(PraiseLogic::class)->formatBatchPraise($post['praises']);
 
-               return app(PraiseLogic::class)->formatPraise($item);
+            $post['comments'] = app(CommentLogic::class)->formatBatchComments($post['comments'],$user);
 
-            });
-
-            $post['comments'] = collect($post['comments'])->map(function($item){
-
-               return app(CommentLogic::class)->formatComments($item);
-
-            });
+            if($post[Post::FIELD_ID_POSTER] == $user->{User::FIELD_ID}){
+                $post['can_delete'] = true;
+            }else{
+                $post['can_delete'] = false;
+            }
 
             return $post;
         });
 
         return collect($posts)->toArray();
+    }
+
+    /**
+     * 删除帖子
+     *
+     * @author yezi
+     *
+     * @param $id
+     * @return mixed
+     * @throws ApiException
+     */
+    public function delete($id)
+    {
+        $user = request()->input('user');
+
+        if(empty($id)){
+            throw new ApiException('404',null,'60001');
+        }
+
+        $result = Post::where(Post::FIELD_ID,$id)->where(Post::FIELD_ID_POSTER,$user->{User::FIELD_ID})->delete();
+
+        return $result;
     }
 
 }

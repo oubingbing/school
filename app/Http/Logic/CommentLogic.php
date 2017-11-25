@@ -44,6 +44,15 @@ class CommentLogic
         return $comment;
     }
 
+    /**
+     * 获取评论
+     *
+     * @author yezi
+     *
+     * @param $objId
+     * @param $type
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
     public function comments($objId,$type)
     {
         $comments = Comment::query()
@@ -54,25 +63,62 @@ class CommentLogic
         return $comments;
     }
 
-    public function formatComments($comments)
+    /**
+     * 批量格式化评论
+     *
+     * @author yezi
+     *
+     * @param $comments
+     * @param $user
+     * @return array
+     */
+    public function formatBatchComments($comments,$user)
     {
-        $commenter = User::find($comments['commenter_id']);
+        return collect($comments)->map(function($item)use($user){
 
-        $comments['commenter'] = [
+            return app(CommentLogic::class)->formatSingleComments($item,$user);
+
+        })->toArray();
+    }
+
+    /**
+     * 格式化单挑评论
+     *
+     * @author yezi
+     *
+     * @param $comment
+     * @param $user
+     * @return mixed
+     */
+    public function formatSingleComments($comment,$user)
+    {
+        $commenter = User::find($comment['commenter_id']);
+
+        $comment['commenter'] = [
             'id'=>$commenter->{User::FIELD_ID},
             'nickname'=>$commenter->{User::FIELD_NICKNAME},
             'avatar'=>$commenter->{User::FIELD_AVATAR}
         ];
 
-        if($comments[Comment::FIELD_ID_REF_COMMENT]){
-            $refComment = Comment::find($comments[Comment::FIELD_ID_REF_COMMENT]);
-            $refComment->refCommenter = User::where(User::FIELD_ID,$refComment->{Comment::FIELD_ID_COMMENTER})->select('id','nickname','avatar')->first();
-            $comments['ref_comment'] = $refComment;
+        if($comment[Comment::FIELD_ID_REF_COMMENT]){
+            $refComment = Comment::withTrashed()->find($comment[Comment::FIELD_ID_REF_COMMENT]);
+            if($refComment){
+                $refComment->refCommenter = User::where(User::FIELD_ID,$refComment->{Comment::FIELD_ID_COMMENTER})->select('id','nickname','avatar')->first();
+                $comment['ref_comment'] = $refComment;
+            }else{
+                $comment['ref_comment'] = '';
+            }
         }else{
-            $comments['ref_comment'] = '';
+            $comment['ref_comment'] = '';
         }
 
-        return $comments;
+        if($comment[Comment::FIELD_ID_COMMENTER] == $user->{User::FIELD_ID}){
+            $comment['can_delete'] = true;
+        }else{
+            $comment['can_delete'] = false;
+        }
+
+        return $comment;
     }
 
 }
