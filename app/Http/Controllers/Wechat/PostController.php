@@ -57,35 +57,33 @@ class PostController extends Controller
     public function postList()
     {
         $user = request()->input('user');
+        $pageSize = request()->input('page_size');
+        $pageNumber = request()->input('page_number');
 
-        $posts = app(PostLogic::class)->getPostList($user);
+        $pageParams = ['page_size'=>$pageSize, 'page_number'=>$pageNumber];
 
-        $posts = collect($posts)->map(function ($post)use($user){
+        $query =  Post::with(['poster','praises','comments'])->where(Post::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE})
+            ->orderBy(Post::FIELD_CREATED_AT,'desc');
 
-            $poster = $post['poster'];
-            $post = collect($post)->forget('poster');
-            $post['poster']  = [
-                'id'=>$poster->id,
-                'nickname'=>$poster->nickname,
-                'avatar'=>$poster->avatar,
-                'college_id'=>$poster->college_id,
-                'created_at'=>$poster->created_at,
-            ];
-
-            $post['praises'] = app(PraiseLogic::class)->formatBatchPraise($post['praises']);
-
-            $post['comments'] = app(CommentLogic::class)->formatBatchComments($post['comments'],$user);
-
-            if($post[Post::FIELD_ID_POSTER] == $user->{User::FIELD_ID}){
-                $post['can_delete'] = true;
-            }else{
-                $post['can_delete'] = false;
-            }
-
-            return $post;
+        $posts = paginate($query,$pageParams, '*',function($post)use($user){
+            return app(PostLogic::class)->formatSinglePost($post,$user);
         });
 
         return collect($posts)->toArray();
+    }
+
+    public function getMostNewPost()
+    {
+        $user = request()->input('user');
+        $time = request()->input('date_time');
+
+        if(empty($time)){
+            throw new ApiException('参数错误',60001);
+        }
+
+        $post = app(PostLogic::class)->getPostList($user,$time);
+
+        return app(PostLogic::class)->formatSinglePost($post,$user);
     }
 
     /**

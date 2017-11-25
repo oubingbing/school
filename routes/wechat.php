@@ -70,6 +70,9 @@ $api->version('v1', function ($api) {
             /** 评论 */
             $api->post('/comment',CommentController::class . '@store');
 
+            /** 获取最新的贴子 */
+            $api->get('/most_new_post',PostController::class . '@getMostNewPost');
+
             /** 点赞 */
             $api->post('/praise',PraiseController::class . '@store');
 
