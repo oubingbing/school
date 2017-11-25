@@ -13,6 +13,7 @@ use App\Comment;
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Logic\CommentLogic;
+use App\Http\Logic\PaginateLogic;
 use App\Http\Logic\PraiseLogic;
 use App\Http\PostLogic\PostLogic;
 use App\Post;
@@ -65,7 +66,7 @@ class PostController extends Controller
         $query =  Post::with(['poster','praises','comments'])->where(Post::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE})
             ->orderBy(Post::FIELD_CREATED_AT,'desc');
 
-        $posts = paginate($query,$pageParams, '*',function($post)use($user){
+        $posts = app(PaginateLogic::class)->paginate($query,$pageParams, '*',function($post)use($user){
             return app(PostLogic::class)->formatSinglePost($post,$user);
         });
 
