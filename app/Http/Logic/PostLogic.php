@@ -77,9 +77,13 @@ class PostLogic
                 'created_at'=>$poster->created_at,
             ];
 
-            if(is_null($post[Post::FIELD_ATTACHMENTS]) || $post[Post::FIELD_ATTACHMENTS] == null){
-                $post['Post::FIELD_ATTACHMENTS'] = '';
-            }
+            $post[Post::FIELD_ATTACHMENTS] = collect($post[Post::FIELD_ATTACHMENTS])->map(function($item){
+                if(is_null($item) || $item == null){
+                    $item = '';
+                }
+
+                return $item;
+            });
 
             $post['praises'] = app(PraiseLogic::class)->formatBatchPraise($post['praises']);
 
