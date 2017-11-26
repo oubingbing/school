@@ -77,6 +77,10 @@ class PostLogic
                 'created_at'=>$poster->created_at,
             ];
 
+            if(is_null($post[Post::FIELD_ATTACHMENTS]) || $post[Post::FIELD_ATTACHMENTS] == null){
+                $post['Post::FIELD_ATTACHMENTS'] = '';
+            }
+
             $post['praises'] = app(PraiseLogic::class)->formatBatchPraise($post['praises']);
 
             $post['comments'] = app(CommentLogic::class)->formatBatchComments($post['comments'],$user);
