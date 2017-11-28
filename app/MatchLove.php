@@ -40,6 +40,15 @@ class MatchLove extends BaseModel
     /** field password 密码 */
     const FIELD_PASSWORD = 'password';
 
+    /** field attachments 附件 */
+    const FIELD_ATTACHMENTS = 'attachments';
+
+    /** field comment_number 评论数 */
+    const FIELD_COMMENT_NUMBER = 'comment_number';
+
+    /** field praise_number 点赞数 */
+    const FIELD_PRAISE_NUMBER = 'praise_number';
+
     /** field type */
     const FIELD_TYPE = 'type';
 
@@ -75,6 +84,9 @@ class MatchLove extends BaseModel
         self::FIELD_PRIVATE,
         self::FIELD_IS_PASSWORD,
         self::FIELD_PASSWORD,
+        self::FIELD_SALE_NUMBER,
+        self::FIELD_ATTACHMENTS,
+        self::FIELD_SALE_NUMBER,
         self::FIELD_TYPE,
         self::FIELD_STATUS
     ];

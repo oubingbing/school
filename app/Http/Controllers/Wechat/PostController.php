@@ -58,13 +58,15 @@ class PostController extends Controller
     public function postList()
     {
         $user = request()->input('user');
-        $pageSize = request()->input('page_size');
-        $pageNumber = request()->input('page_number');
+        $pageSize = request()->input('page_size',10);
+        $pageNumber = request()->input('page_number',1);
 
         $pageParams = ['page_size'=>$pageSize, 'page_number'=>$pageNumber];
 
-        $query =  Post::with(['poster','praises','comments'])->where(Post::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE})
-            ->orderBy(Post::FIELD_CREATED_AT,'desc');
+        $query =  Post::query()->with(['poster','praises','comments'])->orderBy(Post::FIELD_CREATED_AT,'desc');
+        if($user->{User::FIELD_ID_COLLEGE}){
+            $query->where(Post::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE});
+        }
 
         $posts = app(PaginateLogic::class)->paginate($query,$pageParams, '*',function($post)use($user){
             return app(PostLogic::class)->formatSinglePost($post,$user);

@@ -11,6 +11,20 @@ use App\User;
 class UserController extends Controller
 {
     /**
+     * 获取用户信息
+     *
+     * @author yezi
+     *
+     * @return array|string
+     */
+    public function user()
+    {
+        $user = request()->input('user');
+
+        return $user;
+    }
+
+    /**
      * 获取用户所在的学校
      * 
      * @author yei

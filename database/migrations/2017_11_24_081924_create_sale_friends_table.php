@@ -23,6 +23,10 @@ class CreateSaleFriendsTable extends Migration
             $table->string('major')->nullable()->comment('专业');
             $table->string('Expectation',1024)->comment('简单介绍下喜欢什么样的人,期望');
             $table->longText('introduce')->comment('介绍一下舍友');
+            $table->jsonb('attachments')->nullable()->comment('贴子的附件,例如图片');
+
+            $table->integer('comment_number')->default(0)->comment('评论数量');
+            $table->integer('praise_number')->default(0)->comment('点赞数量');
 
             $table->tinyInteger('type')->default(1)->comment('预留字段');
             $table->tinyInteger('status')->default(1)->comment('预留字段');

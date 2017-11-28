@@ -17,6 +17,7 @@ use App\Http\Controllers\QiNiuController;
 use App\Http\Wechat\CommentController;
 use App\Http\Wechat\PostController;
 use App\Http\Wechat\PraiseController;
+use App\Http\Wechat\SaleFriendController;
 use App\Http\Wechat\UserController;
 
 $api = app('Dingo\Api\Routing\Router');
@@ -45,6 +46,9 @@ $api->version('v1', function ($api) {
         });
 
         $api->group(['middleware' => ['wechat', 'after', 'before']], function ($api) {
+
+            /** 获取用户信息 */
+            $api->get('user',UserController::class . '@user');
 
             /** 获取个人学校 */
             $api->get('/school', UserController::class . '@school');
@@ -81,6 +85,18 @@ $api->version('v1', function ($api) {
 
             /** 删除评论 */
             $api->delete('/delete/{id}/comment',CommentController::class . '@delete');
+
+            /** 新增卖舍友 */
+            $api->post('/sale_friend',SaleFriendController::class . '@save');
+
+            /** 获取卖舍友列表 */
+            $api->get('/sale_friends', SaleFriendController::class . '@saleFriends');
+
+            /** 卖舍友详情 */
+            $api->get('/sale_friend/{id}',SaleFriendController::class . '@detail');
+
+            /** 删除卖舍友 */
+            $api->delete('/delete/{id}/sale_friend',SaleFriendController::class . '@delete');
 
         });
 

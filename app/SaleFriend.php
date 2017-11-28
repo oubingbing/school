@@ -37,6 +37,15 @@ class SaleFriend extends BaseModel
     /** field introduce 介绍下舍友 */
     const FIELD_INTRODUCE = 'introduce';
 
+    /** field attachments 附件 */
+    const FIELD_ATTACHMENTS = 'attachments';
+
+    /** field comment_number 评论数 */
+    const FIELD_COMMENT_NUMBER = 'comment_number';
+
+    /** field praise_number 点赞数 */
+    const FIELD_PRAISE_NUMBER = 'praise_number';
+
     /** field type */
     const FIELD_TYPE = 'type';
 
@@ -52,6 +61,19 @@ class SaleFriend extends BaseModel
     /** field deleted_at */
     const FIELD_DELETED_AT = 'deleted_at';
 
+    /** 性别-男 */
+    const ENUM_GENDER_BOY = 1;
+    /** 性别-女 */
+    const ENUM_GENDER_GIRL = 2;
+    /** 性别-人妖 */
+    const ENUM_GENDER_LADY_BOY = 3;
+    /** 性别-未知生物 */
+    const ENUM_GENDER_UNKNOWN = 4;
+
+    protected $casts = [
+        self::FIELD_ATTACHMENTS => 'array',
+    ];
+
     protected $fillable = [
         self::FIELD_ID,
         self::FIELD_ID_OWNER,
@@ -61,7 +83,12 @@ class SaleFriend extends BaseModel
         self::FIELD_MAJOR,
         self::FIELD_EXPECTATION,
         self::FIELD_INTRODUCE,
+        self::FIELD_ATTACHMENTS,
+        self::FIELD_PRAISE_NUMBER,
+        self::FIELD_COMMENT_NUMBER,
         self::FIELD_TYPE,
         self::FIELD_STATUS
     ];
+
+
 }
