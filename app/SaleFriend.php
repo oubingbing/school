@@ -62,13 +62,13 @@ class SaleFriend extends BaseModel
     const FIELD_DELETED_AT = 'deleted_at';
 
     /** 性别-男 */
-    const ENUM_GENDER_BOY = 1;
+    const ENUM_GENDER_BOY = 0;
     /** 性别-女 */
-    const ENUM_GENDER_GIRL = 2;
+    const ENUM_GENDER_GIRL = 1;
     /** 性别-人妖 */
-    const ENUM_GENDER_LADY_BOY = 3;
+    const ENUM_GENDER_LADY_BOY = 2;
     /** 性别-未知生物 */
-    const ENUM_GENDER_UNKNOWN = 4;
+    const ENUM_GENDER_UNKNOWN = 3;
 
     protected $casts = [
         self::FIELD_ATTACHMENTS => 'array',
@@ -89,6 +89,27 @@ class SaleFriend extends BaseModel
         self::FIELD_TYPE,
         self::FIELD_STATUS
     ];
+
+    public function getGenderAttribute($value)
+    {
+        $gender = '男';
+        switch ($value){
+            case self::ENUM_GENDER_BOY:
+                $gender = '男';
+                break;
+            case self::ENUM_GENDER_GIRL:
+                $gender = '女';
+                break;
+            case self::ENUM_GENDER_LADY_BOY:
+                $gender = '人妖';
+                break;
+            case self::ENUM_GENDER_UNKNOWN:
+                $gender = '未知生物';
+                break;
+        }
+
+        return $gender;
+    }
 
     /**
      * 发帖人
