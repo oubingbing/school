@@ -113,7 +113,10 @@ class CommentLogic
     {
         $commenter = User::find($comment['commenter_id']);
 
-        $this->formatBatchComments($comment->subComments,$user);
+        //格式化卖舍友评论
+        if($comment['obj_type'] == Comment::ENUM_OBJ_TYPE_SALE_FRIEND){
+            $this->formatBatchComments($comment->subComments,$user);
+        }
 
         $comment['commenter'] = [
             'id'=>$commenter->{User::FIELD_ID},
