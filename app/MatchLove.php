@@ -65,14 +65,14 @@ class MatchLove extends BaseModel
     const FIELD_DELETED_AT = 'deleted_at';
 
     /** 不匿名 */
-    const ENUM_NOT_PRIVATE = '1';
+    const ENUM_NOT_PRIVATE = 1;
     /** 匿名 */
-    const ENUM_PRIVATE = '2';
+    const ENUM_PRIVATE = 1;
 
     /** 需要密码 */
-    const ENUM_PROVIDE_PASSWORD = '1';
+    const ENUM_PROVIDE_PASSWORD = 1;
     /** 不需要密码 */
-    const ENUM_NOT_PASSWORD = '2';
+    const ENUM_NOT_PASSWORD = 1;
 
     protected $fillable = [
         self::FIELD_ID,
@@ -84,9 +84,9 @@ class MatchLove extends BaseModel
         self::FIELD_PRIVATE,
         self::FIELD_IS_PASSWORD,
         self::FIELD_PASSWORD,
-        self::FIELD_SALE_NUMBER,
+        self::FIELD_COMMENT_NUMBER,
         self::FIELD_ATTACHMENTS,
-        self::FIELD_SALE_NUMBER,
+        self::FIELD_PRAISE_NUMBER,
         self::FIELD_TYPE,
         self::FIELD_STATUS
     ];

@@ -9,9 +9,11 @@
 namespace App\Http\Wechat;
 
 
+use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Logic\PraiseLogic;
 use App\User;
+use Exception;
 
 class PraiseController extends Controller
 {
@@ -20,7 +22,8 @@ class PraiseController extends Controller
      *
      * @author yezi
      *
-     * @return array
+     * @return mixed
+     * @throws ApiException
      */
     public function store()
     {
@@ -30,7 +33,19 @@ class PraiseController extends Controller
         $objType = request()->input('obj_type');
         $collegeId = $user->{User::FIELD_ID_COLLEGE};
 
-        $result = app(PraiseLogic::class)->createPraise($ownerId, $objId, $objType, $collegeId);
+        try{
+            \DB::beginTransaction();
+
+            $result = app(PraiseLogic::class)->createPraise($ownerId, $objId, $objType, $collegeId);
+
+            app(PraiseLogic::class)->incrementNumber($objType,$objId);
+
+            \DB::commit();
+        }catch (Exception $e){
+
+            \DB::rollBack();
+            throw new ApiException($e,60001);
+        }
 
         return app(PraiseLogic::class)->formatSinglePraise($result);
     }

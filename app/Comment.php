@@ -22,6 +22,9 @@ class Comment extends BaseModel
     /** field obj_id 被评论的对象Id */
     const FIELD_ID_OBJ = 'obj_id';
 
+    /** field obj_type 评论对象的类型 */
+    const FIELD_OBJ_TYPE = 'obj_type';
+
     /** field college_id 学校Id */
     const FIELD_ID_COLLEGE = 'college_id';
 
@@ -49,9 +52,18 @@ class Comment extends BaseModel
     /** field deleted_at */
     const FIELD_DELETED_AT = 'deleted_at';
 
-    /** 评论表白墙 */
+    /** obj_type-评论表白墙 */
+    const ENUM_OBJ_TYPE_POST = 1;
+    /** obj_type-评论卖舍友 */
+    const ENUM_OBJ_TYPE_SALE_FRIEND = 2;
+    /** obj_type 评论暗恋匹配 */
+    const ENUM_OBJ_TYPE_MATCH_LOVE = 3;
+    /** obj_type 评论 */
+    const ENUM_OBJ_TYPE_COMMENT = 4;
+
+    /** type-评论表白墙 */
     const ENUM_COMMENT_POST_TYPE = 1;
-    /** 评论别人在表白墙的评论 */
+    /** type-评论别人在表白墙的评论 */
     const ENUM_COMMENT_POST_COMMENT_TYPE = 2;
 
     protected $casts = [
@@ -63,6 +75,7 @@ class Comment extends BaseModel
         self::FIELD_ID_COMMENTER,
         self::FIELD_ID_COLLEGE,
         self::FIELD_ID_OBJ,
+        self::FIELD_OBJ_TYPE,
         self::FIELD_ID_REF_COMMENT,
         self::FIELD_CONTENT,
         self::FIELD_ATTACHMENTS,
@@ -103,8 +116,12 @@ class Comment extends BaseModel
      */
     public function refComment()
     {
-        return $this->belongsTo(self::class,self::FIELD_ID_REF_COMMENT);
+        return $this->belongsTo(self::class,self::FIELD_ID_REF_COMMENT)->where(self::FIELD_OBJ_TYPE,self::ENUM_OBJ_TYPE_COMMENT);
     }
 
+    public function subComments()
+    {
+        return $this->hasMany(self::class,self::FIELD_ID_OBJ,self::FIELD_ID)->where(self::FIELD_OBJ_TYPE,self::ENUM_OBJ_TYPE_COMMENT);
+    }
 
 }

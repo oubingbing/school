@@ -49,6 +49,12 @@ class Post extends BaseModel
     /** field deleted_at */
     const FIELD_DELETED_AT = 'deleted_at';
 
+    /** field praise_number */
+    const FIELD_PRAISE_NUMBER = 'praise_number';
+
+    /** field comment_number */
+    const FIELD_COMMENT_NUMBER = 'comment_number';
+
     protected $casts = [
         self::FIELD_ATTACHMENTS => 'array',
     ];
@@ -64,7 +70,9 @@ class Post extends BaseModel
         self::FIELD_STATUS,
         self::FIELD_PRIVATE,
         self::CREATED_AT,
-        self::FIELD_UPDATED_AT
+        self::FIELD_UPDATED_AT,
+        self::FIELD_PRAISE_NUMBER,
+        self::FIELD_COMMENT_NUMBER
     ];
 
     /**
@@ -100,7 +108,7 @@ class Post extends BaseModel
      */
     public function praises()
     {
-        return $this->hasMany(Praise::class,Praise::FIELD_ID_OBJ,self::FIELD_ID);
+        return $this->hasMany(Praise::class,Praise::FIELD_ID_OBJ,self::FIELD_ID)->where(Praise::FIELD_OBJ_TYPE,Praise::ENUM_OBJ_TYPE_POST);
     }
 
     /**
@@ -112,7 +120,7 @@ class Post extends BaseModel
      */
     public function comments()
     {
-        return $this->hasMany(Comment::class,Comment::FIELD_ID_OBJ,self::FIELD_ID);
+        return $this->hasMany(Comment::class,Comment::FIELD_ID_OBJ,self::FIELD_ID)->where(Comment::FIELD_OBJ_TYPE,Comment::ENUM_OBJ_TYPE_POST);
     }
 
 }

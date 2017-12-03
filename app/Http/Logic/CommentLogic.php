@@ -10,6 +10,8 @@ namespace App\Http\Logic;
 
 
 use App\Comment;
+use App\Post;
+use App\SaleFriend;
 use App\User;
 
 class CommentLogic
@@ -35,7 +37,7 @@ class CommentLogic
             Comment::FIELD_ID_COMMENTER=>$commenterId,
             Comment::FIELD_ID_OBJ=>$objId,
             Comment::FIELD_CONTENT=>$content,
-            Comment::FIELD_TYPE=>$type,
+            Comment::FIELD_OBJ_TYPE=>$type,
             Comment::FIELD_ID_REF_COMMENT=>$refCommentId,
             Comment::FIELD_ATTACHMENTS=>$attachments,
             Comment::FIELD_ID_COLLEGE=>$collegeId
@@ -44,20 +46,37 @@ class CommentLogic
         return $comment;
     }
 
+    public function incrementComment($type,$objId)
+    {
+        switch ($type){
+            case Comment::ENUM_OBJ_TYPE_POST:
+                $result = Post::query()->where(Post::FIELD_ID,$objId)->increment(Post::FIELD_COMMENT_NUMBER);
+                break;
+            case Comment::ENUM_OBJ_TYPE_SALE_FRIEND:
+                $result = SaleFriend::query()->where(SaleFriend::FIELD_ID,$objId)->increment(SaleFriend::FIELD_COMMENT_NUMBER);
+                break;
+            default:
+                $result = Post::query()->where(Post::FIELD_ID,$objId)->increment(Post::FIELD_COMMENT_NUMBER);
+                break;
+        }
+
+        return $result;
+    }
+
     /**
      * 获取评论
      *
      * @author yezi
      *
      * @param $objId
-     * @param $type
+     * @param $objType
      * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
-    public function comments($objId,$type)
+    public function comments($objId,$objType)
     {
         $comments = Comment::query()
             ->where(Comment::FIELD_ID_OBJ,$objId)
-            ->where(Comment::FIELD_TYPE,$type)
+            ->where(Comment::FIELD_OBJ_TYPE,$objType)
             ->get();
 
         return $comments;
@@ -76,13 +95,13 @@ class CommentLogic
     {
         return collect($comments)->map(function($item)use($user){
 
-            return app(CommentLogic::class)->formatSingleComments($item,$user);
+            return $this->formatSingleComments($item,$user);
 
         })->toArray();
     }
 
     /**
-     * 格式化单挑评论
+     * 格式化单条评论
      *
      * @author yezi
      *
@@ -93,6 +112,8 @@ class CommentLogic
     public function formatSingleComments($comment,$user)
     {
         $commenter = User::find($comment['commenter_id']);
+
+        $this->formatBatchComments($comment->subComments,$user);
 
         $comment['commenter'] = [
             'id'=>$commenter->{User::FIELD_ID},

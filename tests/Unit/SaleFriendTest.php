@@ -30,8 +30,6 @@ class SaleFriendTest extends TestCase
 
         $sale = new SaleFriendLogic();
         $result = $sale->save($user->id,$name,$gender,$major,$expectation,$introduce,$user->{User::FIELD_ID_COLLEGE});
-
-        dd($result);
     }
 
 }

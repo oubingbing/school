@@ -31,8 +31,8 @@ class SaleFriend extends BaseModel
     /** field major 专业 */
     const FIELD_MAJOR = 'major';
 
-    /** field Expectation 期望ta是什么样子的 */
-    const FIELD_EXPECTATION = 'Expectation';
+    /** field expectation 期望ta是什么样子的 */
+    const FIELD_EXPECTATION = 'expectation';
 
     /** field introduce 介绍下舍友 */
     const FIELD_INTRODUCE = 'introduce';
@@ -89,6 +89,58 @@ class SaleFriend extends BaseModel
         self::FIELD_TYPE,
         self::FIELD_STATUS
     ];
+
+    /**
+     * 发帖人
+     *
+     * @author yezi
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function poster()
+    {
+        return $this->belongsTo(User::class,self::FIELD_ID_OWNER)->select([
+            User::FIELD_ID,
+            User::FIELD_NICKNAME,
+            User::FIELD_AVATAR
+        ]);
+    }
+
+    /**
+     * 所属大学
+     *
+     * @author yezi
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function college()
+    {
+        return $this->belongsTo(Colleges::class,self::FIELD_ID_COLLEGE);
+    }
+
+    /**
+     * 点赞人
+     *
+     * @author yezi
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function praises()
+    {
+        return $this->hasMany(Praise::class,Praise::FIELD_ID_OBJ,self::FIELD_ID)->where(Praise::FIELD_OBJ_TYPE,Praise::ENUM_OBJ_TYPE_SALE_FRIEND);
+    }
+
+    /**
+     * 贴子评论
+     *
+     * @author yezi
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class,Comment::FIELD_ID_OBJ,self::FIELD_ID)->where(Comment::FIELD_OBJ_TYPE,Comment::ENUM_OBJ_TYPE_SALE_FRIEND);
+    }
 
 
 }

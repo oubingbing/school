@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\TokenController;
 use App\Http\Controllers\QiNiuController;
 use App\Http\Wechat\CommentController;
+use App\Http\Wechat\MatchLoveController;
 use App\Http\Wechat\PostController;
 use App\Http\Wechat\PraiseController;
 use App\Http\Wechat\SaleFriendController;
@@ -97,6 +98,18 @@ $api->version('v1', function ($api) {
 
             /** 删除卖舍友 */
             $api->delete('/delete/{id}/sale_friend',SaleFriendController::class . '@delete');
+
+            /** 新建匹配 */
+            $api->post('/match_love',MatchLoveController::class . '@save');
+
+            /** 匹配列表 */
+            $api->get('/match_loves',MatchLoveController::class . '@matchLoves');
+
+            /** 匹配详情 */
+            $api->get('/match_love',MatchLoveController::class . '@detail');
+
+            /** 删除匹配 */
+            $api->delete('delete/{id}/match_love',MatchLoveController::class . '@delete');
 
         });
 

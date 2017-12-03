@@ -14,6 +14,7 @@ use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Logic\CommentLogic;
 use App\User;
+use Exception;
 
 class CommentController extends Controller
 {
@@ -22,7 +23,8 @@ class CommentController extends Controller
      *
      * @author yezi
      *
-     * @return array
+     * @return mixed
+     * @throws ApiException
      */
     public function store()
     {
@@ -35,7 +37,19 @@ class CommentController extends Controller
         $refCommentId = request()->input('ref_comment_id',null);
         $attachments = request()->input('attachments',null);
 
-        $result = app(CommentLogic::class)->saveComment($commenterId, $objId, $content, $type, $refCommentId, $attachments, $collegeId);
+        try{
+            \DB::beginTransaction();
+
+            $result = app(CommentLogic::class)->saveComment($commenterId, $objId, $content, $type, $refCommentId, $attachments, $collegeId);
+
+            app(CommentLogic::class)->incrementComment($type,$objId);
+
+            \DB::commit();
+        }catch (Exception $e){
+
+            \DB::rollBack();
+            throw new ApiException($e,60001);
+        }
 
         return app(CommentLogic::class)->formatSingleComments($result,$user);
     }

@@ -9,6 +9,7 @@
 namespace App\Http\Logic;
 
 
+use App\Comment;
 use App\SaleFriend;
 
 class SaleFriendLogic
@@ -25,9 +26,10 @@ class SaleFriendLogic
      * @param $expectation
      * @param $introduce
      * @param null $collegeId
+     * @param $attachments
      * @return mixed
      */
-    public function save($userId, $name, $gender, $major, $expectation, $introduce, $collegeId = null)
+    public function save($userId, $name, $gender, $major, $expectation, $introduce, $attachments,$collegeId = null)
     {
         $result = SaleFriend::create([
             SaleFriend::FIELD_ID_OWNER => $userId,
@@ -36,7 +38,8 @@ class SaleFriendLogic
             SaleFriend::FIELD_GENDER => $gender,
             SaleFriend::FIELD_MAJOR => $major,
             SaleFriend::FIELD_EXPECTATION => $expectation,
-            SaleFriend::FIELD_INTRODUCE => $introduce
+            SaleFriend::FIELD_INTRODUCE => $introduce,
+            SaleFriend::FIELD_ATTACHMENTS=>$attachments
         ]);
 
         return $result;
@@ -44,6 +47,21 @@ class SaleFriendLogic
 
     public function formatSingle($saleFriend,$user)
     {
+        $saleFriend->can_delete = $this->canDeleteSaleFriend($saleFriend,$user);
+
+        $saleFriend['comments'] = collect(app(CommentLogic::class)->formatBatchComments($saleFriend['comments'],$user))->sortByDesc(Comment::FIELD_CREATED_AT)->values();
+
+        return $saleFriend;
+    }
+
+    public function canDeleteSaleFriend($saleFriend,$user)
+    {
+        $poster = $saleFriend['poster'];
+        if($poster->id == $user->id){
+            return true;
+        }else{
+            return false;
+        }
 
     }
 

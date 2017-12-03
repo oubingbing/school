@@ -9,17 +9,13 @@
 namespace App\Http\Wechat;
 
 
-use App\Comment;
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
-use App\Http\Logic\CommentLogic;
 use App\Http\Logic\PaginateLogic;
-use App\Http\Logic\PraiseLogic;
 use App\Http\PostLogic\PostLogic;
 use App\Post;
-use App\Praise;
 use App\User;
-use phpDocumentor\Reflection\DocBlock\Tags\Return_;
+use League\Flysystem\Exception;
 
 class PostController extends Controller
 {
@@ -39,11 +35,21 @@ class PostController extends Controller
         $location = request()->input('location');
         $private = request()->input('private');
 
-        if(empty($content)){
-            throw new ApiException('内容不能为空',6000);
-        }
+        try{
+            \DB::beginTransaction();
 
-        $result = app(PostLogic::class)->save($user,$content,$imageUrls,$location,$private);
+            if(empty($content)){
+                throw new ApiException('内容不能为空',6000);
+            }
+
+            $result = app(PostLogic::class)->save($user,$content,$imageUrls,$location,$private);
+
+            \DB::commit();
+        }catch (Exception $e){
+
+            \DB::rollBack();
+            throw new ApiException($e,60001);
+        }
 
         return collect($result)->toArray();
     }
@@ -75,6 +81,14 @@ class PostController extends Controller
         return collect($posts)->toArray();
     }
 
+    /**
+     * 获取最新的贴子
+     *
+     * @author yezi
+     *
+     * @return static
+     * @throws ApiException
+     */
     public function getMostNewPost()
     {
         $user = request()->input('user');

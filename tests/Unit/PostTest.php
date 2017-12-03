@@ -43,4 +43,14 @@ class PostTest extends TestCase
 
     }
 
+    /**
+     * @test
+     */
+    public function comment()
+    {
+        $post = Post::find(21);
+
+        dd($post->comments->toArray());
+    }
+
 }

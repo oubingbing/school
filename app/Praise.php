@@ -39,12 +39,12 @@ class Praise extends BaseModel
 
     /** type - 表白点赞 */
     const ENUM_OBJ_TYPE_POST = 1;
-
     /** type - 卖舍友点赞 */
-    const ENUM_OBJ_TYPE_SALE = 2;
-
+    const ENUM_OBJ_TYPE_SALE_FRIEND = 2;
     /** type - 暗恋匹配点赞 */
-    const ENUM_OBJ_TYPE_LOVE = 3;
+    const ENUM_OBJ_TYPE_MATCH_LOVE = 3;
+    /** type - 评论 */
+    const ENUM_OBJ_TYPE_COMMENT = 4;
     
     protected $fillable = [
         self::FIELD_ID,
