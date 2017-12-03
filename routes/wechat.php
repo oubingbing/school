@@ -96,6 +96,9 @@ $api->version('v1', function ($api) {
             /** 卖舍友详情 */
             $api->get('/sale_friend/{id}',SaleFriendController::class . '@detail');
 
+            /** 获取最新卖舍友 */
+            $api->get('/most_new_sale_friend',SaleFriendController::class . '@mostNewSaleFriends');
+
             /** 删除卖舍友 */
             $api->delete('/delete/{id}/sale_friend',SaleFriendController::class . '@delete');
 

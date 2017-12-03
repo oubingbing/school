@@ -93,6 +93,28 @@ class SaleFriendController extends Controller
         return $saleFriends;
     }
 
+    public function mostNewSaleFriends()
+    {
+        $user = request()->input('user');
+        $time = request()->input('time');
+
+        $query = SaleFriend::query()
+            ->with(['poster','comments'])
+            ->where(SaleFriend::FIELD_CREATED_AT,'>=',$time)
+            ->orderBy(SaleFriend::FIELD_CREATED_AT,'desc');
+        if($user->{User::FIELD_ID_COLLEGE}){
+            $query->where(SaleFriend::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE});
+        }
+
+        $result = $query->get();
+
+        $result = collect($result)->map(function ($item)use($user){
+            return app(SaleFriendLogic::class)->formatSingle($item,$user);
+        });
+
+        return $result;
+    }
+
     /**
      * 详情
      *
