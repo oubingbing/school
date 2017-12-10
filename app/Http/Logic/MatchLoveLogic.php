@@ -26,15 +26,17 @@ class MatchLoveLogic
      * @param null $collegeId
      * @return mixed
      */
-    public function createMatchLove($userId,$username,$matchName,$content,$private,$collegeId=null)
+    public function createMatchLove($userId, $username, $matchName, $content, $private, $collegeId = null)
     {
         $result = MatchLove::create([
-            MatchLove::FIELD_ID_OWNER=>$userId,
-            MatchLove::FIELD_USER_NAME=>$username,
-            MatchLove::FIELD_MATCH_NAME=>$matchName,
-            MatchLove::FIELD_CONTENT=>$content,
-            MatchLove::FIELD_PRIVATE=>$private,
-            MatchLove::FIELD_ID_COLLEGE=>$collegeId
+            MatchLove::FIELD_ID_OWNER => $userId,
+            MatchLove::FIELD_USER_NAME => $username,
+            MatchLove::FIELD_MATCH_NAME => $matchName,
+            MatchLove::FIELD_CONTENT => $content,
+            MatchLove::FIELD_PRIVATE => $private,
+            MatchLove::FIELD_ID_COLLEGE => $collegeId,
+            MatchLove::FIELD_IS_PASSWORD => MatchLove::ENUM_NOT_PASSWORD,
+            MatchLove::FIELD_STATUS => 1
         ]);
 
         return $result;
@@ -48,6 +50,8 @@ class MatchLoveLogic
      */
     public function formatSingle($matchLove)
     {
+        //$matchLove->{MatchLove::FIELD_USER_NAME} = substr_replace($matchLove->{MatchLove::FIELD_USER_NAME},'*',1,2);
+
         return $matchLove;
     }
 

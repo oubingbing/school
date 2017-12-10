@@ -72,7 +72,7 @@ class MatchLove extends BaseModel
     /** 需要密码 */
     const ENUM_PROVIDE_PASSWORD = 1;
     /** 不需要密码 */
-    const ENUM_NOT_PASSWORD = 1;
+    const ENUM_NOT_PASSWORD = 2;
 
     protected $fillable = [
         self::FIELD_ID,
@@ -90,5 +90,14 @@ class MatchLove extends BaseModel
         self::FIELD_TYPE,
         self::FIELD_STATUS
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class,self::FIELD_ID_OWNER)->select([
+            User::FIELD_ID,
+            User::FIELD_NICKNAME,
+            User::FIELD_AVATAR
+        ]);
+    }
 
 }

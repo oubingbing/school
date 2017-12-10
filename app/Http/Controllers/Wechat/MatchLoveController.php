@@ -9,6 +9,7 @@
 namespace App\Http\Wechat;
 
 
+use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Logic\MatchLoveLogic;
 use App\Http\Logic\PaginateLogic;
@@ -18,11 +19,12 @@ use App\User;
 class MatchLoveController extends Controller
 {
     /**
-     * 新增
+     * 新增匹配不能为空
      *
      * @author yezi
      *
      * @return mixed
+     * @throws ApiException
      */
     public function save()
     {
@@ -30,8 +32,25 @@ class MatchLoveController extends Controller
         $username = request()->input('username');
         $matchName = request()->input('match_name');
         $content = request()->input('content');
-        $private = request()->input('private');
+        $private = request()->input('privation');
 
+        $rule = [
+            'username' => 'required',
+            'match_name' => 'required',
+            'privation' => 'required'
+        ];
+
+        $messages = [
+            'username.required'=>'你的名字不能为空',
+            'gender.required'=>'匹配的名字不能为空',
+            'privation.required'=>'是否匿名不能为空不能为空',
+        ];
+
+        $validator = \Validator::make(request()->input(), $rule,$messages);
+        if ($validator->fails()) {
+            $messages = $validator->errors();
+            throw new ApiException($messages->first(), 60001);
+        }
 
         $matchLove = new MatchLoveLogic();
         $result = $matchLove->createMatchLove($user->id,$username,$matchName,$content,$private,$user->{User::FIELD_ID_COLLEGE});
@@ -54,7 +73,7 @@ class MatchLoveController extends Controller
 
         $pageParams = ['page_size'=>$pageSize, 'page_number'=>$pageNumber];
 
-        $query = MatchLove::query()->orderBy(MatchLove::FIELD_CREATED_AT,'desc');
+        $query = MatchLove::query()->with(['user'])->orderBy(MatchLove::FIELD_CREATED_AT,'desc');
         if($user->{User::FIELD_ID_COLLEGE}){
             $query->where(MatchLove::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE});
         }
