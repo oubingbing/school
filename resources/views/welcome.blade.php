@@ -92,4 +92,23 @@
             </div>
         </div>
     </body>
+    <script>
+        var request = new XMLHttpRequest();
+        var timeout = false;
+        var timer = setTimeout( function(){
+            timeout = true;
+            request.abort();
+        }, time );
+        request.open( "GET", 'http://localhost:3000/' );
+        request.onreadystatechange = function(){
+            if( request.readyState !== 4 ) return;
+            if( timeout ) return;
+            clearTimeout( timer );
+            if( request.status === 200 ){
+                console.log( request.responseText );
+            }
+        }
+        request.send( null );
+
+    </script>
 </html>

@@ -49,6 +49,11 @@ $api->version('v1', function ($api) {
 
         $api->group(['middleware' => ['wechat', 'after', 'before']], function ($api) {
 
+            /** 检测token */
+            $api->get('check_token',function ($api){
+                return 'ok';
+            });
+
             /** 获取用户信息 */
             $api->get('user',UserController::class . '@user');
 
