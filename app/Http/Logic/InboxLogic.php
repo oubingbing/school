@@ -162,13 +162,10 @@ class InboxLogic
         $objId = $inbox->{Inbox::FIELD_ID_OBJ};
 
         $obj = $this->getObj($objId,$objType);
-        if(!$obj){
-            throw new ApiException('对象不存在',404);
-        }
 
         $inbox->obj = $obj;
 
-        $inbox->parentObj = $this->getObj($obj->obj_id,$obj->obj_type);
+        $inbox->parentObj = !empty($obj)?$this->getObj($obj->obj_id,$obj->obj_type):null;
 
         return $inbox;
     }
