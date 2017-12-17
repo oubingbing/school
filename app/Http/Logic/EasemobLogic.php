@@ -2,52 +2,121 @@
 /**
  * Created by PhpStorm.
  * User: xuxiaodao
- * Date: 2017/11/28
- * Time: 下午4:40
+ * Date: 2017/12/15
+ * Time: 下午3:26
  */
 
 namespace App\Http\Logic;
 
 
-use GuzzleHttp\Client;
-
 class EasemobLogic
 {
-    protected $orgName;
-    protected $appName;
-    protected $clientId;
-    protected $clientSecret;
-    protected $domain;
+    protected $token;
+    protected $auth;
+    protected $baseUrl;
     protected $http;
-
-    public function __construct()
+    protected $header;
+    
+    public function __construct(EasemobAuthLogic $easemobAuthLogic,Http $http)
     {
-        $http = new Client;
+        $this->auth = $easemobAuthLogic;
+        $this->token = $this->auth->getToken();
+        $this->baseUrl = $this->auth->getUrl();
         $this->http = $http;
-        
-        $this->orgName = env('EASEMOB_ORG_NAME');
-        $this->appName = env('EASEMOB_APP_NAME');
-        $this->clientId = env('EASEMOB_CLIENT_ID');
-        $this->clientSecret = env('EASEMOB_CLIENT_SECRET');
-        $this->domain = env('EASEMOB_DOMAIN');
+        $this->header = [
+            'Authorization:Bearer '.$this->token,
+            'Content-Type:application/json'
+        ];
     }
 
-    public function getToken()
+    /**
+     * 注册单个用户
+     *
+     * @author yezi
+     *
+     * @param $username
+     * @param $password
+     * @return array
+     */
+    public function singleRegister($username,$password)
     {
-        $url = $this->domain.'/'.$this->orgName.'/'.$this->appName.'/token';
-        
-        $data = [
-            'grant_type'=>'client_credentials',
-            'client_id'=>$this->clientId,
-            'client_secret'=>$this->clientSecret
+        $url = $this->baseUrl.'/users';
+        $option = [
+            'username'=>$username,
+            'password'=>$password
         ];
-        
-        $response = $this->http->post($url, ['form_params' => $data]);
 
-        $token = json_decode((string) $response->getBody(), true);
-        
-        return $token;
-        
+        $result = $this->http->post($url,$option,$this->header);
+
+        return $result;
+    }
+
+    /**
+     * 注册多个用户
+     *
+     * @author yezi
+     *
+     * @param $users
+     * @return array
+     */
+    public function batchSingleRegister($users)
+    {
+        $url = $this->baseUrl.'/users';
+        $option = $users;
+
+        $result = $this->http->post($url,$option,$this->header);
+
+        return $result;
+    }
+
+    /**
+     * 获取单个用户
+     * 
+     * @author yezi
+     * 
+     * @param $username
+     * @return array
+     */
+    public function user($username)
+    {
+        $url = $this->baseUrl.'/users'.$username;
+        $option = [];
+        $result = $this->http->get($url,$option,$this->header);
+
+        return $result;
+    }
+
+    /**
+     * 获取多个用户信息
+     * 
+     * @return array
+     */
+    public function users()
+    {
+        $url = $this->baseUrl.'/users';
+        $option = [];
+        $result = $this->http->get($url,$option,$this->header);
+
+        return $result;
+    }
+
+    public function send($from,$to = array(),$type,$content)
+    {
+        $url = $this->baseUrl.'/messages';
+
+        $option = [
+            'target_type'=>'users',
+            'target'=>$to,
+            'msg'=>[
+                'type'=>$type,
+                'action'=>$content
+            ],
+            'from'=>$from
+        ];
+
+        $result = $this->http->post($url,$option,$this->header);
+
+        return $result;
     }
 
 }

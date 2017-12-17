@@ -16,11 +16,11 @@ class Inbox extends BaseModel
     /** field id */
     const FIELD_ID = 'id';
 
-    /** field owner_id 收信人Id */
-    const FIELD_ID_OWNER = 'owner_id';
+    /** field from_id 发信人Id */
+    const FIELD_ID_FROM = 'from_id';
 
-    /** field college_id 学校Id */
-    const FIELD_ID_COLLEGE = 'college_id';
+    /** field to_id 接收人Id */
+    const FIELD_ID_TO = 'to_id';
 
     /** field content 内容 */
     const FIELD_CONTENT = 'content';
@@ -49,10 +49,26 @@ class Inbox extends BaseModel
     /** field deleted_at */
     const FIELD_DELETED_AT = 'deleted_at';
 
+    /** 表白墙 */
+    const ENUM_OBJ_TYPE_POST = 1;
+    /** 卖舍友 */
+    const ENUM_OBJ_TYPE_SALE_FRIEND = 2;
+    /** 匹配 */
+    const ENUM_OBJ_TYPE_MATCH_LOVE = 3;
+    /** 评论 */
+    const ENUM_OBJ_TYPE_COMMENT = 4;
+    /** 赞 */
+    const ENUM_OBJ_TYPE_PRAISE = 5;
+
+    /** 评论对象 */
+    const ENUM_ACTION_TYPE_COMMENT = 1;
+    /** 点赞对象 */
+    const ENUM_ACTION_TYPE_PRAISE = 2;
+
     protected $fillable = [
         self::FIELD_ID,
-        self::FIELD_ID_OWNER,
-        self::FIELD_ID_COLLEGE,
+        self::FIELD_ID_FROM,
+        self::FIELD_ID_TO,
         self::FIELD_ID_OBJ,
         self::FIELD_CONTENT,
         self::FIELD_OBJ_TYPE,
@@ -63,5 +79,14 @@ class Inbox extends BaseModel
         self::FIELD_UPDATED_AT
     ];
 
+    public function fromUser()
+    {
+        return $this->belongsTo(User::class,self::FIELD_ID_FROM)->select(User::FIELD_ID,User::FIELD_NICKNAME,User::FIELD_AVATAR);
+    }
+
+    public function toUser()
+    {
+        return $this->belongsTo(User::class,self::FIELD_ID_TO)->select(User::FIELD_ID,User::FIELD_NICKNAME,User::FIELD_AVATAR);
+    }
 
 }

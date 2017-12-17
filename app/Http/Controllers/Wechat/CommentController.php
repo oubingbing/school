@@ -13,11 +13,23 @@ use App\Comment;
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Logic\CommentLogic;
+use App\Http\Logic\InboxLogic;
+use App\Inbox;
 use App\User;
+use Carbon\Carbon;
 use Exception;
 
 class CommentController extends Controller
 {
+    protected $inbox;
+    protected $comment;
+
+    public function __construct(InboxLogic $inboxLogic,CommentLogic $commentLogic)
+    {
+        $this->inbox = $inboxLogic;
+        $this->comment = $commentLogic;
+    }
+
     /**
      * 评论
      *
@@ -37,10 +49,23 @@ class CommentController extends Controller
         $refCommentId = request()->input('ref_comment_id',null);
         $attachments = request()->input('attachments',null);
 
+        $objUserId = $this->comment->getObjUserId($type,$objId);
+        if(!$objUserId){
+            throw new ApiException('对象不存在',404);
+        }
+
+        $fromId = $user->id;
+        $toId = $objUserId;
+        $objType = Inbox::ENUM_OBJ_TYPE_COMMENT;
+        $postAt = Carbon::now();
+        $actionType = Inbox::ENUM_ACTION_TYPE_COMMENT;
+
         try{
             \DB::beginTransaction();
 
             $result = app(CommentLogic::class)->saveComment($commenterId, $objId, $content, $type, $refCommentId, $attachments, $collegeId);
+
+            $this->inbox->send($fromId,$toId,$result->id,$content,$objType,$actionType,$postAt);
 
             app(CommentLogic::class)->incrementComment($type,$objId);
 

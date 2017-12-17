@@ -9,6 +9,7 @@
 namespace Tests\Unit;
 
 
+use App\Http\Logic\EasemobAuthLogic;
 use App\Http\Logic\EasemobLogic;
 use Tests\TestCase;
 
@@ -19,11 +20,53 @@ class EasemobTest extends TestCase
      */
     public function getToken()
     {
-        $eas= new EasemobLogic();
+        $eas= new EasemobAuthLogic();
 
         $token = $eas->getToken();
 
-        dd(json_encode($token));
+        dump($token);
+
+        self::assertNotEmpty($token);
+    }
+
+    /**
+     * @test
+     */
+    public function register()
+    {
+        $username = 'bingbing';
+        $password = 'bingbing';
+        $result = app(EasemobLogic::class)->singleRegister($username,$password);
+
+        self::assertNotEmpty($result);
+
+        dd($result);
+    }
+
+    /**
+     * @test
+     */
+    public function user()
+    {
+        $username = 'yezi';
+
+        $result = app(EasemobLogic::class)->user($username);
+        dd($result);
+    }
+
+    /**
+     * @test
+     */
+    public function send()
+    {
+        $from = 'yezi';
+        $to = ['bingbing'];
+        $type = 1;
+        $content = '测试';
+
+        $result = app(EasemobLogic::class)->send($from,$to,$type,$content);
+
+        dd($result);
     }
 
 }

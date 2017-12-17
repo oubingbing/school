@@ -9,6 +9,13 @@
 namespace App\Http\Logic;
 
 
+use App\Comment;
+use App\Http\Repository\CommentRepository;
+use App\Http\Repository\MatchLoveRepository;
+use App\Http\Repository\PostRepository;
+use App\Http\Repository\PraiseRepository;
+use App\Http\Repository\SaleFriendRepository;
+use App\MatchLove;
 use App\Post;
 use App\Praise;
 use App\SaleFriend;
@@ -16,6 +23,21 @@ use App\User;
 
 class PraiseLogic
 {
+    protected $post;
+    protected $sale;
+    protected $match;
+    protected $praise;
+    protected $comment;
+
+    public function __construct(PostRepository $postRepository,CommentRepository $commentRepository,MatchLoveRepository $matchLoveRepository,PraiseRepository $praiseRepository,SaleFriendRepository $saleFriendRepository)
+    {
+        $this->post = $postRepository;
+        $this->sale = $saleFriendRepository;
+        $this->match = $matchLoveRepository;
+        $this->praiseRepository = $praiseRepository;
+        $this->comment = $commentRepository;
+    }
+
     /**
      * 点赞
      *
@@ -110,6 +132,39 @@ class PraiseLogic
             'nickname'=>$praiseUser->{User::FIELD_NICKNAME},
             'avatar'=>$praiseUser->{User::FIELD_AVATAR}
         ];
+    }
+
+
+    /**
+     * 获取评论的对象
+     *
+     * @param $type
+     * @param $objId
+     * @return string
+     */
+    public function getObjUserId($type,$objId)
+    {
+        $userId = '';
+        switch ($type){
+            case Praise::ENUM_OBJ_TYPE_POST:
+                $obj = $this->post->getPostById($objId);
+                $userId = $obj->{Post::FIELD_ID_POSTER};
+                break;
+            case Praise::ENUM_OBJ_TYPE_SALE_FRIEND:
+                $obj = $this->sale->getSaleFriendById($objId);
+                $userId = $obj->{SaleFriend::FIELD_ID_OWNER};
+                break;
+            case Praise::ENUM_OBJ_TYPE_MATCH_LOVE:
+                $obj = $this->match->getMatchLoveById($objId);
+                $userId = $obj->{MatchLove::FIELD_ID_OWNER};
+                break;
+            case  Praise::ENUM_OBJ_TYPE_COMMENT:
+                $obj = $this->comment->getCommentById($objId);
+                $userId = $obj->{Comment::FIELD_ID_COMMENTER};
+                break;
+        }
+
+        return $userId;
     }
 
 }

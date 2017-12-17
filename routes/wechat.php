@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\TokenController;
 use App\Http\Controllers\QiNiuController;
 use App\Http\Wechat\CommentController;
+use App\Http\Wechat\InboxController;
 use App\Http\Wechat\MatchLoveController;
 use App\Http\Wechat\PostController;
 use App\Http\Wechat\PraiseController;
@@ -112,7 +113,13 @@ $api->version('v1', function ($api) {
             $api->get('/match_love',MatchLoveController::class . '@detail');
 
             /** 删除匹配 */
-            $api->delete('delete/{id}/match_love',MatchLoveController::class . '@delete');
+            $api->delete('/delete/{id}/match_love',MatchLoveController::class . '@delete');
+
+            /** 检测是否有新的消息 */
+            $api->get('/new/{type}/inbox',InboxController::class . '@getNewInbox');
+
+            /** 根据对象类型获取新的消息列表 */
+            $api->get('/user/{type}/inbox/{messageType}',InboxController::class . '@userInbox');
 
         });
 

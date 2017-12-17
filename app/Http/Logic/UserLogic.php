@@ -30,7 +30,6 @@ class UserLogic
         ]);
 
         return $result;
-
     }
 
 }
