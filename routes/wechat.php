@@ -14,6 +14,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\TokenController;
 use App\Http\Controllers\QiNiuController;
+use App\Http\Wechat\ChatController;
 use App\Http\Wechat\CommentController;
 use App\Http\Wechat\InboxController;
 use App\Http\Wechat\MatchLoveController;
@@ -120,6 +121,9 @@ $api->version('v1', function ($api) {
 
             /** 根据对象类型获取新的消息列表 */
             $api->get('/user/{type}/inbox/{messageType}',InboxController::class . '@userInbox');
+
+            /** 发送私信 */
+            $api->post('/send/{id}/message',ChatController::class . '@sendMessage');
 
         });
 

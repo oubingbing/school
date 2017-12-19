@@ -20,17 +20,41 @@ class FriendRepository
         $this->friend = $friend;
     }
 
-    public function saveFriend($userId,$friendId,$nickname,$friendGroupId,$type)
+    /**
+     * 新增好友
+     *
+     * @author yezi
+     *
+     * @param $userId
+     * @param $friendId
+     * @return mixed
+     */
+    public function saveFriend($userId,$friendId)
     {
         $result = $this->friend->create([
             Friend::FIELD_ID_USER=>$userId,
             Friend::FIELD_ID_FRIEND=>$friendId,
-            Friend::FIELD_ID_FRIEND_GROUP=>$friendGroupId,
-            Friend::FIELD_NICKNAME=>$nickname,
-            Friend::FIELD_TYPE=>$type
         ]);
 
         return $result;
+    }
+
+    /**
+     * 根据Id获取朋友
+     *
+     * @author yezi
+     *
+     * @param $id
+     * @return array
+     */
+    public function getFriendById($id)
+    {
+        return $this->friend->query()->find($id);
+    }
+
+    public function checkFriend($userId,$friendId)
+    {
+        return Friend::query()->where(Friend::FIELD_ID_USER,$userId)->where(Friend::FIELD_ID_FRIEND,$friendId)->first();
     }
 
 }

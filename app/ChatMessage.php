@@ -49,6 +49,20 @@ class ChatMessage extends BaseModel
     /** field deleted_at */
     const FIELD_DELETED_AT = 'deleted_at';
 
+    /** 消息类型-文本 */
+    const ENUM_TYPE_TEXT = 1;
+    /** 消息类型-图片 */
+    const ENUM_TYPE_IMAGE = 2;
+
+    /** 接收状态-已发送 */
+    const ENUM_STATUS_SEND = 1;
+    /** 接受状态-已送达 */
+    const ENUM_STATUS_ARRIVE = 2;
+    /** 接受状态-已阅读 */
+    const ENUM_STATUS_RED = 3;
+    /** 接受状态-接受失败 */
+    const ENUM_STATUS_FAIL = 4;
+
     protected $casts = [
         self::FIELD_ATTACHMENTS => 'array',
     ];
@@ -67,5 +81,15 @@ class ChatMessage extends BaseModel
         self::FIELD_UPDATED_AT,
         self::FIELD_DELETED_AT
     ];
+
+    public function fromUser()
+    {
+        return $this->belongsTo(User::class,self::FIELD_ID_FROM_USER)->select(User::FIELD_ID,User::FIELD_NICKNAME,User::FIELD_AVATAR);
+    }
+
+    public function toUser()
+    {
+        return $this->belongsTo(User::class,self::FIELD_ID_TO)->select(User::FIELD_ID,User::FIELD_NICKNAME,User::FIELD_AVATAR);
+    }
 
 }

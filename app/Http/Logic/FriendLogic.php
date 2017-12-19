@@ -20,9 +20,23 @@ class FriendLogic
         $this->friend = $friendRepository;
     }
 
-    public function createFriend($userId,$friendId,$nickname,$friendGroupId,$type)
+    /**
+     * 新增好友
+     *
+     * @author yezi
+     *
+     * @param $userId
+     * @param $friendId
+     * @return mixed
+     */
+    public function createFriend($userId,$friendId)
     {
-        return $this->friend->saveFriend($userId,$friendId,$nickname,$friendGroupId,$type);
+        return $this->friend->saveFriend($userId,$friendId);
+    }
+
+    public function checkFriendUnique($userId,$friendId)
+    {
+        return $this->friend->checkFriend($userId,$friendId);
     }
 
 }

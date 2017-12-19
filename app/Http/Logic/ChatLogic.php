@@ -31,10 +31,27 @@ class ChatLogic
      * @param $attachments
      * @param $type
      * @param $post_at
+     * @return mixed
      */
     public function sendMessage($fromId,$toId,$content,$attachments,$type,$post_at)
     {
-        $this->chatMessage->saveChatMessage($fromId,$toId,$content,$attachments,$type,$post_at);
+        return $this->chatMessage->saveChatMessage($fromId,$toId,$content,$attachments,$type,$post_at);
+    }
+
+    /**
+     * 格式化返回值
+     *
+     * @author yezi
+     *
+     * @param $message
+     * @return mixed
+     */
+    public function format($message)
+    {
+        $message->fromUser;
+        $message->toUser;
+
+        return $message;
     }
 
 }
