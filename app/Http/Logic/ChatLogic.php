@@ -38,6 +38,19 @@ class ChatLogic
         return $this->chatMessage->saveChatMessage($fromId,$toId,$content,$attachments,$type,$post_at);
     }
 
+    public function chatList($userId,$friendId)
+    {
+        $result = $this->chatMessage->chatList($userId,$friendId);
+
+        $result = collect($result)->map(function ($item){
+
+            return $this->format($item);
+
+        });
+
+        return $result;
+    }
+
     /**
      * 格式化返回值
      *

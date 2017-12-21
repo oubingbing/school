@@ -63,9 +63,11 @@ class ChatController extends Controller
         return $result;
     }
 
-    public function chatList()
+    public function chatList($friendId)
     {
+        $user = request()->input('user');
 
+        return $this->chat->chatList($user->id,$friendId);
     }
 
 

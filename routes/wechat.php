@@ -125,6 +125,9 @@ $api->version('v1', function ($api) {
             /** 发送私信 */
             $api->post('/send/{id}/message',ChatController::class . '@sendMessage');
 
+            /** 私信列表 */
+            $api->get('/message/{id}/list',ChatController::class . '@chatList');
+
         });
 
     });
