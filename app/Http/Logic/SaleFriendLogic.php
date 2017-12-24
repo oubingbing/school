@@ -10,6 +10,7 @@ namespace App\Http\Logic;
 
 
 use App\Comment;
+use App\Follow;
 use App\SaleFriend;
 
 class SaleFriendLogic
@@ -50,6 +51,8 @@ class SaleFriendLogic
         $saleFriend->can_delete = $this->canDeleteSaleFriend($saleFriend,$user);
 
         $saleFriend['comments'] = collect(app(CommentLogic::class)->formatBatchComments($saleFriend['comments'],$user))->sortByDesc(Comment::FIELD_CREATED_AT)->values();
+
+        $saleFriend['follow'] = app(FollowLogic::class)->checkFollow($user->id,$saleFriend['id'],Follow::ENUM_OBJ_TYPE_SALE_FRIEND)?true:false;
 
         return $saleFriend;
     }

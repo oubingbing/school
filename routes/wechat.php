@@ -16,6 +16,7 @@ use App\Http\Controllers\Auth\TokenController;
 use App\Http\Controllers\QiNiuController;
 use App\Http\Wechat\ChatController;
 use App\Http\Wechat\CommentController;
+use App\Http\Wechat\FollowController;
 use App\Http\Wechat\InboxController;
 use App\Http\Wechat\MatchLoveController;
 use App\Http\Wechat\PostController;
@@ -127,6 +128,15 @@ $api->version('v1', function ($api) {
 
             /** 私信列表 */
             $api->get('/message/{id}/list',ChatController::class . '@chatList');
+
+            /** 私信好友列表 */
+            $api->get('/friends',ChatController::class . '@friends');
+
+            /** 关注 */
+            $api->post('/follow',FollowController::class . '@contact');
+
+            /** 取消关注 */
+            $api->patch('/cancel/{id}/follow/{type}',FollowController::class . '@cancelFollow');
 
         });
 

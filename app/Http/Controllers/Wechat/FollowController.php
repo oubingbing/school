@@ -1,0 +1,46 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: xuxiaodao
+ * Date: 2017/12/24
+ * Time: 下午8:04
+ */
+
+namespace App\Http\Wechat;
+
+
+use App\Http\Controllers\Controller;
+use App\Http\Logic\FollowLogic;
+
+class FollowController extends Controller
+{
+    protected $follow;
+
+    public function __construct(FollowLogic $followLogic)
+    {
+        $this->follow = $followLogic;
+    }
+
+    public function contact()
+    {
+        $user = request()->input('user');
+        $obj = request()->input('obj_id');
+        $type = request()->input('obj_type');
+
+        $follow = $this->follow->follow($user->id,$obj,$type);
+
+        return $follow;
+    }
+
+    public function cancelFollow($id,$type)
+    {
+        $user = request()->input('user');
+        $objId = $id;
+        $objType = $type;
+
+        $result =  $this->follow->cancelFollow($user->id,$objId,$objType);
+
+        return collect($result)->toArray();
+    }
+
+}

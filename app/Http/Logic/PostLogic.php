@@ -9,7 +9,9 @@
 namespace App\Http\PostLogic;
 
 
+use App\Follow;
 use App\Http\Logic\CommentLogic;
+use App\Http\Logic\FollowLogic;
 use App\Http\Logic\PraiseLogic;
 use App\Post;
 use App\User;
@@ -76,6 +78,8 @@ class PostLogic
                 'college_id'=>$poster->college_id,
                 'created_at'=>$poster->created_at,
             ];
+
+            $post['follow'] = app(FollowLogic::class)->checkFollow($user->id,$post['id'],Follow::ENUM_OBJ_TYPE_POST)?true:false;
 
             $post[Post::FIELD_ATTACHMENTS] = collect($post[Post::FIELD_ATTACHMENTS])->map(function($item){
                 if(is_null($item) || $item == null){

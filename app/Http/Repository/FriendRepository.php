@@ -57,4 +57,9 @@ class FriendRepository
         return Friend::query()->where(Friend::FIELD_ID_USER,$userId)->where(Friend::FIELD_ID_FRIEND,$friendId)->first();
     }
 
+    public function friendList($userId)
+    {
+        return $this->friend->query()->with(['friend'])->where(Friend::FIELD_ID_USER,$userId)->get();
+    }
+
 }

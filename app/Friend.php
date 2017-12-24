@@ -54,4 +54,14 @@ class Friend extends BaseModel
         self::FIELD_STATUS
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class,self::FIELD_ID_USER);
+    }
+
+    public function friend()
+    {
+        return $this->belongsTo(User::class,self::FIELD_ID_FRIEND)->select(User::FIELD_ID,User::FIELD_NICKNAME,User::FIELD_AVATAR);
+    }
+
 }

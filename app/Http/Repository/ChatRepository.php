@@ -47,13 +47,34 @@ class ChatRepository
         return $result;
     }
 
+    /**
+     * 获取聊天信息
+     *
+     * @author yezi
+     *
+     * @param $userId
+     * @param $friendId
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
     public function chatList($userId,$friendId)
     {
-        return $this->chatMessage->query()->where(function ($query)use($userId,$friendId){
+        return $this->chatMessage->query()
+            ->where(function ($query)use($userId,$friendId){
             $query->where(ChatMessage::FIELD_ID_FROM_USER,$userId)->where(ChatMessage::FIELD_ID_TO,$friendId);
         })->orWhere(function ($query)use($userId,$friendId){
             $query->where(ChatMessage::FIELD_ID_FROM_USER,$friendId)->where(ChatMessage::FIELD_ID_TO,$userId);
         })->get();
+    }
+
+    public function countNewChat($userId,$friendId)
+    {
+        $number = $this->chatMessage->query()
+            ->where(ChatMessage::FIELD_ID_FROM_USER,$friendId)
+            ->where(ChatMessage::FIELD_ID_TO,$userId)
+            ->where(ChatMessage::FIELD_READ_AT,null)
+            ->count();
+
+        return $number;
     }
 
 }

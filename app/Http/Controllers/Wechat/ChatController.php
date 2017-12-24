@@ -63,11 +63,35 @@ class ChatController extends Controller
         return $result;
     }
 
+    /**
+     *
+     *
+     * @param $friendId
+     * @return \Illuminate\Database\Eloquent\Collection|static|static[]
+     */
     public function chatList($friendId)
     {
         $user = request()->input('user');
 
-        return $this->chat->chatList($user->id,$friendId);
+        $result = $this->chat->chatList($user->id,$friendId);
+
+        return $result;
+    }
+
+    public function friends()
+    {
+        $user = request()->input('user');
+
+        $friends = $this->friend->friends($user->id);
+
+        $friends = collect($friends)->map(function ($friend){
+
+            $friend = $this->friend->format($friend);
+
+            return $friend;
+        });
+
+        return $friends;
     }
 
 

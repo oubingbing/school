@@ -9,6 +9,7 @@
 namespace App\Http\Logic;
 
 
+use App\Follow;
 use App\MatchLove;
 
 class MatchLoveLogic
@@ -46,11 +47,14 @@ class MatchLoveLogic
      * 格式化单挑
      *
      * @param $matchLove
+     * @param $user
      * @return mixed
      */
-    public function formatSingle($matchLove)
+    public function formatSingle($matchLove,$user)
     {
         //$matchLove->{MatchLove::FIELD_USER_NAME} = substr_replace($matchLove->{MatchLove::FIELD_USER_NAME},'*',1,2);
+
+        $matchLove['follow'] = app(FollowLogic::class)->checkFollow($user->id,$matchLove['id'],Follow::ENUM_OBJ_TYPE_MATCH_LOVE)?true:false;
 
         return $matchLove;
     }
