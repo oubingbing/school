@@ -163,5 +163,10 @@ class SaleFriend extends BaseModel
         return $this->hasMany(Comment::class,Comment::FIELD_ID_OBJ,self::FIELD_ID)->where(Comment::FIELD_OBJ_TYPE,Comment::ENUM_OBJ_TYPE_SALE_FRIEND);
     }
 
+    public function follows()
+    {
+        return $this->hasMany(Follow::class,Follow::FIELD_ID_OBJ)->where(Follow::FIELD_OBJ_TYPE,Follow::ENUM_OBJ_TYPE_SALE_FRIEND);
+    }
+
 
 }

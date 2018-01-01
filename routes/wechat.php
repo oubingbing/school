@@ -117,6 +117,9 @@ $api->version('v1', function ($api) {
             /** 删除匹配 */
             $api->delete('/delete/{id}/match_love',MatchLoveController::class . '@delete');
 
+            /** 获取最新的匹配 */
+            $api->get('most_new_match_loves',MatchLoveController::class . '@newList');
+
             /** 检测是否有新的消息 */
             $api->get('/new/{type}/inbox',InboxController::class . '@getNewInbox');
 

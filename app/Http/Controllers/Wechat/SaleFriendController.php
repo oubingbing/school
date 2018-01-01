@@ -10,6 +10,7 @@ namespace App\Http\Wechat;
 
 
 use App\Exceptions\ApiException;
+use App\Follow;
 use App\Http\Controllers\Controller;
 use App\Http\Logic\PaginateLogic;
 use App\Http\Logic\SaleFriendLogic;
@@ -78,10 +79,24 @@ class SaleFriendController extends Controller
         $user = request()->input('user');
         $pageSize = request()->input('page_size',10);
         $pageNumber = request()->input('page_number',1);
+        $type = request()->input('type');
+        $orderBy = request()->input('order_by','created_at');
+        $sortBy = request()->input('sort_by','desc');
 
         $pageParams = ['page_size'=>$pageSize, 'page_number'=>$pageNumber];
 
-        $query = SaleFriend::query()->with(['poster','comments'])->orderBy(SaleFriend::FIELD_CREATED_AT,'desc');
+        $query = SaleFriend::query()
+            ->with(['poster','comments'])
+            ->when($type,function ($query)use($user,$type){
+                if($type == 2){
+                    $query->whereHas('follows',function ($query)use($user,$type){
+                        $query->where(Follow::FIELD_ID_USER,$user->id)->where(Follow::FIELD_STATUS,Follow::ENUM_STATUS_FOLLOW);
+                    });
+                }
+
+                return $query;
+            })
+            ->orderBy($orderBy,$sortBy);
         if($user->{User::FIELD_ID_COLLEGE}){
             $query->where(SaleFriend::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE});
         }

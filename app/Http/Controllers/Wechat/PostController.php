@@ -10,12 +10,15 @@ namespace App\Http\Wechat;
 
 
 use App\Exceptions\ApiException;
+use App\Follow;
 use App\Http\Controllers\Controller;
 use App\Http\Logic\PaginateLogic;
 use App\Http\PostLogic\PostLogic;
 use App\Post;
 use App\User;
+use ClassesWithParents\D;
 use League\Flysystem\Exception;
+use Psy\Util\Json;
 
 class PostController extends Controller
 {
@@ -55,7 +58,7 @@ class PostController extends Controller
     }
 
     /**
-     * 获取帖子列表
+     * 获取帖子列表,type=1全部,=2关注,=3最新,4=最热
      *
      * @author yezi
      *
@@ -66,10 +69,24 @@ class PostController extends Controller
         $user = request()->input('user');
         $pageSize = request()->input('page_size',10);
         $pageNumber = request()->input('page_number',1);
+        $type = request()->input('type');
+        $orderBy = request()->input('order_by','created_at');
+        $sortBy = request()->input('sort_by','desc');
 
         $pageParams = ['page_size'=>$pageSize, 'page_number'=>$pageNumber];
 
-        $query =  Post::query()->with(['poster','praises','comments'])->orderBy(Post::FIELD_CREATED_AT,'desc');
+        $query =  Post::query()->with(['poster','praises','comments'])
+            ->when($type,function ($query)use($user,$type){
+                if($type == 2){
+                    $query->whereHas('follows',function ($query)use($user,$type){
+                        $query->where(Follow::FIELD_ID_USER,$user->id)->where(Follow::FIELD_STATUS,Follow::ENUM_STATUS_FOLLOW);
+                    });
+                }
+
+                return $query;
+            })
+            ->orderBy($orderBy,$sortBy);
+
         if($user->{User::FIELD_ID_COLLEGE}){
             $query->where(Post::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE});
         }

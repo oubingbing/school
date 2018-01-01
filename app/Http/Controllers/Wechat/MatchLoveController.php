@@ -10,6 +10,7 @@ namespace App\Http\Wechat;
 
 
 use App\Exceptions\ApiException;
+use App\Follow;
 use App\Http\Controllers\Controller;
 use App\Http\Logic\MatchLoveLogic;
 use App\Http\Logic\PaginateLogic;
@@ -70,10 +71,23 @@ class MatchLoveController extends Controller
         $user = request()->input('user');
         $pageSize = request()->input('page_size',10);
         $pageNumber = request()->input('page_number',1);
+        $type = request()->input('type');
+        $orderBy = request()->input('order_by','created_at');
+        $sortBy = request()->input('sort_by','desc');
 
         $pageParams = ['page_size'=>$pageSize, 'page_number'=>$pageNumber];
 
-        $query = MatchLove::query()->with(['user'])->orderBy(MatchLove::FIELD_CREATED_AT,'desc');
+        $query = MatchLove::query()->with(['user'])
+            ->when($type,function ($query)use($user,$type){
+                if($type == 2){
+                    $query->whereHas('follows',function ($query)use($user,$type){
+                        $query->where(Follow::FIELD_ID_USER,$user->id)->where(Follow::FIELD_STATUS,Follow::ENUM_STATUS_FOLLOW);
+                    });
+                }
+
+                return $query;
+            })
+            ->orderBy($orderBy,$sortBy);
         if($user->{User::FIELD_ID_COLLEGE}){
             $query->where(MatchLove::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE});
         }
@@ -83,6 +97,32 @@ class MatchLoveController extends Controller
         });
 
         return $saleFriends;
+    }
+
+    public function newList()
+    {
+        $user = request()->input('user');
+        $time = request()->input('date_time');
+
+        if(empty($time)){
+            throw new ApiException('参数错误',60001);
+        }
+
+        $query = MatchLove::query()->with(['user'])
+            ->where(MatchLove::FIELD_CREATED_AT,'>=',$time)
+            ->orderBy('created_at','desc');
+        if($user->{User::FIELD_ID_COLLEGE}){
+            $query->where(MatchLove::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE});
+        }
+
+        $result = $query->get();
+
+        $formatResult = collect($result)->map(function ($item)use($user){
+            app(MatchLoveLogic::class)->formatSingle($item,$user);
+            return $item;
+        });
+
+        return $formatResult;
     }
 
     /**

@@ -100,4 +100,9 @@ class MatchLove extends BaseModel
         ]);
     }
 
+    public function follows()
+    {
+        return $this->hasMany(Follow::class,Follow::FIELD_ID_OBJ)->where(Follow::FIELD_OBJ_TYPE,Follow::ENUM_OBJ_TYPE_MATCH_LOVE);
+    }
+
 }

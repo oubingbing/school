@@ -78,8 +78,8 @@ class PraiseLogic
             case Praise::ENUM_OBJ_TYPE_SALE_FRIEND:
                 SaleFriend::where(SaleFriend::FIELD_ID,$objId)->increment(SaleFriend::FIELD_PRAISE_NUMBER);
                 break;
-            default:
-                Post::query()->where(Post::FIELD_ID,$objId)->increment(Post::FIELD_PRAISE_NUMBER);
+            case Praise::ENUM_OBJ_TYPE_MATCH_LOVE:
+                MatchLove::where(MatchLove::FIELD_ID,$objId)->increment(MatchLove::FIELD_PRAISE_NUMBER);
                 break;
         }
         

@@ -52,7 +52,26 @@ class MatchLoveLogic
      */
     public function formatSingle($matchLove,$user)
     {
-        //$matchLove->{MatchLove::FIELD_USER_NAME} = substr_replace($matchLove->{MatchLove::FIELD_USER_NAME},'*',1,2);
+        $strLen = mb_strlen($matchLove->{MatchLove::FIELD_USER_NAME},'utf8');
+
+        $lastName = mb_substr( $matchLove->{MatchLove::FIELD_USER_NAME},-1,1,'utf-8');
+
+        if($strLen > 1){
+            $matchLove->{MatchLove::FIELD_USER_NAME} = str_pad($lastName,$strLen*2,"*",STR_PAD_LEFT);
+        }else{
+            $matchLove->{MatchLove::FIELD_USER_NAME} = '*';
+        }
+
+        $strLen = mb_strlen($matchLove->{MatchLove::FIELD_MATCH_NAME},'utf8');
+
+        $lastName = mb_substr( $matchLove->{MatchLove::FIELD_MATCH_NAME},-1,1,'utf-8');
+
+        if($strLen > 1){
+            $matchLove->{MatchLove::FIELD_MATCH_NAME} = str_pad($lastName,$strLen*2,"*",STR_PAD_LEFT);
+        }else{
+            $matchLove->{MatchLove::FIELD_MATCH_NAME} = '*';
+        }
+
 
         $matchLove['follow'] = app(FollowLogic::class)->checkFollow($user->id,$matchLove['id'],Follow::ENUM_OBJ_TYPE_MATCH_LOVE)?true:false;
 
