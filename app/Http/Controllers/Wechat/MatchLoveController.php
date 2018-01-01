@@ -137,11 +137,11 @@ class MatchLoveController extends Controller
     {
         $user = request()->input('user');
 
-        $matchLove = MatchLove::find($id);
+        $matchLove = MatchLove::with(['user'])->find($id);
 
         $matchLoveLogic = new MatchLoveLogic();
 
-        return $matchLoveLogic->formatSingle($matchLove);
+        return $matchLoveLogic->formatSingle($matchLove,$user);
     }
 
     /**

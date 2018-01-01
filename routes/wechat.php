@@ -75,6 +75,9 @@ $api->version('v1', function ($api) {
             /** 贴子列表 */
             $api->get('/post',PostController::class . '@postList');
 
+            /** 贴子详情 */
+            $api->get('/post/{id}',PostController::class . '@detail');
+
             /** 评论 */
             $api->post('/comment',CommentController::class . '@store');
 
@@ -112,7 +115,7 @@ $api->version('v1', function ($api) {
             $api->get('/match_loves',MatchLoveController::class . '@matchLoves');
 
             /** 匹配详情 */
-            $api->get('/match_love',MatchLoveController::class . '@detail');
+            $api->get('/match_love/{id}',MatchLoveController::class . '@detail');
 
             /** 删除匹配 */
             $api->delete('/delete/{id}/match_love',MatchLoveController::class . '@delete');

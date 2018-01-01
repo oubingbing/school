@@ -98,6 +98,17 @@ class PostController extends Controller
         return collect($posts)->toArray();
     }
 
+    public function detail($id)
+    {
+        $user = request()->input('user');
+
+        $post = Post::query()->with(['poster','praises','comments'])->find($id);
+
+        $result = app(PostLogic::class)->formatSinglePost($post,$user);
+
+        return $result;
+    }
+
     /**
      * 获取最新的贴子
      *
