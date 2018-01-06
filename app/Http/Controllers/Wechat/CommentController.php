@@ -14,6 +14,7 @@ use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Logic\CommentLogic;
 use App\Http\Logic\InboxLogic;
+use App\Http\Repository\CommentRepository;
 use App\Inbox;
 use App\User;
 use Carbon\Carbon;
@@ -49,7 +50,13 @@ class CommentController extends Controller
         $refCommentId = request()->input('ref_comment_id',null);
         $attachments = request()->input('attachments',null);
 
-        $objUserId = $this->comment->getObjUserId($type,$objId);
+        if($type == Comment::ENUM_OBJ_TYPE_COMMENT){
+            $obj = app(CommentRepository::class)->getCommentById($objId);
+            $objUserId = $obj->{Comment::FIELD_ID_COMMENTER};
+        }else{
+            $objUserId = $this->comment->getObjUserId($type,$objId);
+        }
+
         if(!$objUserId){
             throw new ApiException('对象不存在',404);
         }
