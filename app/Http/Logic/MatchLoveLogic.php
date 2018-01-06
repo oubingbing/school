@@ -14,6 +14,13 @@ use App\MatchLove;
 
 class MatchLoveLogic
 {
+    protected $followLogic;
+
+    public function __construct(FollowLogic $followLogic)
+    {
+        $this->followLogic = $followLogic;
+    }
+
     /**
      * 新建
      *
@@ -44,7 +51,9 @@ class MatchLoveLogic
     }
 
     /**
-     * 格式化单挑
+     * 格式化单条
+     *
+     * @author yezi
      *
      * @param $matchLove
      * @param $user
@@ -72,10 +81,75 @@ class MatchLoveLogic
             $matchLove->{MatchLove::FIELD_MATCH_NAME} = '*';
         }
 
+        $matchLove['follow'] = $this->followLogic->checkFollow($user->id,$matchLove['id'],Follow::ENUM_OBJ_TYPE_MATCH_LOVE)?true:false;
 
-        $matchLove['follow'] = app(FollowLogic::class)->checkFollow($user->id,$matchLove['id'],Follow::ENUM_OBJ_TYPE_MATCH_LOVE)?true:false;
+        if($matchLove[MatchLove::FIELD_ID_OWNER] == $user->id){
+            $matchLove['can_see'] = true;
+        }else{
+            $matchLove['can_see'] = false;
+        }
 
         return $matchLove;
+    }
+
+    public function checkMatch($userName,$matchName)
+    {
+        $result = MatchLove::query()->where(MatchLove::FIELD_USER_NAME,$userName)->where(MatchLove::FIELD_MATCH_NAME,$matchName)->first();
+
+        return $result;
+    }
+
+    /**
+     * 匹配成功
+     *
+     * @author yeiz
+     *
+     * @param $userName
+     * @param $matchName
+     * @return int
+     */
+    public function matchSuccess($userName,$matchName)
+    {
+        $result = MatchLove::query()->where(function ($query)use($userName,$matchName){
+            $query->where(MatchLove::FIELD_USER_NAME,$userName)->where(MatchLove::FIELD_MATCH_NAME,$matchName);
+        })->orWhere(function ($query)use($userName,$matchName){
+            $query->where(MatchLove::FIELD_USER_NAME,$matchName)->where(MatchLove::FIELD_MATCH_NAME,$userName);
+        })->update([MatchLove::FIELD_STATUS=>MatchLove::ENUM_STATUS_SUCCESS]);
+
+        return $result;
+    }
+
+    /**
+     * 获取匹配结果
+     *
+     * @author yezi
+     *
+     * @param $userName
+     * @param $matchName
+     * @param $userId
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function matchResult($userName,$matchName,$userId)
+    {
+        $result = MatchLove::query()->with('user')->where(function ($query)use($userName,$matchName){
+            $query->where(MatchLove::FIELD_USER_NAME,$userName)->where(MatchLove::FIELD_MATCH_NAME,$matchName);
+        })->orWhere(function ($query)use($userName,$matchName){
+            $query->where(MatchLove::FIELD_USER_NAME,$matchName)->where(MatchLove::FIELD_MATCH_NAME,$userName);
+        })->get();
+
+        $first = collect($result)->first();
+        $last = collect($result)->last();
+
+        $newResult = [];
+        if ($first->{MatchLove::FIELD_ID_OWNER} == $userId){
+            $newResult[0] = $first;
+            $newResult[1] = $last;
+        }else{
+            $newResult[0] = $last;
+            $newResult[1] = $first;
+        }
+
+        return $newResult;
     }
 
 }

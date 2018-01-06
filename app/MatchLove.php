@@ -74,6 +74,11 @@ class MatchLove extends BaseModel
     /** 不需要密码 */
     const ENUM_NOT_PASSWORD = 2;
 
+    /** 匹配中 */
+    const ENUM_STATUS_MATCHING = 1;
+    /** 匹配成功 */
+    const ENUM_STATUS_SUCCESS = 2;
+
     protected $fillable = [
         self::FIELD_ID,
         self::FIELD_ID_OWNER,

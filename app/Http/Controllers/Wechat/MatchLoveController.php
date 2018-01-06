@@ -19,6 +19,15 @@ use App\User;
 
 class MatchLoveController extends Controller
 {
+    protected $match;
+    protected $paginate;
+
+    public function __construct(MatchLoveLogic $matchLoveLogic,PaginateLogic $paginateLogic)
+    {
+        $this->match = $matchLoveLogic;
+        $this->paginate = $paginateLogic;
+    }
+
     /**
      * 新增匹配不能为空
      *
@@ -53,14 +62,18 @@ class MatchLoveController extends Controller
             throw new ApiException($messages->first(), 60001);
         }
 
-        $matchLove = new MatchLoveLogic();
-        $result = $matchLove->createMatchLove($user->id,$username,$matchName,$content,$private,$user->{User::FIELD_ID_COLLEGE});
+        $this->match->createMatchLove($user->id,$username,$matchName,$content,$private,$user->{User::FIELD_ID_COLLEGE});
 
-        return $result;
+        $checkResult = $this->match->checkMatch($matchName,$username);
+        if($checkResult){
+            $this->match->matchSuccess($username,$matchName);
+        }
+
+        return $checkResult;
     }
 
     /**
-     * 获取
+     * 获取匹配列表
      *
      * @author yezi
      *
@@ -92,13 +105,21 @@ class MatchLoveController extends Controller
             $query->where(MatchLove::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE});
         }
 
-        $saleFriends = app(PaginateLogic::class)->paginate($query,$pageParams, '*',function($saleFriend)use($user){
-            return app(MatchLoveLogic::class)->formatSingle($saleFriend,$user);
+        $saleFriends = $this->paginate->paginate($query,$pageParams, '*',function($saleFriend)use($user){
+            return $this->match->formatSingle($saleFriend,$user);
         });
 
         return $saleFriends;
     }
 
+    /**
+     * 获取新的列表
+     *
+     * @author yezi
+     *
+     * @return static
+     * @throws ApiException
+     */
     public function newList()
     {
         $user = request()->input('user');
@@ -118,7 +139,7 @@ class MatchLoveController extends Controller
         $result = $query->get();
 
         $formatResult = collect($result)->map(function ($item)use($user){
-            app(MatchLoveLogic::class)->formatSingle($item,$user);
+            $this->match->formatSingle($item,$user);
             return $item;
         });
 
@@ -139,9 +160,7 @@ class MatchLoveController extends Controller
 
         $matchLove = MatchLove::with(['user'])->find($id);
 
-        $matchLoveLogic = new MatchLoveLogic();
-
-        return $matchLoveLogic->formatSingle($matchLove,$user);
+        return $this->match->formatSingle($matchLove,$user);
     }
 
     /**
@@ -157,6 +176,17 @@ class MatchLoveController extends Controller
         $user = request()->input('user');
 
         $result = MatchLove::where(MatchLove::FIELD_ID,$id)->where(MatchLove::FIELD_ID_OWNER,$user->id)->delete();
+
+        return $result;
+    }
+
+    public function matchSuccess($id)
+    {
+        $user = request()->input('user');
+
+        $date = MatchLove::query()->find($id);
+
+        $result = $this->match->matchResult($date->{MatchLove::FIELD_USER_NAME},$date->{MatchLove::FIELD_MATCH_NAME},$user->id);
 
         return $result;
     }

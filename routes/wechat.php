@@ -123,6 +123,9 @@ $api->version('v1', function ($api) {
             /** 获取最新的匹配 */
             $api->get('most_new_match_loves',MatchLoveController::class . '@newList');
 
+            /** 获取匹配成功的信息 */
+            $api->get('match/{id}/result',MatchLoveController::class . '@matchSuccess');
+
             /** 检测是否有新的消息 */
             $api->get('/new/{type}/inbox',InboxController::class . '@getNewInbox');
 
