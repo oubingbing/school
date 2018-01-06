@@ -51,7 +51,7 @@ class CommentController extends Controller
         $attachments = request()->input('attachments',null);
 
         if($type == Comment::ENUM_OBJ_TYPE_COMMENT){
-            $obj = app(CommentRepository::class)->getCommentById($objId);
+            $obj = app(CommentRepository::class)->getCommentById($refCommentId);
             $objUserId = $obj->{Comment::FIELD_ID_COMMENTER};
         }else{
             $objUserId = $this->comment->getObjUserId($type,$objId);
