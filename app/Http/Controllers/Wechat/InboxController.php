@@ -75,16 +75,19 @@ class InboxController extends Controller
     public function userInbox($type, $messageType)
     {
         $user = request()->input('user');
+        $pageSize = request()->input('page_size',10);
+        $pageNumber = request()->input('page_number',1);
 
+        $pageParams = ['page_size'=>$pageSize, 'page_number'=>$pageNumber];
 
         try {
             \DB::beginTransaction();
 
-            $inboxList = $this->inboxLogic->getInboxList($user->id, $type, $messageType);
+            $inboxList = $this->inboxLogic->getInboxList($user->id, $type, $messageType,$pageParams);
 
             $this->inboxLogic->readInbox($user->id);
 
-            $inboxList = $this->inboxLogic->formatInboxList($inboxList);
+            $inboxList['page_data'] = $this->inboxLogic->formatInboxList($inboxList['page_data']);
 
             \DB::commit();
         } catch (Exception $e) {

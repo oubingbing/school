@@ -16,17 +16,17 @@ use App\Http\Logic\PaginateLogic;
 use App\Http\PostLogic\PostLogic;
 use App\Post;
 use App\User;
-use ClassesWithParents\D;
 use League\Flysystem\Exception;
-use Psy\Util\Json;
 
 class PostController extends Controller
 {
     protected $postLogic;
+    protected $paginateLogic;
 
-    public function __construct(PostLogic $postLogic)
+    public function __construct(PostLogic $postLogic,PaginateLogic $paginateLogic)
     {
         $this->postLogic  = $postLogic;
+        $this->paginateLogic = $paginateLogic;
     }
 
     /**
@@ -98,7 +98,7 @@ class PostController extends Controller
             $query->where(Post::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE});
         }
 
-        $posts = app(PaginateLogic::class)->paginate($query,$pageParams, '*',function($post)use($user){
+        $posts = $this->paginateLogic->paginate($query,$pageParams, '*',function($post)use($user){
             return $this->postLogic->formatSinglePost($post,$user);
         });
 

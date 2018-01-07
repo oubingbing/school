@@ -9,35 +9,23 @@
 namespace App\Http\Logic;
 
 
+use App\Comment;
 use App\Exceptions\ApiException;
-use App\Http\Repository\CommentRepository;
-use App\Http\Repository\InboxRepository;
-use App\Http\Repository\MatchLoveRepository;
-use App\Http\Repository\PostRepository;
-use App\Http\Repository\PraiseRepository;
-use App\Http\Repository\SaleFriendRepository;
-use App\Http\Repository\UserRepository;
 use App\Inbox;
+use App\MatchLove;
+use App\Post;
+use App\Praise;
+use App\SaleFriend;
+use App\User;
+use Carbon\Carbon;
 
 class InboxLogic
 {
-    protected $inboxRepository;
-    protected $userRepository;
-    protected $postRepository;
-    protected $saleFriendRepository;
-    protected $matchLoveRepository;
-    protected $commentRepository;
-    protected $praiseRepository;
+    protected $paginateLogic;
 
-    public function __construct(InboxRepository $inboxRepository,UserRepository $userRepository,PostRepository $postRepository,SaleFriendRepository $friendRepository,MatchLoveRepository $matchLoveRepository,CommentRepository $commentRepository,PraiseRepository $praiseRepository,SaleFriendRepository $saleFriendRepository)
+    public function __construct(PaginateLogic $paginateLogic)
     {
-        $this->inboxRepository = $inboxRepository;
-        $this->userRepository = $userRepository;
-        $this->postRepository = $postRepository;
-        $this->saleFriendRepository = $saleFriendRepository;
-        $this->matchLoveRepository = $matchLoveRepository;
-        $this->commentRepository = $commentRepository;
-        $this->praiseRepository = $praiseRepository;
+        $this->paginateLogic = $paginateLogic;
     }
 
     /**
@@ -55,22 +43,30 @@ class InboxLogic
      * @return mixed
      * @throws ApiException
      */
-    public function send($fromId,$toId,$objId,$content,$objType,$actionType,$postAt)
+    public function send($fromId, $toId, $objId, $content, $objType, $actionType, $postAt)
     {
-        $fromUser = $this->userRepository->getUserById($fromId);
-        $toUser = $this->userRepository->getUserById($toId);
+        $fromUser = User::query()->find($fromId);
+        $toUser = User::query()->find($toId);
 
         if (!$fromUser)
-            throw new ApiException('用户不存在',404);
+            throw new ApiException('用户不存在', 404);
 
-        if(!$toUser)
-            throw new ApiException('用户不在',404);
+        if (!$toUser)
+            throw new ApiException('用户不在', 404);
 
-        $checkResult = $this->checkObj($objId,$objType);
+        $checkResult = $this->checkObj($objId, $objType);
         if (!$checkResult)
-            throw new ApiException('对象不存在',404);
+            throw new ApiException('对象不存在', 404);
 
-        $result = $this->inboxRepository->store($fromId, $toId, $objId, $content, $objType, $actionType, $postAt);
+        $result = Inbox::create([
+            Inbox::FIELD_ID_FROM => $fromId,
+            Inbox::FIELD_ID_TO => $toId,
+            Inbox::FIELD_ID_OBJ => $objId,
+            Inbox::FIELD_CONTENT => $content,
+            Inbox::FIELD_OBJ_TYPE => $objType,
+            Inbox::FIELD_ACTION_TYPE => $actionType,
+            Inbox::FIELD_POST_AT => $postAt
+        ]);
 
         //todo 发送环信消息
 
@@ -86,29 +82,29 @@ class InboxLogic
      * @param $objType
      * @return bool
      */
-    public function checkObj($objId,$objType)
+    public function checkObj($objId, $objType)
     {
         $obj = '';
 
-        switch ($objType){
+        switch ($objType) {
             case 1:
-                $obj = $this->postRepository->getPostById($objId);
+                $obj = Post::query()->find($objId);
                 break;
             case 2:
-                $obj = $this->saleFriendRepository->getSaleFriendById($objId);
+                $obj = SaleFriend::query()->find($objId);
                 break;
             case 3:
-                $obj = $this->matchLoveRepository->getMatchLoveById($obj);
+                $obj = MatchLove::query()->find($objId);
                 break;
             case 4:
-                $obj = $this->commentRepository->getCommentById($objId);
+                $obj = Comment::query()->find($objId);
                 break;
             case 5:
-                $obj = $this->praiseRepository->getPraiseById($objId);
+                $obj = Praise::query()->find($objId);
                 break;
         }
 
-        return empty($obj)?false:true;
+        return empty($obj) ? false : true;
     }
 
     /**
@@ -119,20 +115,46 @@ class InboxLogic
      * @param $userId
      * @param $type
      * @param $messageType
+     * @param $pageParams
      * @return mixed
      */
-    public function getInboxList($userId,$type,$messageType)
+    public function getInboxList($userId, $type, $messageType, $pageParams)
     {
-        if($messageType == 0){
+        if ($messageType == 0) {
             $messageType = '';
         }
 
-        return $this->inboxRepository->userInbox($userId,$type,$messageType);
+        $builder = Inbox::query()->with(['fromUser', 'toUser'])->where(Inbox::FIELD_ID_TO, $userId);
+        if ($type == 0) {
+            $builder->when($messageType, function ($query) {
+                return $query->where(Inbox::FIELD_READ_AT, null);
+            });
+        } else {
+            $builder->where(Inbox::FIELD_OBJ_TYPE, $type)
+                ->when($messageType, function ($query) {
+                    return $query->where(Inbox::FIELD_READ_AT, null);
+                });
+        }
+
+        $builder->orderBy(Inbox::FIELD_CREATED_AT,'desc');
+
+        $result = $this->paginateLogic->paginate($builder, $pageParams, '*');
+
+        return $result;
     }
 
-    public function readInbox($userId,$objType=null)
+    public function readInbox($userId, $objType = null)
     {
-        return $this->inboxRepository->readInbox($userId,$objType);
+        $result = Inbox::query()
+            ->where(Inbox::FIELD_ID_TO, $userId)
+            ->when($objType, function ($query) use ($objType) {
+                $query->where(Inbox::FIELD_OBJ_TYPE, $objType);
+
+                return $query;
+            })
+            ->update([Inbox::FIELD_READ_AT => Carbon::now()]);
+
+        return $result;
     }
 
     /**
@@ -144,14 +166,27 @@ class InboxLogic
      * @param $type
      * @return int
      */
-    public function getNewInboxByType($userId,$type)
+    public function getNewInboxByType($userId, $type)
     {
-        return $this->inboxRepository->countNewInboxByType($userId,$type);
+        if ($type == 0) {
+            $result = Inbox::query()
+                ->where(Inbox::FIELD_ID_TO, $userId)
+                ->where(Inbox::FIELD_READ_AT, null)
+                ->count();
+        } else {
+            $result = Inbox::query()
+                ->where(Inbox::FIELD_ID_TO, $userId)
+                ->where(Inbox::FIELD_OBJ_TYPE, $type)
+                ->where(Inbox::FIELD_READ_AT, null)
+                ->count();
+        }
+
+        return $result;
     }
 
     public function formatInboxList($inboxList)
     {
-        return collect($inboxList)->map(function ($inbox){
+        return collect($inboxList)->map(function ($inbox) {
             return $this->formatInbox($inbox);
         });
     }
@@ -161,34 +196,34 @@ class InboxLogic
         $objType = $inbox->{Inbox::FIELD_OBJ_TYPE};
         $objId = $inbox->{Inbox::FIELD_ID_OBJ};
 
-        $obj = $this->getObj($objId,$objType);
+        $obj = $this->getObj($objId, $objType);
 
         $inbox->obj = $obj;
 
-        $inbox->parentObj = !empty($obj)?$this->getObj($obj->obj_id,$obj->obj_type):null;
+        $inbox->parentObj = !empty($obj) ? $this->getObj($obj->obj_id, $obj->obj_type) : null;
 
         return $inbox;
     }
 
 
-    public function getObj($objId,$objType)
+    public function getObj($objId, $objType)
     {
         $obj = '';
-        switch ($objType){
+        switch ($objType) {
             case 1:
-                $obj = $this->postRepository->getPostById($objId);
+                $obj = Post::query()->find($objId);
                 break;
             case 2:
-                $obj = $this->saleFriendRepository->getSaleFriendById($objId);
+                $obj = SaleFriend::query()->find($objId);
                 break;
             case 3:
-                $obj = $this->matchLoveRepository->getMatchLoveById($obj);
+                $obj = MatchLove::query()->find($objId);
                 break;
             case 4:
-                $obj = $this->commentRepository->getCommentById($objId);
+                $obj = Comment::query()->find($objId);
                 break;
             case 5:
-                $obj = $this->praiseRepository->getPraiseById($objId);
+                $obj = Praise::query()->find($objId);
                 break;
         }
 
