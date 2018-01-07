@@ -70,11 +70,11 @@ class CommentController extends Controller
         try{
             \DB::beginTransaction();
 
-            $result = app(CommentLogic::class)->saveComment($commenterId, $objId, $content, $type, $refCommentId, $attachments, $collegeId);
+            $result = $this->comment->saveComment($commenterId, $objId, $content, $type, $refCommentId, $attachments, $collegeId);
 
             $this->inbox->send($fromId,$toId,$result->id,$content,$objType,$actionType,$postAt);
 
-            app(CommentLogic::class)->incrementComment($type,$objId);
+            $this->comment->incrementComment($type,$objId);
 
             \DB::commit();
         }catch (Exception $e){
@@ -83,7 +83,7 @@ class CommentController extends Controller
             throw new ApiException($e,60001);
         }
 
-        return app(CommentLogic::class)->formatSingleComments($result,$user);
+        return $this->comment->formatSingleComments($result,$user);
     }
 
     /**

@@ -22,6 +22,13 @@ use Psy\Util\Json;
 
 class PostController extends Controller
 {
+    protected $postLogic;
+
+    public function __construct(PostLogic $postLogic)
+    {
+        $this->postLogic  = $postLogic;
+    }
+
     /**
      * 发表贴子
      *
@@ -45,7 +52,7 @@ class PostController extends Controller
                 throw new ApiException('内容不能为空',6000);
             }
 
-            $result = app(PostLogic::class)->save($user,$content,$imageUrls,$location,$private);
+            $result = $this->postLogic->save($user,$content,$imageUrls,$location,$private);
 
             \DB::commit();
         }catch (Exception $e){
@@ -92,7 +99,7 @@ class PostController extends Controller
         }
 
         $posts = app(PaginateLogic::class)->paginate($query,$pageParams, '*',function($post)use($user){
-            return app(PostLogic::class)->formatSinglePost($post,$user);
+            return $this->postLogic->formatSinglePost($post,$user);
         });
 
         return collect($posts)->toArray();

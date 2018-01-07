@@ -18,6 +18,13 @@ use App\User;
 
 class PostLogic
 {
+    protected $commentLogic;
+
+    public function __construct(CommentLogic $commentLogic)
+    {
+        $this->commentLogic = $commentLogic;
+    }
+
     /**
      * 保存新增的贴子
      *
@@ -91,7 +98,7 @@ class PostLogic
 
             $post['praises'] = app(PraiseLogic::class)->formatBatchPraise($post['praises']);
 
-            $post['comments'] = app(CommentLogic::class)->formatBatchComments($post['comments'],$user);
+            $post['comments'] = $this->commentLogic->formatBatchComments($post['comments'],$user);
 
             if($post[Post::FIELD_ID_POSTER] == $user->{User::FIELD_ID}){
                 $post['can_delete'] = true;
