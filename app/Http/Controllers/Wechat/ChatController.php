@@ -50,8 +50,11 @@ class ChatController extends Controller
             }
 
             $result = $this->chat->sendMessage($userId,$friendId,$content,$attachments,$type,$postAt);
-
             $result = $this->chat->format($result);
+
+           // $result = $this->chat->chatList($user->id,$friendId);
+
+           // $data = array_reverse(collect($result)->toArray());
 
             \DB::commit();
 
@@ -75,7 +78,11 @@ class ChatController extends Controller
 
         $result = $this->chat->chatList($user->id,$friendId);
 
-        return $result;
+        //$result = collect($result)->reverse();
+
+        $data = array_reverse(collect($result)->toArray());
+
+        return $data;
     }
 
     public function friends()

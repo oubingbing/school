@@ -63,7 +63,7 @@ class ChatRepository
             $query->where(ChatMessage::FIELD_ID_FROM_USER,$userId)->where(ChatMessage::FIELD_ID_TO,$friendId);
         })->orWhere(function ($query)use($userId,$friendId){
             $query->where(ChatMessage::FIELD_ID_FROM_USER,$friendId)->where(ChatMessage::FIELD_ID_TO,$userId);
-        })->get();
+        })->take(10)->orderBy(ChatMessage::FIELD_CREATED_AT,'desc')->get();
     }
 
     public function countNewChat($userId,$friendId)
