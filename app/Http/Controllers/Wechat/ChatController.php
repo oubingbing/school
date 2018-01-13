@@ -52,10 +52,6 @@ class ChatController extends Controller
             $result = $this->chat->sendMessage($userId,$friendId,$content,$attachments,$type,$postAt);
             $result = $this->chat->format($result);
 
-           // $result = $this->chat->chatList($user->id,$friendId);
-
-           // $data = array_reverse(collect($result)->toArray());
-
             \DB::commit();
 
         }catch (Exception $exception){
@@ -67,10 +63,12 @@ class ChatController extends Controller
     }
 
     /**
+     * 获取聊天列表
      *
+     * @author yezi
      *
      * @param $friendId
-     * @return \Illuminate\Database\Eloquent\Collection|static|static[]
+     * @return array
      */
     public function chatList($friendId)
     {
@@ -78,7 +76,16 @@ class ChatController extends Controller
 
         $result = $this->chat->chatList($user->id,$friendId);
 
-        //$result = collect($result)->reverse();
+        $data = array_reverse(collect($result)->toArray());
+
+        return $data;
+    }
+
+    public function getNewMessage($friendId)
+    {
+        $user = request()->input('user');
+
+        $result = $this->chat->newMessage($user->id,$friendId);
 
         $data = array_reverse(collect($result)->toArray());
 

@@ -52,7 +52,7 @@ $api->version('v1', function ($api) {
         $api->group(['middleware' => ['wechat', 'after', 'before']], function ($api) {
 
             /** 获取用户信息 */
-            $api->get('user',UserController::class . '@user');
+            $api->get('user/{id}',UserController::class . '@user');
 
             /** 获取个人学校 */
             $api->get('/school', UserController::class . '@school');
@@ -137,6 +137,9 @@ $api->version('v1', function ($api) {
 
             /** 私信列表 */
             $api->get('/message/{id}/list',ChatController::class . '@chatList');
+
+            /** 获取最新私信 */
+            $api->get('/new/{id}/messages',ChatController::class . '@getNewMessage');
 
             /** 私信好友列表 */
             $api->get('/friends',ChatController::class . '@friends');

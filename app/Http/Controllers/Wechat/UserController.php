@@ -17,9 +17,9 @@ class UserController extends Controller
      *
      * @return array|string
      */
-    public function user()
+    public function user($id)
     {
-        $user = request()->input('user');
+        $user = User::find($id);
 
         return $user;
     }
