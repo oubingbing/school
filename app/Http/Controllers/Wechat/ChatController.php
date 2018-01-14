@@ -149,5 +149,14 @@ class ChatController extends Controller
         return $friends;
     }
 
+    public function delete($id)
+    {
+        $user = request()->input('user');
+
+        $result = $this->chat->delete($user->id,$id);
+
+        return $result;
+    }
+
 
 }

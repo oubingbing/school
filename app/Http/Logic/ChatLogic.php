@@ -157,4 +157,9 @@ class ChatLogic
         return $message;
     }
 
+    public function delete($userId,$id)
+    {
+        return ChatMessage::query()->where(ChatMessage::FIELD_ID,$id)->where(ChatMessage::FIELD_ID_FROM_USER,$userId)->delete();
+    }
+
 }
