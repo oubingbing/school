@@ -8,6 +8,7 @@ use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Logic\ChatLogic;
 use App\Http\Logic\FriendLogic;
+use App\Http\Logic\PaginateLogic;
 use Carbon\Carbon;
 use League\Flysystem\Exception;
 
@@ -15,11 +16,13 @@ class ChatController extends Controller
 {
     protected $chat;
     protected $friend;
+    protected $paginateLogic;
 
-    public function __construct(ChatLogic $chatLogic,FriendLogic $friendLogic)
+    public function __construct(ChatLogic $chatLogic,FriendLogic $friendLogic,PaginateLogic $paginateLogic)
     {
         $this->chat = $chatLogic;
         $this->friend = $friendLogic;
+        $this->paginateLogic = $paginateLogic;
     }
 
     /**
@@ -73,14 +76,45 @@ class ChatController extends Controller
     public function chatList($friendId)
     {
         $user = request()->input('user');
+        $pageSize = request()->input('page_size',10);
+        $pageNumber = request()->input('page_number',1);
+        $orderBy = request()->input('order_by','created_at');
+        $sortBy = request()->input('sort_by','desc');
 
-        $result = $this->chat->chatList($user->id,$friendId);
+        $pageParams = ['page_size'=>$pageSize, 'page_number'=>$pageNumber];
+
+        $query = $this->chat->builder($user->id,$friendId)->sort($orderBy,$sortBy)->done();
+
+        $result = $this->paginateLogic->paginate($query,$pageParams, '*',function($item)use($user){
+            return $this->chat->format($item);
+        });
 
         $data = array_reverse(collect($result)->toArray());
+
+        $newMessages = collect($result)->filter(function ($item){
+
+            if(empty($item->{ChatMessage::FIELD_READ_AT})){
+                return true;
+            }else{
+                return false;
+            }
+
+        });
+        $ids = collect(collect($newMessages)->pluck(ChatMessage::FIELD_ID))->toArray();
+
+        $this->chat->readMessage($ids);
 
         return $data;
     }
 
+    /**
+     * 获取新的消息
+     *
+     * @author yezi
+     *
+     * @param $friendId
+     * @return array
+     */
     public function getNewMessage($friendId)
     {
         $user = request()->input('user');
@@ -92,6 +126,13 @@ class ChatController extends Controller
         return $data;
     }
 
+    /**
+     * 好友列表
+     *
+     * @author yezi
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|static|static[]
+     */
     public function friends()
     {
         $user = request()->input('user');

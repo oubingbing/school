@@ -16,6 +16,7 @@ use Carbon\Carbon;
 class ChatLogic
 {
     protected $chatMessage;
+    protected $chatList;
 
     public function __construct(ChatRepository $chatRepository)
     {
@@ -40,30 +41,53 @@ class ChatLogic
         return $this->chatMessage->saveChatMessage($fromId,$toId,$content,$attachments,$type,$post_at);
     }
 
-    public function chatList($userId,$friendId)
+    /**
+     * 构建查询语句
+     *
+     * @author yezi
+     *
+     * @param $userId
+     * @param $friendId
+     * @return $this
+     */
+    public function builder($userId,$friendId)
     {
-        $result = $this->chatMessage->chatList($userId,$friendId);
+        $this->chatList = ChatMessage::query()
+            ->where(function ($query)use($userId,$friendId){
+                $query->where(ChatMessage::FIELD_ID_FROM_USER,$userId)->where(ChatMessage::FIELD_ID_TO,$friendId);
+            })->orWhere(function ($query)use($userId,$friendId){
+                $query->where(ChatMessage::FIELD_ID_FROM_USER,$friendId)->where(ChatMessage::FIELD_ID_TO,$userId);
+            });
 
-        $result = collect($result)->map(function ($item){
+        return $this;
+    }
 
-            return $this->format($item);
+    /**
+     * 排序
+     *
+     * @author yezi
+     *
+     * @param $orderBy
+     * @param $sort
+     * @return $this
+     */
+    public function sort($orderBy,$sort)
+    {
+        $this->chatList->take(10)->orderBy($orderBy,$sort);
 
-        });
+        return $this;
+    }
 
-        $newMessages = collect($result)->filter(function ($item){
-
-            if(empty($item->{ChatMessage::FIELD_READ_AT})){
-                return true;
-            }else{
-                return false;
-            }
-
-        });
-        $ids = collect(collect($newMessages)->pluck(ChatMessage::FIELD_ID))->toArray();
-
-        $this->readMessage($ids);
-
-        return $result;
+    /**
+     * 查询语句构建完成
+     *
+     * @author yezi
+     *
+     * @return mixed
+     */
+    public function done()
+    {
+        return $this->chatList;
     }
 
     /**
