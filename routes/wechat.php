@@ -142,7 +142,7 @@ $api->version('v1', function ($api) {
             $api->get('/new/{id}/messages',ChatController::class . '@getNewMessage');
 
             /** 撤回消息 */
-            $api->get('delete/{id}/chat_message',ChatController::class . '@delete');
+            $api->delete('delete/{id}/chat_message',ChatController::class . '@delete');
 
             /** 私信好友列表 */
             $api->get('/friends',ChatController::class . '@friends');
