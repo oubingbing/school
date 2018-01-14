@@ -89,7 +89,7 @@ class ChatController extends Controller
             return $this->chat->format($item);
         });
 
-        $data = array_reverse(collect($result)->toArray());
+        $result['page_data'] = array_reverse(collect($result['page_data'])->toArray());
 
         $newMessages = collect($result)->filter(function ($item){
 
@@ -104,7 +104,7 @@ class ChatController extends Controller
 
         $this->chat->readMessage($ids);
 
-        return $data;
+        return $result;
     }
 
     /**
