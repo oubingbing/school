@@ -95,7 +95,7 @@ class PostController extends Controller
                 return $query;
             })
             ->when($just,function ($query)use($user){
-                $query->where(Post::FIELD_ID_POSTER,$user);
+                $query->where(Post::FIELD_ID_POSTER,$user->id);
 
                 return $query;
             })
