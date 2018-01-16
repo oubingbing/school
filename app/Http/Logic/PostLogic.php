@@ -46,7 +46,7 @@ class PostLogic
             Post::FIELD_CONTENT => $content,
             Post::FIELD_ATTACHMENTS => $imageUrls,
             Post::FIELD_PRIVATE => $private,
-            Post::FIELD_TOPIC => $topic
+            Post::FIELD_TOPIC => !empty($topic)?$topic:'无'
         ]);
 
         return $result;
