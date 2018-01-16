@@ -46,9 +46,20 @@ class SaleFriendLogic
         return $result;
     }
 
+    /**
+     * 格式化单挑数据
+     *
+     * @author yezi
+     *
+     * @param $saleFriend
+     * @param $user
+     * @return mixed
+     */
     public function formatSingle($saleFriend,$user)
     {
         $saleFriend->can_delete = $this->canDeleteSaleFriend($saleFriend,$user);
+
+        $saleFriend->can_chat = $this->canChat($saleFriend,$user);
 
         $saleFriend['comments'] = collect(app(CommentLogic::class)->formatBatchComments($saleFriend['comments'],$user))->sortByDesc(Comment::FIELD_CREATED_AT)->values();
 
@@ -57,6 +68,15 @@ class SaleFriendLogic
         return $saleFriend;
     }
 
+    /**
+     * 是否可以删除当前数据
+     *
+     * @author yezi
+     *
+     * @param $saleFriend
+     * @param $user
+     * @return bool
+     */
     public function canDeleteSaleFriend($saleFriend,$user)
     {
         $poster = $saleFriend['poster'];
@@ -66,6 +86,25 @@ class SaleFriendLogic
             return false;
         }
 
+    }
+
+    /**
+     * 是否可以与之聊天
+     *
+     * @author yezi
+     *
+     * @param $saleFriend
+     * @param $user
+     * @return bool
+     */
+    public function canChat($saleFriend,$user)
+    {
+        $poster = $saleFriend['poster'];
+        if($poster->id != $user->id){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 

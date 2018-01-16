@@ -77,6 +77,7 @@ class PostController extends Controller
         $user = request()->input('user');
         $pageSize = request()->input('page_size',10);
         $pageNumber = request()->input('page_number',1);
+        $just = request()->input('just');
         $type = request()->input('type');
         $orderBy = request()->input('order_by','created_at');
         $sortBy = request()->input('sort_by','desc');
@@ -90,6 +91,11 @@ class PostController extends Controller
                         $query->where(Follow::FIELD_ID_USER,$user->id)->where(Follow::FIELD_STATUS,Follow::ENUM_STATUS_FOLLOW);
                     });
                 }
+
+                return $query;
+            })
+            ->when($just,function ($query)use($user){
+                $query->where(Post::FIELD_ID_POSTER,$user);
 
                 return $query;
             })

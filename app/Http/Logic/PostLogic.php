@@ -104,8 +104,10 @@ class PostLogic
 
             if($post[Post::FIELD_ID_POSTER] == $user->{User::FIELD_ID}){
                 $post['can_delete'] = true;
+                $post['can_chat'] = false;
             }else{
                 $post['can_delete'] = false;
+                $post['can_chat'] = true;
             }
 
         }

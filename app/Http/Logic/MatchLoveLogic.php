@@ -86,9 +86,11 @@ class MatchLoveLogic
         if($matchLove[MatchLove::FIELD_ID_OWNER] == $user->id){
             $matchLove['can_see'] = true;
             $matchLove['can_delete'] = true;
+            $matchLove['can_chat'] = false;
         }else{
             $matchLove['can_see'] = false;
             $matchLove['can_delete'] = false;
+            $matchLove['can_chat'] = true;
         }
 
         return $matchLove;
