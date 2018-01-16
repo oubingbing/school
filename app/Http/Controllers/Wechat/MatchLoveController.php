@@ -85,6 +85,7 @@ class MatchLoveController extends Controller
         $pageSize = request()->input('page_size',10);
         $pageNumber = request()->input('page_number',1);
         $type = request()->input('type');
+        $just = request()->input('just');
         $orderBy = request()->input('order_by','created_at');
         $sortBy = request()->input('sort_by','desc');
 
@@ -97,6 +98,11 @@ class MatchLoveController extends Controller
                         $query->where(Follow::FIELD_ID_USER,$user->id)->where(Follow::FIELD_STATUS,Follow::ENUM_STATUS_FOLLOW);
                     });
                 }
+
+                return $query;
+            })
+            ->when($just,function ($query)use($user){
+                $query->where(MatchLove::FIELD_ID_OWNER,$user->id);
 
                 return $query;
             })
