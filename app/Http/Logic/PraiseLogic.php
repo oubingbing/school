@@ -167,4 +167,15 @@ class PraiseLogic
         return $userId;
     }
 
+    public function checkRepeat($userId,$objId,$type)
+    {
+        $result = Praise::query()
+            ->where(Praise::FIELD_ID_OWNER,$userId)
+            ->where(Praise::FIELD_ID_OBJ,$objId)
+            ->where(Praise::FIELD_OBJ_TYPE,$type)
+            ->first();
+
+        return $result;
+    }
+
 }

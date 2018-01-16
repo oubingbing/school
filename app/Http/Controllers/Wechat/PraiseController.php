@@ -51,6 +51,11 @@ class PraiseController extends Controller
             throw new ApiException('对象不存在',404);
         }
 
+        $history = $this->praise->checkRepeat($user->id,$objId,$objType);
+        if($history){
+            return;
+        }
+
         $fromId = $user->id;
         $toId = $objUserId;
         $content = '有新的点赞';

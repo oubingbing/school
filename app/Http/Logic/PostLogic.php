@@ -35,16 +35,18 @@ class PostLogic
      * @param null $imageUrls
      * @param null $location
      * @param null $private
+     * @param null $topic
      * @return mixed
      */
-    public function save($user,$content,$imageUrls=null,$location=null,$private=null)
+    public function save($user,$content,$imageUrls=null,$location=null,$private=null,$topic=null)
     {
         $result = Post::create([
             Post::FIELD_ID_POSTER => $user->{User::FIELD_ID},
             Post::FIELD_ID_COLLEGE => $user->{User::FIELD_ID_COLLEGE},
             Post::FIELD_CONTENT => $content,
             Post::FIELD_ATTACHMENTS => $imageUrls,
-            Post::FIELD_PRIVATE => $private
+            Post::FIELD_PRIVATE => $private,
+            Post::FIELD_TOPIC => $topic
         ]);
 
         return $result;
