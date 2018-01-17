@@ -156,7 +156,7 @@ class CommentLogic
             $comment['ref_comment'] = '';
         }
 
-        $comment['newContent'] = $comment[Comment::FIELD_CONTENT];
+        $comment['new_content'] = trim($comment[Comment::FIELD_CONTENT]);
 
         if($comment[Comment::FIELD_ID_COMMENTER] == $user->{User::FIELD_ID}){
             $comment['can_delete'] = true;
