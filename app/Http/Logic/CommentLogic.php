@@ -141,7 +141,8 @@ class CommentLogic
         $comment['commenter'] = [
             'id'=>$commenter->{User::FIELD_ID},
             'nickname'=>$commenter->{User::FIELD_NICKNAME},
-            'avatar'=>$commenter->{User::FIELD_AVATAR}
+            'avatar'=>$commenter->{User::FIELD_AVATAR},
+            'text' => $comment[Comment::FIELD_CONTENT]
         ];
 
         if($comment[Comment::FIELD_ID_REF_COMMENT]){
