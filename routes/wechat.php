@@ -54,6 +54,9 @@ $api->version('v1', function ($api) {
             /** 获取用户信息 */
             $api->get('user/{id}',UserController::class . '@user');
 
+            /** 获取个人信息 */
+            $api->get('/personal_info',UserController::class . '@personal');
+
             /** 获取个人学校 */
             $api->get('/school', UserController::class . '@school');
 

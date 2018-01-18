@@ -25,6 +25,20 @@ class UserController extends Controller
     }
 
     /**
+     * 获取个人信息
+     *
+     * @author yezi
+     *
+     * @return array|string
+     */
+    public function personal()
+    {
+        $user = request()->input('user');
+
+        return $user;
+    }
+
+    /**
      * 获取用户所在的学校
      * 
      * @author yei
