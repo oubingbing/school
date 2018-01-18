@@ -157,7 +157,7 @@ class CommentLogic
             $comment['ref_comment'] = '';
         }
 
-        $comment['new_content'] = json_decode($comment['content']);
+        $comment['new_content'] = $comment['content'];
 
         if($comment[Comment::FIELD_ID_COMMENTER] == $user->{User::FIELD_ID}){
             $comment['can_delete'] = true;
