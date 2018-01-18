@@ -157,7 +157,7 @@ class CommentLogic
             $comment['ref_comment'] = '';
         }
 
-        $comment['new_content'] = trim($comment[Comment::FIELD_CONTENT]);
+        $comment['new_content'] = '测试时的范德萨发';
 
         if($comment[Comment::FIELD_ID_COMMENTER] == $user->{User::FIELD_ID}){
             $comment['can_delete'] = true;
