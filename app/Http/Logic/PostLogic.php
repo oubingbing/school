@@ -38,28 +38,28 @@ class PostLogic
      * @param null $topic
      * @return mixed
      */
-    public function save($user,$content,$imageUrls=null,$location=null,$private=null,$topic=null)
+    public function save($user, $content, $imageUrls = null, $location = null, $private = null, $topic = null)
     {
         $result = Post::create([
-            Post::FIELD_ID_POSTER => $user->{User::FIELD_ID},
-            Post::FIELD_ID_COLLEGE => $user->{User::FIELD_ID_COLLEGE},
-            Post::FIELD_CONTENT => $content,
+            Post::FIELD_ID_POSTER   => $user->{User::FIELD_ID},
+            Post::FIELD_ID_COLLEGE  => $user->{User::FIELD_ID_COLLEGE},
+            Post::FIELD_CONTENT     => $content,
             Post::FIELD_ATTACHMENTS => $imageUrls,
-            Post::FIELD_PRIVATE => $private,
-            Post::FIELD_TOPIC => !empty($topic)?$topic:'无'
+            Post::FIELD_PRIVATE     => $private,
+            Post::FIELD_TOPIC       => !empty($topic) ? $topic : '无'
         ]);
 
         return $result;
     }
 
-    public function getPostList($user,$time=null)
+    public function getPostList($user, $time = null)
     {
-        $posts = Post::with(['poster','praises','comments'])
-            ->where(Post::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE})
-            ->when($time,function ($query)use($time){
-                return $query->where(Post::FIELD_CREATED_AT,'>',$time);
+        $posts = Post::with(['poster', 'praises', 'comments'])
+            ->where(Post::FIELD_ID_COLLEGE, $user->{User::FIELD_ID_COLLEGE})
+            ->when($time, function ($query) use ($time) {
+                return $query->where(Post::FIELD_CREATED_AT, '>', $time);
             })
-            ->orderBy(Post::FIELD_CREATED_AT,'desc')
+            ->orderBy(Post::FIELD_CREATED_AT, 'desc')
             ->get();
 
         return $posts;
@@ -75,23 +75,23 @@ class PostLogic
      * @param $user
      * @return $this
      */
-    public function formatSinglePost($post,$user)
+    public function formatSinglePost($post, $user)
     {
-        if(collect($post)->toArray()){
-            $poster = $post['poster'];
-            $post = collect($post)->forget('poster');
-            $post['poster']  = [
-                'id'=>$poster->id,
-                'nickname'=>$poster->nickname,
-                'avatar'=>$poster->avatar,
-                'college_id'=>$poster->college_id,
-                'created_at'=>$poster->created_at,
+        if (collect($post)->toArray()) {
+            $poster         = $post['poster'];
+            $post           = collect($post)->forget('poster');
+            $post['poster'] = [
+                'id'         => $poster->id,
+                'nickname'   => $poster->nickname,
+                'avatar'     => $poster->avatar,
+                'college_id' => $poster->college_id,
+                'created_at' => $poster->created_at,
             ];
 
-            $post['follow'] = app(FollowLogic::class)->checkFollow($user->id,$post['id'],Follow::ENUM_OBJ_TYPE_POST)?true:false;
+            $post['follow'] = app(FollowLogic::class)->checkFollow($user->id, $post['id'], Follow::ENUM_OBJ_TYPE_POST) ? true : false;
 
-            $post[Post::FIELD_ATTACHMENTS] = collect($post[Post::FIELD_ATTACHMENTS])->map(function($item){
-                if(is_null($item) || $item == null){
+            $post[ Post::FIELD_ATTACHMENTS ] = collect($post[ Post::FIELD_ATTACHMENTS ])->map(function ($item) {
+                if (is_null($item) || $item == null) {
                     $item = '';
                 }
 
@@ -100,17 +100,18 @@ class PostLogic
 
             $post['praises'] = app(PraiseLogic::class)->formatBatchPraise($post['praises']);
 
-            $post['comments'] = $this->commentLogic->formatBatchComments($post['comments'],$user);
+            $post['comments'] = $this->commentLogic->formatBatchComments($post['comments'], $user);
 
-            if($post[Post::FIELD_ID_POSTER] == $user->{User::FIELD_ID}){
+            if ($post[ Post::FIELD_ID_POSTER ] == $user->{User::FIELD_ID}) {
                 $post['can_delete'] = true;
-                $post['can_chat'] = false;
-            }else{
+                $post['can_chat']   = false;
+            } else {
                 $post['can_delete'] = false;
-                $post['can_chat'] = true;
+                $post['can_chat']   = true;
             }
 
         }
+
         return $post;
     }
 

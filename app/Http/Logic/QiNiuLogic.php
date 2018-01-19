@@ -23,8 +23,8 @@ class QiNiuLogic
     {
         $this->accessKey = env('QI_NIU_ACCESS_KEY');
         $this->secretKey = env('QI_NIU_SECRET_KEY');
-        $this->bucket = env('BUCKET_NAME');
-        $this->baseUrl = 'http://if-pri.qiniudn.com/qiniu.png?imageView2/1/h/500';
+        $this->bucket    = env('BUCKET_NAME');
+        $this->baseUrl   = 'http://if-pri.qiniudn.com/qiniu.png?imageView2/1/h/500';
 
         $this->auth = new Auth($this->accessKey, $this->secretKey);
     }

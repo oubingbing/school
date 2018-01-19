@@ -46,7 +46,7 @@ class InboxLogic
     public function send($fromId, $toId, $objId, $content, $objType, $actionType, $postAt)
     {
         $fromUser = User::query()->find($fromId);
-        $toUser = User::query()->find($toId);
+        $toUser   = User::query()->find($toId);
 
         if (!$fromUser)
             throw new ApiException('用户不存在', 404);
@@ -59,13 +59,13 @@ class InboxLogic
             throw new ApiException('对象不存在', 404);
 
         $result = Inbox::create([
-            Inbox::FIELD_ID_FROM => $fromId,
-            Inbox::FIELD_ID_TO => $toId,
-            Inbox::FIELD_ID_OBJ => $objId,
-            Inbox::FIELD_CONTENT => $content,
-            Inbox::FIELD_OBJ_TYPE => $objType,
+            Inbox::FIELD_ID_FROM     => $fromId,
+            Inbox::FIELD_ID_TO       => $toId,
+            Inbox::FIELD_ID_OBJ      => $objId,
+            Inbox::FIELD_CONTENT     => $content,
+            Inbox::FIELD_OBJ_TYPE    => $objType,
             Inbox::FIELD_ACTION_TYPE => $actionType,
-            Inbox::FIELD_POST_AT => $postAt
+            Inbox::FIELD_POST_AT     => $postAt
         ]);
 
         //todo 发送环信消息
@@ -136,7 +136,7 @@ class InboxLogic
                 });
         }
 
-        $builder->orderBy(Inbox::FIELD_CREATED_AT,'desc');
+        $builder->orderBy(Inbox::FIELD_CREATED_AT, 'desc');
 
         $result = $this->paginateLogic->paginate($builder, $pageParams, '*');
 
@@ -194,7 +194,7 @@ class InboxLogic
     public function formatInbox($inbox)
     {
         $objType = $inbox->{Inbox::FIELD_OBJ_TYPE};
-        $objId = $inbox->{Inbox::FIELD_ID_OBJ};
+        $objId   = $inbox->{Inbox::FIELD_ID_OBJ};
 
         $obj = $this->getObj($objId, $objType);
 

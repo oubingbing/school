@@ -37,14 +37,14 @@ class MatchLoveLogic
     public function createMatchLove($userId, $username, $matchName, $content, $private, $collegeId = null)
     {
         $result = MatchLove::create([
-            MatchLove::FIELD_ID_OWNER => $userId,
-            MatchLove::FIELD_USER_NAME => $username,
-            MatchLove::FIELD_MATCH_NAME => $matchName,
-            MatchLove::FIELD_CONTENT => $content,
-            MatchLove::FIELD_PRIVATE => $private,
-            MatchLove::FIELD_ID_COLLEGE => $collegeId,
+            MatchLove::FIELD_ID_OWNER    => $userId,
+            MatchLove::FIELD_USER_NAME   => $username,
+            MatchLove::FIELD_MATCH_NAME  => $matchName,
+            MatchLove::FIELD_CONTENT     => $content,
+            MatchLove::FIELD_PRIVATE     => $private,
+            MatchLove::FIELD_ID_COLLEGE  => $collegeId,
             MatchLove::FIELD_IS_PASSWORD => MatchLove::ENUM_NOT_PASSWORD,
-            MatchLove::FIELD_STATUS => 1
+            MatchLove::FIELD_STATUS      => 1
         ]);
 
         return $result;
@@ -59,46 +59,46 @@ class MatchLoveLogic
      * @param $user
      * @return mixed
      */
-    public function formatSingle($matchLove,$user)
+    public function formatSingle($matchLove, $user)
     {
-        $strLen = mb_strlen($matchLove->{MatchLove::FIELD_USER_NAME},'utf8');
+        $strLen = mb_strlen($matchLove->{MatchLove::FIELD_USER_NAME}, 'utf8');
 
-        $lastName = mb_substr( $matchLove->{MatchLove::FIELD_USER_NAME},-1,1,'utf-8');
+        $lastName = mb_substr($matchLove->{MatchLove::FIELD_USER_NAME}, -1, 1, 'utf-8');
 
-        if($strLen > 1){
-            $matchLove->{MatchLove::FIELD_USER_NAME} = str_pad($lastName,$strLen*2,"*",STR_PAD_LEFT);
-        }else{
+        if ($strLen > 1) {
+            $matchLove->{MatchLove::FIELD_USER_NAME} = str_pad($lastName, $strLen * 2, "*", STR_PAD_LEFT);
+        } else {
             $matchLove->{MatchLove::FIELD_USER_NAME} = '*';
         }
 
-        $strLen = mb_strlen($matchLove->{MatchLove::FIELD_MATCH_NAME},'utf8');
+        $strLen = mb_strlen($matchLove->{MatchLove::FIELD_MATCH_NAME}, 'utf8');
 
-        $lastName = mb_substr( $matchLove->{MatchLove::FIELD_MATCH_NAME},-1,1,'utf-8');
+        $lastName = mb_substr($matchLove->{MatchLove::FIELD_MATCH_NAME}, -1, 1, 'utf-8');
 
-        if($strLen > 1){
-            $matchLove->{MatchLove::FIELD_MATCH_NAME} = str_pad($lastName,$strLen*2,"*",STR_PAD_LEFT);
-        }else{
+        if ($strLen > 1) {
+            $matchLove->{MatchLove::FIELD_MATCH_NAME} = str_pad($lastName, $strLen * 2, "*", STR_PAD_LEFT);
+        } else {
             $matchLove->{MatchLove::FIELD_MATCH_NAME} = '*';
         }
 
-        $matchLove['follow'] = $this->followLogic->checkFollow($user->id,$matchLove['id'],Follow::ENUM_OBJ_TYPE_MATCH_LOVE)?true:false;
+        $matchLove['follow'] = $this->followLogic->checkFollow($user->id, $matchLove['id'], Follow::ENUM_OBJ_TYPE_MATCH_LOVE) ? true : false;
 
-        if($matchLove[MatchLove::FIELD_ID_OWNER] == $user->id){
-            $matchLove['can_see'] = true;
+        if ($matchLove[ MatchLove::FIELD_ID_OWNER ] == $user->id) {
+            $matchLove['can_see']    = true;
             $matchLove['can_delete'] = true;
-            $matchLove['can_chat'] = false;
-        }else{
-            $matchLove['can_see'] = false;
+            $matchLove['can_chat']   = false;
+        } else {
+            $matchLove['can_see']    = false;
             $matchLove['can_delete'] = false;
-            $matchLove['can_chat'] = true;
+            $matchLove['can_chat']   = true;
         }
 
         return $matchLove;
     }
 
-    public function checkMatch($userName,$matchName)
+    public function checkMatch($userName, $matchName)
     {
-        $result = MatchLove::query()->where(MatchLove::FIELD_USER_NAME,$userName)->where(MatchLove::FIELD_MATCH_NAME,$matchName)->first();
+        $result = MatchLove::query()->where(MatchLove::FIELD_USER_NAME, $userName)->where(MatchLove::FIELD_MATCH_NAME, $matchName)->first();
 
         return $result;
     }
@@ -112,13 +112,13 @@ class MatchLoveLogic
      * @param $matchName
      * @return int
      */
-    public function matchSuccess($userName,$matchName)
+    public function matchSuccess($userName, $matchName)
     {
-        $result = MatchLove::query()->where(function ($query)use($userName,$matchName){
-            $query->where(MatchLove::FIELD_USER_NAME,$userName)->where(MatchLove::FIELD_MATCH_NAME,$matchName);
-        })->orWhere(function ($query)use($userName,$matchName){
-            $query->where(MatchLove::FIELD_USER_NAME,$matchName)->where(MatchLove::FIELD_MATCH_NAME,$userName);
-        })->update([MatchLove::FIELD_STATUS=>MatchLove::ENUM_STATUS_SUCCESS]);
+        $result = MatchLove::query()->where(function ($query) use ($userName, $matchName) {
+            $query->where(MatchLove::FIELD_USER_NAME, $userName)->where(MatchLove::FIELD_MATCH_NAME, $matchName);
+        })->orWhere(function ($query) use ($userName, $matchName) {
+            $query->where(MatchLove::FIELD_USER_NAME, $matchName)->where(MatchLove::FIELD_MATCH_NAME, $userName);
+        })->update([MatchLove::FIELD_STATUS => MatchLove::ENUM_STATUS_SUCCESS]);
 
         return $result;
     }
@@ -133,22 +133,22 @@ class MatchLoveLogic
      * @param $userId
      * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
-    public function matchResult($userName,$matchName,$userId)
+    public function matchResult($userName, $matchName, $userId)
     {
-        $result = MatchLove::query()->with('user')->where(function ($query)use($userName,$matchName){
-            $query->where(MatchLove::FIELD_USER_NAME,$userName)->where(MatchLove::FIELD_MATCH_NAME,$matchName);
-        })->orWhere(function ($query)use($userName,$matchName){
-            $query->where(MatchLove::FIELD_USER_NAME,$matchName)->where(MatchLove::FIELD_MATCH_NAME,$userName);
+        $result = MatchLove::query()->with('user')->where(function ($query) use ($userName, $matchName) {
+            $query->where(MatchLove::FIELD_USER_NAME, $userName)->where(MatchLove::FIELD_MATCH_NAME, $matchName);
+        })->orWhere(function ($query) use ($userName, $matchName) {
+            $query->where(MatchLove::FIELD_USER_NAME, $matchName)->where(MatchLove::FIELD_MATCH_NAME, $userName);
         })->get();
 
         $first = collect($result)->first();
-        $last = collect($result)->last();
+        $last  = collect($result)->last();
 
         $newResult = [];
-        if ($first->{MatchLove::FIELD_ID_OWNER} == $userId){
+        if ($first->{MatchLove::FIELD_ID_OWNER} == $userId) {
             $newResult[0] = $first;
             $newResult[1] = $last;
-        }else{
+        } else {
             $newResult[0] = $last;
             $newResult[1] = $first;
         }

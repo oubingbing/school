@@ -23,9 +23,9 @@ class PostController extends Controller
     protected $postLogic;
     protected $paginateLogic;
 
-    public function __construct(PostLogic $postLogic,PaginateLogic $paginateLogic)
+    public function __construct(PostLogic $postLogic, PaginateLogic $paginateLogic)
     {
-        $this->postLogic  = $postLogic;
+        $this->postLogic = $postLogic;
         $this->paginateLogic = $paginateLogic;
     }
 
@@ -46,20 +46,20 @@ class PostController extends Controller
         $private = request()->input('private');
         $topic = request()->input('username');
 
-        try{
+        try {
             \DB::beginTransaction();
 
-            if(empty($content)){
-                throw new ApiException('内容不能为空',6000);
+            if (empty($content)) {
+                throw new ApiException('内容不能为空', 6000);
             }
 
-            $result = $this->postLogic->save($user,$content,$imageUrls,$location,$private,$topic);
+            $result = $this->postLogic->save($user, $content, $imageUrls, $location, $private, $topic);
 
             \DB::commit();
-        }catch (Exception $e){
+        } catch (Exception $e) {
 
             \DB::rollBack();
-            throw new ApiException($e,60001);
+            throw new ApiException($e, 60001);
         }
 
         return collect($result)->toArray();
@@ -75,38 +75,38 @@ class PostController extends Controller
     public function postList()
     {
         $user = request()->input('user');
-        $pageSize = request()->input('page_size',10);
-        $pageNumber = request()->input('page_number',1);
+        $pageSize = request()->input('page_size', 10);
+        $pageNumber = request()->input('page_number', 1);
         $just = request()->input('just');
         $type = request()->input('type');
-        $orderBy = request()->input('order_by','created_at');
-        $sortBy = request()->input('sort_by','desc');
+        $orderBy = request()->input('order_by', 'created_at');
+        $sortBy = request()->input('sort_by', 'desc');
 
-        $pageParams = ['page_size'=>$pageSize, 'page_number'=>$pageNumber];
+        $pageParams = ['page_size' => $pageSize, 'page_number' => $pageNumber];
 
-        $query =  Post::query()->with(['poster','praises','comments'])
-            ->when($type,function ($query)use($user,$type){
-                if($type == 2){
-                    $query->whereHas('follows',function ($query)use($user,$type){
-                        $query->where(Follow::FIELD_ID_USER,$user->id)->where(Follow::FIELD_STATUS,Follow::ENUM_STATUS_FOLLOW);
+        $query = Post::query()->with(['poster', 'praises', 'comments'])
+            ->when($type, function ($query) use ($user, $type) {
+                if ($type == 2) {
+                    $query->whereHas('follows', function ($query) use ($user, $type) {
+                        $query->where(Follow::FIELD_ID_USER, $user->id)->where(Follow::FIELD_STATUS, Follow::ENUM_STATUS_FOLLOW);
                     });
                 }
 
                 return $query;
             })
-            ->when($just,function ($query)use($user){
-                $query->where(Post::FIELD_ID_POSTER,$user->id);
+            ->when($just, function ($query) use ($user) {
+                $query->where(Post::FIELD_ID_POSTER, $user->id);
 
                 return $query;
             })
-            ->orderBy($orderBy,$sortBy);
+            ->orderBy($orderBy, $sortBy);
 
-        if($user->{User::FIELD_ID_COLLEGE}){
-            $query->where(Post::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE});
+        if ($user->{User::FIELD_ID_COLLEGE}) {
+            $query->where(Post::FIELD_ID_COLLEGE, $user->{User::FIELD_ID_COLLEGE});
         }
 
-        $posts = $this->paginateLogic->paginate($query,$pageParams, '*',function($post)use($user){
-            return $this->postLogic->formatSinglePost($post,$user);
+        $posts = $this->paginateLogic->paginate($query, $pageParams, '*', function ($post) use ($user) {
+            return $this->postLogic->formatSinglePost($post, $user);
         });
 
         return collect($posts)->toArray();
@@ -116,9 +116,9 @@ class PostController extends Controller
     {
         $user = request()->input('user');
 
-        $post = Post::query()->with(['poster','praises','comments'])->find($id);
+        $post = Post::query()->with(['poster', 'praises', 'comments'])->find($id);
 
-        $result = app(PostLogic::class)->formatSinglePost($post,$user);
+        $result = app(PostLogic::class)->formatSinglePost($post, $user);
 
         return $result;
     }
@@ -136,14 +136,14 @@ class PostController extends Controller
         $user = request()->input('user');
         $time = request()->input('date_time');
 
-        if(empty($time)){
-            throw new ApiException('参数错误',60001);
+        if (empty($time)) {
+            throw new ApiException('参数错误', 60001);
         }
 
-        $posts = app(PostLogic::class)->getPostList($user,$time);
+        $posts = app(PostLogic::class)->getPostList($user, $time);
 
-        $posts = collect($posts)->map(function ($post)use($user){
-           return app(PostLogic::class)->formatSinglePost($post,$user);
+        $posts = collect($posts)->map(function ($post) use ($user) {
+            return app(PostLogic::class)->formatSinglePost($post, $user);
         });
 
         return $posts;
@@ -162,11 +162,11 @@ class PostController extends Controller
     {
         $user = request()->input('user');
 
-        if(empty($id)){
-            throw new ApiException('404',null,'60001');
+        if (empty($id)) {
+            throw new ApiException('404', null, '60001');
         }
 
-        $result = Post::where(Post::FIELD_ID,$id)->where(Post::FIELD_ID_POSTER,$user->{User::FIELD_ID})->delete();
+        $result = Post::where(Post::FIELD_ID, $id)->where(Post::FIELD_ID_POSTER, $user->{User::FIELD_ID})->delete();
 
         return $result;
     }

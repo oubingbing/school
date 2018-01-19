@@ -40,9 +40,9 @@ class UserController extends Controller
 
     /**
      * 获取用户所在的学校
-     * 
+     *
      * @author yei
-     * 
+     *
      * @return string
      */
     public function school()
@@ -51,7 +51,7 @@ class UserController extends Controller
 
         $college = $user->college;
 
-        return $college?$college->{Colleges::FIELD_NAME}:'请选择学校';
+        return $college ? $college->{Colleges::FIELD_NAME} : '请选择学校';
     }
 
     /**
@@ -63,7 +63,7 @@ class UserController extends Controller
      */
     public function recommendSchool()
     {
-        $colleges = Colleges::orderBy(\DB::raw('RAND()'))->take(15)->get(['id','name']);
+        $colleges = Colleges::orderBy(\DB::raw('RAND()'))->take(15)->get(['id', 'name']);
 
         return collect($colleges)->toArray();
     }
@@ -74,12 +74,12 @@ class UserController extends Controller
 
         $college = Colleges::find($id);
 
-        if($college){
-            $userObj = User::where(User::FIELD_ID_OPENID,$user->{User::FIELD_ID_OPENID})->first();
+        if ($college) {
+            $userObj                           = User::where(User::FIELD_ID_OPENID, $user->{User::FIELD_ID_OPENID})->first();
             $userObj->{User::FIELD_ID_COLLEGE} = $id;
             $userObj->save();
-        }else{
-            throw new ApiException('学校不存在',5005);
+        } else {
+            throw new ApiException('学校不存在', 5005);
         }
 
         return collect($userObj)->toArray();
@@ -89,11 +89,11 @@ class UserController extends Controller
     {
         $user = request()->input('user');
 
-        if(empty($name)){
-            throw new ApiException('内容不能为空','50005');
+        if (empty($name)) {
+            throw new ApiException('内容不能为空', '50005');
         }
 
-        $colleges = Colleges::where(Colleges::FIELD_NAME,'like','%'.$name.'%')->get(['id','name']);
+        $colleges = Colleges::where(Colleges::FIELD_NAME, 'like', '%' . $name . '%')->get(['id', 'name']);
 
         return collect($colleges)->toArray();
     }

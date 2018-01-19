@@ -22,15 +22,15 @@ class EasemobAuthLogic
 
     public function __construct()
     {
-        $http = new Http();
+        $http       = new Http();
         $this->http = $http;
-        
-        $this->orgName = env('EASEMOB_ORG_NAME');
-        $this->appName = env('EASEMOB_APP_NAME');
-        $this->clientId = env('EASEMOB_CLIENT_ID');
+
+        $this->orgName      = env('EASEMOB_ORG_NAME');
+        $this->appName      = env('EASEMOB_APP_NAME');
+        $this->clientId     = env('EASEMOB_CLIENT_ID');
         $this->clientSecret = env('EASEMOB_CLIENT_SECRET');
-        $this->domain = env('EASEMOB_DOMAIN');
-        $this->baseUrl = $this->domain.'/'.$this->orgName.'/'.$this->appName;
+        $this->domain       = env('EASEMOB_DOMAIN');
+        $this->baseUrl      = $this->domain . '/' . $this->orgName . '/' . $this->appName;
     }
 
     /**
@@ -42,9 +42,9 @@ class EasemobAuthLogic
      */
     public function getToken()
     {
-        if(Cache::get('easemoToken')){
+        if (Cache::get('easemoToken')) {
             return Cache::get('easemoToken');
-        }else{
+        } else {
             return $this->updateToken();
         }
     }
@@ -59,23 +59,23 @@ class EasemobAuthLogic
      */
     public function updateToken()
     {
-        $url = $this->baseUrl.'/token';
+        $url = $this->baseUrl . '/token';
 
         $data = [
-            'grant_type'=>'client_credentials',
-            'client_id'=>$this->clientId,
-            'client_secret'=>$this->clientSecret
+            'grant_type'    => 'client_credentials',
+            'client_id'     => $this->clientId,
+            'client_secret' => $this->clientSecret
         ];
 
         $response = $this->http->post($url, $data);
 
-        if($response['status_code'] != 200){
+        if ($response['status_code'] != 200) {
             throw new ApiException('获取token失败');
         }
 
         $result = $response['result'];
 
-        Cache::put('easemoToken',$result['access_token'],2);
+        Cache::put('easemoToken', $result['access_token'], 2);
 
         return $result['access_token'];
     }

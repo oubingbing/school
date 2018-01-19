@@ -29,13 +29,13 @@ class PraiseLogic
     protected $praise;
     protected $comment;
 
-    public function __construct(PostRepository $postRepository,CommentRepository $commentRepository,MatchLoveRepository $matchLoveRepository,PraiseRepository $praiseRepository,SaleFriendRepository $saleFriendRepository)
+    public function __construct(PostRepository $postRepository, CommentRepository $commentRepository, MatchLoveRepository $matchLoveRepository, PraiseRepository $praiseRepository, SaleFriendRepository $saleFriendRepository)
     {
-        $this->post = $postRepository;
-        $this->sale = $saleFriendRepository;
-        $this->match = $matchLoveRepository;
+        $this->post             = $postRepository;
+        $this->sale             = $saleFriendRepository;
+        $this->match            = $matchLoveRepository;
         $this->praiseRepository = $praiseRepository;
-        $this->comment = $commentRepository;
+        $this->comment          = $commentRepository;
     }
 
     /**
@@ -52,9 +52,9 @@ class PraiseLogic
     public function createPraise($ownerId, $objId, $objType, $collegeId = null)
     {
         $praise = Praise::create([
-            Praise::FIELD_ID_OWNER => $ownerId,
-            Praise::FIELD_ID_OBJ => $objId,
-            Praise::FIELD_OBJ_TYPE => $objType,
+            Praise::FIELD_ID_OWNER   => $ownerId,
+            Praise::FIELD_ID_OBJ     => $objId,
+            Praise::FIELD_OBJ_TYPE   => $objType,
             Praise::FIELD_ID_COLLEGE => $collegeId
         ]);
 
@@ -69,20 +69,20 @@ class PraiseLogic
      * @param $type
      * @param $objId
      */
-    public function incrementNumber($type,$objId)
+    public function incrementNumber($type, $objId)
     {
-        switch ($type){
+        switch ($type) {
             case Praise::ENUM_OBJ_TYPE_POST:
-                Post::query()->where(Post::FIELD_ID,$objId)->increment(Post::FIELD_PRAISE_NUMBER);
+                Post::query()->where(Post::FIELD_ID, $objId)->increment(Post::FIELD_PRAISE_NUMBER);
                 break;
             case Praise::ENUM_OBJ_TYPE_SALE_FRIEND:
-                SaleFriend::where(SaleFriend::FIELD_ID,$objId)->increment(SaleFriend::FIELD_PRAISE_NUMBER);
+                SaleFriend::where(SaleFriend::FIELD_ID, $objId)->increment(SaleFriend::FIELD_PRAISE_NUMBER);
                 break;
             case Praise::ENUM_OBJ_TYPE_MATCH_LOVE:
-                MatchLove::where(MatchLove::FIELD_ID,$objId)->increment(MatchLove::FIELD_PRAISE_NUMBER);
+                MatchLove::where(MatchLove::FIELD_ID, $objId)->increment(MatchLove::FIELD_PRAISE_NUMBER);
                 break;
         }
-        
+
     }
 
     /**
@@ -94,10 +94,10 @@ class PraiseLogic
      * @param $objType
      * @return mixed
      */
-    public function praise($objId,$objType)
+    public function praise($objId, $objType)
     {
-        $praise = Praise::where(Praise::FIELD_ID_OBJ,$objId)
-            ->where(Praise::FIELD_OBJ_TYPE,$objType)
+        $praise = Praise::where(Praise::FIELD_ID_OBJ, $objId)
+            ->where(Praise::FIELD_OBJ_TYPE, $objType)
             ->get();
 
         return $praise;
@@ -105,7 +105,7 @@ class PraiseLogic
 
     public function formatBatchPraise($praises)
     {
-        return collect($praises)->map(function ($item){
+        return collect($praises)->map(function ($item) {
 
             return $this->formatSinglePraise($item);
 
@@ -123,14 +123,15 @@ class PraiseLogic
     public function formatSinglePraise($praise)
     {
         $praiseUser = User::find($praise['owner_id']);
+
         return [
-            'id'=>$praise['id'],
-            'owner_id'=>$praise[Praise::FIELD_ID_OWNER],
-            'obj_type'=>$praise[Praise::FIELD_OBJ_TYPE],
-            'college_id'=>$praise[Praise::FIELD_ID_COLLEGE],
-            'user_id'=>$praiseUser->id,
-            'nickname'=>$praiseUser->{User::FIELD_NICKNAME},
-            'avatar'=>$praiseUser->{User::FIELD_AVATAR}
+            'id'         => $praise['id'],
+            'owner_id'   => $praise[ Praise::FIELD_ID_OWNER ],
+            'obj_type'   => $praise[ Praise::FIELD_OBJ_TYPE ],
+            'college_id' => $praise[ Praise::FIELD_ID_COLLEGE ],
+            'user_id'    => $praiseUser->id,
+            'nickname'   => $praiseUser->{User::FIELD_NICKNAME},
+            'avatar'     => $praiseUser->{User::FIELD_AVATAR}
         ];
     }
 
@@ -142,24 +143,24 @@ class PraiseLogic
      * @param $objId
      * @return string
      */
-    public function getObjUserId($type,$objId)
+    public function getObjUserId($type, $objId)
     {
         $userId = '';
-        switch ($type){
+        switch ($type) {
             case Praise::ENUM_OBJ_TYPE_POST:
-                $obj = $this->post->getPostById($objId);
+                $obj    = $this->post->getPostById($objId);
                 $userId = $obj->{Post::FIELD_ID_POSTER};
                 break;
             case Praise::ENUM_OBJ_TYPE_SALE_FRIEND:
-                $obj = $this->sale->getSaleFriendById($objId);
+                $obj    = $this->sale->getSaleFriendById($objId);
                 $userId = $obj->{SaleFriend::FIELD_ID_OWNER};
                 break;
             case Praise::ENUM_OBJ_TYPE_MATCH_LOVE:
-                $obj = $this->match->getMatchLoveById($objId);
+                $obj    = $this->match->getMatchLoveById($objId);
                 $userId = $obj->{MatchLove::FIELD_ID_OWNER};
                 break;
             case  Praise::ENUM_OBJ_TYPE_COMMENT:
-                $obj = $this->comment->getCommentById($objId);
+                $obj    = $this->comment->getCommentById($objId);
                 $userId = $obj->{Comment::FIELD_ID_COMMENTER};
                 break;
         }
@@ -167,12 +168,12 @@ class PraiseLogic
         return $userId;
     }
 
-    public function checkRepeat($userId,$objId,$type)
+    public function checkRepeat($userId, $objId, $type)
     {
         $result = Praise::query()
-            ->where(Praise::FIELD_ID_OWNER,$userId)
-            ->where(Praise::FIELD_ID_OBJ,$objId)
-            ->where(Praise::FIELD_OBJ_TYPE,$type)
+            ->where(Praise::FIELD_ID_OWNER, $userId)
+            ->where(Praise::FIELD_ID_OBJ, $objId)
+            ->where(Praise::FIELD_OBJ_TYPE, $type)
             ->first();
 
         return $result;

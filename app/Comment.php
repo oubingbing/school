@@ -94,7 +94,7 @@ class Comment extends BaseModel
      */
     public function commenter()
     {
-        return $this->belongsTo(User::class,self::FIELD_ID_COMMENTER,User::FIELD_ID);
+        return $this->belongsTo(User::class, self::FIELD_ID_COMMENTER, User::FIELD_ID);
     }
 
     /**
@@ -106,7 +106,7 @@ class Comment extends BaseModel
      */
     public function college()
     {
-        return $this->belongsTo(Colleges::class,self::FIELD_ID_COLLEGE);
+        return $this->belongsTo(Colleges::class, self::FIELD_ID_COLLEGE);
     }
 
     /**
@@ -116,12 +116,12 @@ class Comment extends BaseModel
      */
     public function refComment()
     {
-        return $this->belongsTo(self::class,self::FIELD_ID_REF_COMMENT)->where(self::FIELD_OBJ_TYPE,self::ENUM_OBJ_TYPE_COMMENT);
+        return $this->belongsTo(self::class, self::FIELD_ID_REF_COMMENT)->where(self::FIELD_OBJ_TYPE, self::ENUM_OBJ_TYPE_COMMENT);
     }
 
     public function subComments()
     {
-        return $this->hasMany(self::class,self::FIELD_ID_OBJ,self::FIELD_ID)->where(self::FIELD_OBJ_TYPE,self::ENUM_OBJ_TYPE_COMMENT);
+        return $this->hasMany(self::class, self::FIELD_ID_OBJ, self::FIELD_ID)->where(self::FIELD_OBJ_TYPE, self::ENUM_OBJ_TYPE_COMMENT);
     }
 
 }

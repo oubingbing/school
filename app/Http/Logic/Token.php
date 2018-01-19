@@ -2,9 +2,7 @@
 
 namespace App\Http\Logic;
 
-use App\User;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use Tymon\JWTAuth\Facades\JWTFactory;
 
 class Token
 {
@@ -17,7 +15,7 @@ class Token
 
     public function refreshWeChatToken()
     {
-        
+
     }
 
 

@@ -22,22 +22,22 @@ class PaginateLogic
      * @param null $map
      * @return array
      */
-    public function paginate($query,$pageParams,$columns = null,$map = null)
+    public function paginate($query, $pageParams, $columns = null, $map = null)
     {
         if ($columns === null || !is_array($columns)) {
             $columns = ['*'];
         }
-        
-        $perPage = $pageParams['page_size']?$pageParams['page_size']:10;
-        $currentPage = $pageParams['page_number']?$pageParams['page_number']:1;
+
+        $perPage     = $pageParams['page_size'] ? $pageParams['page_size'] : 10;
+        $currentPage = $pageParams['page_number'] ? $pageParams['page_number'] : 1;
 
         $result = $query->paginate($perPage, $columns, null, $currentPage);
-        $items = $result->getCollection();
+        $items  = $result->getCollection();
         if ($map != null) {
             $items = $items->map($map);
         }
 
-        $result = $this->paginateFormat($result->perPage(),$result->currentPage(),$result->lastPage(),$result->total(),$items);
+        $result = $this->paginateFormat($result->perPage(), $result->currentPage(), $result->lastPage(), $result->total(), $items);
 
         return $result;
     }
@@ -52,16 +52,16 @@ class PaginateLogic
      * @param $items
      * @return array
      */
-    public function paginateFormat($perPage,$currentPage,$lastPage,$total,$items)
+    public function paginateFormat($perPage, $currentPage, $lastPage, $total, $items)
     {
         return [
-            'page'=>[
-                'size'=>$perPage,
-                'number'=>$currentPage,
-                'total-pages'=>$lastPage,
-                'total-items'=>$total
+            'page'      => [
+                'size'        => $perPage,
+                'number'      => $currentPage,
+                'total-pages' => $lastPage,
+                'total-items' => $total
             ],
-            'page_data'=>$items
+            'page_data' => $items
         ];
     }
 

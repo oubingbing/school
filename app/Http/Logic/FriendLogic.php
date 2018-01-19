@@ -18,10 +18,10 @@ class FriendLogic
     protected $friend;
     protected $chat;
 
-    public function __construct(FriendRepository $friendRepository,ChatRepository $chatRepository)
+    public function __construct(FriendRepository $friendRepository, ChatRepository $chatRepository)
     {
         $this->friend = $friendRepository;
-        $this->chat = $chatRepository;
+        $this->chat   = $chatRepository;
     }
 
     /**
@@ -33,9 +33,9 @@ class FriendLogic
      * @param $friendId
      * @return mixed
      */
-    public function createFriend($userId,$friendId)
+    public function createFriend($userId, $friendId)
     {
-        return $this->friend->saveFriend($userId,$friendId);
+        return $this->friend->saveFriend($userId, $friendId);
     }
 
     /**
@@ -47,9 +47,9 @@ class FriendLogic
      * @param $friendId
      * @return \Illuminate\Database\Eloquent\Model|null|static
      */
-    public function checkFriendUnique($userId,$friendId)
+    public function checkFriendUnique($userId, $friendId)
     {
-        return $this->friend->checkFriend($userId,$friendId);
+        return $this->friend->checkFriend($userId, $friendId);
     }
 
     /**
@@ -67,7 +67,7 @@ class FriendLogic
 
     public function format($friend)
     {
-        $friend->newMessageNumber = $this->chat->countNewChat($friend->{Friend::FIELD_ID_USER},$friend->{Friend::FIELD_ID_FRIEND});
+        $friend->newMessageNumber = $this->chat->countNewChat($friend->{Friend::FIELD_ID_USER}, $friend->{Friend::FIELD_ID_FRIEND});
 
         return $friend;
     }

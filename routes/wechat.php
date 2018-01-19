@@ -28,6 +28,7 @@ $api = app('Dingo\Api\Routing\Router');
 
 app('api.exception')->register(function (Exception $exception) {
     $request = Illuminate\Http\Request::capture();
+
     return app('App\Exceptions\Handler')->render($request, $exception);
 });
 
@@ -52,109 +53,109 @@ $api->version('v1', function ($api) {
         $api->group(['middleware' => ['wechat', 'after', 'before']], function ($api) {
 
             /** 获取用户信息 */
-            $api->get('user/{id}',UserController::class . '@user');
+            $api->get('user/{id}', UserController::class . '@user');
 
             /** 获取个人信息 */
-            $api->get('/personal_info',UserController::class . '@personal');
+            $api->get('/personal_info', UserController::class . '@personal');
 
             /** 获取个人学校 */
             $api->get('/school', UserController::class . '@school');
 
             /** 获取随机学校 */
-            $api->get('/recommend_school',UserController::class . '@recommendSchool');
+            $api->get('/recommend_school', UserController::class . '@recommendSchool');
 
             /** 设置学校 */
-            $api->patch('/set/{id}/college',UserController::class . '@setCollege');
+            $api->patch('/set/{id}/college', UserController::class . '@setCollege');
 
             /** 搜索学校 */
-            $api->get('search/{name}/college',UserController::class . '@searchCollege');
+            $api->get('search/{name}/college', UserController::class . '@searchCollege');
 
             /** 获取七牛上传token */
-            $api->get('upload_token',QiNiuController::class . '@getUploadToken');
+            $api->get('upload_token', QiNiuController::class . '@getUploadToken');
 
             /** 发表贴子 */
-            $api->post('post',PostController::class . '@store');
+            $api->post('post', PostController::class . '@store');
 
             /** 贴子列表 */
-            $api->get('/post',PostController::class . '@postList');
+            $api->get('/post', PostController::class . '@postList');
 
             /** 贴子详情 */
-            $api->get('/post/{id}',PostController::class . '@detail');
+            $api->get('/post/{id}', PostController::class . '@detail');
 
             /** 评论 */
-            $api->post('/comment',CommentController::class . '@store');
+            $api->post('/comment', CommentController::class . '@store');
 
             /** 获取最新的贴子 */
-            $api->get('/most_new_post',PostController::class . '@getMostNewPost');
+            $api->get('/most_new_post', PostController::class . '@getMostNewPost');
 
             /** 点赞 */
-            $api->post('/praise',PraiseController::class . '@store');
+            $api->post('/praise', PraiseController::class . '@store');
 
             /** 删除表白墙 */
-            $api->delete('/delete/{id}/post',PostController::class . '@delete');
+            $api->delete('/delete/{id}/post', PostController::class . '@delete');
 
             /** 删除评论 */
-            $api->delete('/delete/{id}/comment',CommentController::class . '@delete');
+            $api->delete('/delete/{id}/comment', CommentController::class . '@delete');
 
             /** 新增卖舍友 */
-            $api->post('/sale_friend',SaleFriendController::class . '@save');
+            $api->post('/sale_friend', SaleFriendController::class . '@save');
 
             /** 获取卖舍友列表 */
             $api->get('/sale_friends', SaleFriendController::class . '@saleFriends');
 
             /** 卖舍友详情 */
-            $api->get('/sale_friend/{id}',SaleFriendController::class . '@detail');
+            $api->get('/sale_friend/{id}', SaleFriendController::class . '@detail');
 
             /** 获取最新卖舍友 */
-            $api->get('/most_new_sale_friend',SaleFriendController::class . '@mostNewSaleFriends');
+            $api->get('/most_new_sale_friend', SaleFriendController::class . '@mostNewSaleFriends');
 
             /** 删除卖舍友 */
-            $api->delete('/delete/{id}/sale_friend',SaleFriendController::class . '@delete');
+            $api->delete('/delete/{id}/sale_friend', SaleFriendController::class . '@delete');
 
             /** 新建匹配 */
-            $api->post('/match_love',MatchLoveController::class . '@save');
+            $api->post('/match_love', MatchLoveController::class . '@save');
 
             /** 匹配列表 */
-            $api->get('/match_loves',MatchLoveController::class . '@matchLoves');
+            $api->get('/match_loves', MatchLoveController::class . '@matchLoves');
 
             /** 匹配详情 */
-            $api->get('/match_love/{id}',MatchLoveController::class . '@detail');
+            $api->get('/match_love/{id}', MatchLoveController::class . '@detail');
 
             /** 删除匹配 */
-            $api->delete('/delete/{id}/match_love',MatchLoveController::class . '@delete');
+            $api->delete('/delete/{id}/match_love', MatchLoveController::class . '@delete');
 
             /** 获取最新的匹配 */
-            $api->get('most_new_match_loves',MatchLoveController::class . '@newList');
+            $api->get('most_new_match_loves', MatchLoveController::class . '@newList');
 
             /** 获取匹配成功的信息 */
-            $api->get('match/{id}/result',MatchLoveController::class . '@matchSuccess');
+            $api->get('match/{id}/result', MatchLoveController::class . '@matchSuccess');
 
             /** 检测是否有新的消息 */
-            $api->get('/new/{type}/inbox',InboxController::class . '@getNewInbox');
+            $api->get('/new/{type}/inbox', InboxController::class . '@getNewInbox');
 
             /** 根据对象类型获取新的消息列表 */
-            $api->get('/user/{type}/inbox/{messageType}',InboxController::class . '@userInbox');
+            $api->get('/user/{type}/inbox/{messageType}', InboxController::class . '@userInbox');
 
             /** 发送私信 */
-            $api->post('/send/{id}/message',ChatController::class . '@sendMessage');
+            $api->post('/send/{id}/message', ChatController::class . '@sendMessage');
 
             /** 私信列表 */
-            $api->get('/message/{id}/list',ChatController::class . '@chatList');
+            $api->get('/message/{id}/list', ChatController::class . '@chatList');
 
             /** 获取最新私信 */
-            $api->get('/new/{id}/messages',ChatController::class . '@getNewMessage');
+            $api->get('/new/{id}/messages', ChatController::class . '@getNewMessage');
 
             /** 撤回消息 */
-            $api->delete('delete/{id}/chat_message',ChatController::class . '@delete');
+            $api->delete('delete/{id}/chat_message', ChatController::class . '@delete');
 
             /** 私信好友列表 */
-            $api->get('/friends',ChatController::class . '@friends');
+            $api->get('/friends', ChatController::class . '@friends');
 
             /** 关注 */
-            $api->post('/follow',FollowController::class . '@contact');
+            $api->post('/follow', FollowController::class . '@contact');
 
             /** 取消关注 */
-            $api->patch('/cancel/{id}/follow/{type}',FollowController::class . '@cancelFollow');
+            $api->patch('/cancel/{id}/follow/{type}', FollowController::class . '@cancelFollow');
 
         });
 
