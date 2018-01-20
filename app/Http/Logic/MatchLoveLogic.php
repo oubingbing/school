@@ -9,8 +9,10 @@
 namespace App\Http\Logic;
 
 
+use App\Colleges;
 use App\Follow;
 use App\MatchLove;
+use App\User;
 
 class MatchLoveLogic
 {
@@ -91,6 +93,16 @@ class MatchLoveLogic
             $matchLove['can_see']    = false;
             $matchLove['can_delete'] = false;
             $matchLove['can_chat']   = true;
+        }
+
+
+        $matchLove['show_college'] = false;
+        $matchLove['college'] = null;
+        if(!$user->{User::FIELD_ID_COLLEGE}){
+            if($matchLove['college_id']){
+                $matchLove['show_college'] = true;
+                $matchLove['college'] = Colleges::where(Colleges::FIELD_ID,$matchLove['college_id'])->value(Colleges::FIELD_NAME);
+            }
         }
 
         return $matchLove;

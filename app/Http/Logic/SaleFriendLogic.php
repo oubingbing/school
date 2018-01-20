@@ -9,9 +9,11 @@
 namespace App\Http\Logic;
 
 
+use App\Colleges;
 use App\Comment;
 use App\Follow;
 use App\SaleFriend;
+use App\User;
 
 class SaleFriendLogic
 {
@@ -71,6 +73,15 @@ class SaleFriendLogic
         $saleFriend['comments'] = collect($this->commentLogic->formatBatchComments($saleFriend['comments'], $user))->sortByDesc(Comment::FIELD_CREATED_AT)->values();
 
         $saleFriend['follow'] = app(FollowLogic::class)->checkFollow($user->id, $saleFriend['id'], Follow::ENUM_OBJ_TYPE_SALE_FRIEND) ? true : false;
+
+        $saleFriend['show_college'] = false;
+        $saleFriend['college'] = null;
+        if(!$user->{User::FIELD_ID_COLLEGE}){
+            if($saleFriend['college_id']){
+                $saleFriend['show_college'] = true;
+                $saleFriend['college'] = Colleges::where(Colleges::FIELD_ID,$saleFriend['college_id'])->value(Colleges::FIELD_NAME);
+            }
+        }
 
         return $saleFriend;
     }
