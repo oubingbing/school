@@ -9,6 +9,7 @@
 namespace App\Http\PostLogic;
 
 
+use App\Colleges;
 use App\Follow;
 use App\Http\Logic\CommentLogic;
 use App\Http\Logic\FollowLogic;
@@ -86,6 +87,7 @@ class PostLogic
                 'avatar'     => $poster->avatar,
                 'college_id' => $poster->college_id,
                 'created_at' => $poster->created_at,
+                'gender'     => $poster->gender
             ];
 
             $post['follow'] = app(FollowLogic::class)->checkFollow($user->id, $post['id'], Follow::ENUM_OBJ_TYPE_POST) ? true : false;
@@ -100,7 +102,7 @@ class PostLogic
 
             $post['praises'] = app(PraiseLogic::class)->formatBatchPraise($post['praises']);
 
-            $post['comments'] = $this->commentLogic->formatBatchComments($post['comments'], $user);
+            $post['comments'] = $this->commentLogic->formatBatchComments($post['comments'], $user,$post);
 
             if ($post[ Post::FIELD_ID_POSTER ] == $user->{User::FIELD_ID}) {
                 $post['can_delete'] = true;
@@ -108,6 +110,15 @@ class PostLogic
             } else {
                 $post['can_delete'] = false;
                 $post['can_chat']   = true;
+            }
+
+            $post['show_college'] = false;
+            $post['college'] = null;
+            if(!$user->{User::FIELD_ID_COLLEGE}){
+                if($post['college_id']){
+                    $post['show_college'] = true;
+                    $post['college'] = Colleges::where(Colleges::FIELD_ID,$post['college_id'])->value(Colleges::FIELD_NAME);
+                }
             }
 
         }

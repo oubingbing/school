@@ -99,11 +99,10 @@ class PostController extends Controller
 
                 return $query;
             })
+            ->when($user->{User::FIELD_ID_COLLEGE},function ($query)use($user){
+                return $query->where(Post::FIELD_ID_COLLEGE, $user->{User::FIELD_ID_COLLEGE});
+            })
             ->orderBy($orderBy, $sortBy);
-
-        if ($user->{User::FIELD_ID_COLLEGE}) {
-            $query->where(Post::FIELD_ID_COLLEGE, $user->{User::FIELD_ID_COLLEGE});
-        }
 
         $posts = $this->paginateLogic->paginate($query, $pageParams, '*', function ($post) use ($user) {
             return $this->postLogic->formatSinglePost($post, $user);

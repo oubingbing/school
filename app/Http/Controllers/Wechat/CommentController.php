@@ -50,7 +50,8 @@ class CommentController extends Controller
         $refCommentId = request()->input('ref_comment_id',null);
         $attachments = request()->input('attachments',null);
 
-        $objUserId = $this->comment->getObjUserId($type,$objId);
+        $objData = $this->comment->getObjUserId($type,$objId);
+        $objUserId = $objData['userId'];
         if(!$objUserId){
             throw new ApiException('对象不存在',404);
         }
@@ -77,7 +78,7 @@ class CommentController extends Controller
             throw new ApiException($e,60001);
         }
 
-        return $this->comment->formatSingleComments($result,$user);
+        return $this->comment->formatSingleComments($result,$user,$objData['obj']);
     }
 
     /**

@@ -101,7 +101,8 @@ class MatchLove extends BaseModel
         return $this->belongsTo(User::class,self::FIELD_ID_OWNER)->select([
             User::FIELD_ID,
             User::FIELD_NICKNAME,
-            User::FIELD_AVATAR
+            User::FIELD_AVATAR,
+            User::FIELD_GENDER
         ]);
     }
 

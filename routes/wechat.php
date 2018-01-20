@@ -58,6 +58,9 @@ $api->version('v1', function ($api) {
             /** 获取个人信息 */
             $api->get('/personal_info', UserController::class . '@personal');
 
+            /** 选择所有学校 */
+            $api->patch('/clear_school',UserController::class . '@clearSchool');
+
             /** 获取个人学校 */
             $api->get('/school', UserController::class . '@school');
 

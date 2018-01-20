@@ -85,6 +85,15 @@ class UserController extends Controller
         return collect($userObj)->toArray();
     }
 
+    /**
+     * 搜索学校
+     *
+     * @author yezi
+     *
+     * @param $name
+     * @return array
+     * @throws ApiException
+     */
     public function searchCollege($name)
     {
         $user = request()->input('user');
@@ -96,6 +105,22 @@ class UserController extends Controller
         $colleges = Colleges::where(Colleges::FIELD_NAME, 'like', '%' . $name . '%')->get(['id', 'name']);
 
         return collect($colleges)->toArray();
+    }
+
+    /**
+     * 清除自己所在的学校
+     *
+     * @author yezi
+     *
+     * @return int
+     */
+    public function clearSchool()
+    {
+        $user = request()->input('user');
+
+        $result = User::query()->where(User::FIELD_ID,$user->id)->update([User::FIELD_ID_COLLEGE=>null]);
+
+        return $result;
     }
 
 }

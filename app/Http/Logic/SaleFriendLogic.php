@@ -15,6 +15,13 @@ use App\SaleFriend;
 
 class SaleFriendLogic
 {
+    protected $commentLogic;
+
+    public function __construct(CommentLogic $commentLogic)
+    {
+        $this->commentLogic = $commentLogic;
+    }
+
     /**
      * 新增
      *
@@ -61,7 +68,7 @@ class SaleFriendLogic
 
         $saleFriend->can_chat = $this->canChat($saleFriend, $user);
 
-        $saleFriend['comments'] = collect(app(CommentLogic::class)->formatBatchComments($saleFriend['comments'], $user))->sortByDesc(Comment::FIELD_CREATED_AT)->values();
+        $saleFriend['comments'] = collect($this->commentLogic->formatBatchComments($saleFriend['comments'], $user))->sortByDesc(Comment::FIELD_CREATED_AT)->values();
 
         $saleFriend['follow'] = app(FollowLogic::class)->checkFollow($user->id, $saleFriend['id'], Follow::ENUM_OBJ_TYPE_SALE_FRIEND) ? true : false;
 

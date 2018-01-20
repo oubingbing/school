@@ -20,6 +20,13 @@ use Illuminate\Http\Request;
 
 class SaleFriendController extends Controller
 {
+    protected $saleFriendLogic;
+
+    public function __construct(SaleFriendLogic $saleFriendLogic)
+    {
+        $this->saleFriendLogic = $saleFriendLogic;
+    }
+
     /**
      * 新增
      *
@@ -61,8 +68,7 @@ class SaleFriendController extends Controller
             throw new ApiException($messages->first(), 60001);
         }
 
-        $sale = new SaleFriendLogic();
-        $result = $sale->save($user->id,$name,$gender,$major,$expectation,$introduce,$attachments,$user->{User::FIELD_ID_COLLEGE});
+        $result = $this->saleFriendLogic->save($user->id,$name,$gender,$major,$expectation,$introduce,$attachments,$user->{User::FIELD_ID_COLLEGE});
 
         return $result;
     }
@@ -108,7 +114,7 @@ class SaleFriendController extends Controller
         }
 
         $saleFriends = app(PaginateLogic::class)->paginate($query,$pageParams, '*',function($saleFriend)use($user){
-            return app(SaleFriendLogic::class)->formatSingle($saleFriend,$user);
+            return $this->saleFriendLogic->formatSingle($saleFriend,$user);
         });
 
         return $saleFriends;
@@ -130,7 +136,7 @@ class SaleFriendController extends Controller
         $result = $query->get();
 
         $result = collect($result)->map(function ($item)use($user){
-            return app(SaleFriendLogic::class)->formatSingle($item,$user);
+            return $this->saleFriendLogic->formatSingle($item,$user);
         });
 
         return $result;

@@ -109,13 +109,14 @@ class CommentLogic
      *
      * @param $comments
      * @param $user
+     * @param $obj
      * @return array
      */
-    public function formatBatchComments($comments, $user)
+    public function formatBatchComments($comments, $user,$obj=null)
     {
-        return collect($comments)->map(function ($item) use ($user) {
+        return collect($comments)->map(function ($item) use ($user,$obj) {
 
-            return $this->formatSingleComments($item, $user);
+            return $this->formatSingleComments($item, $user,$obj);
 
         })->toArray();
     }
@@ -127,9 +128,10 @@ class CommentLogic
      *
      * @param $comment
      * @param $user
+     * @param $obj
      * @return mixed
      */
-    public function formatSingleComments($comment, $user)
+    public function formatSingleComments($comment, $user,$obj=null)
     {
         $commenter = User::find($comment['commenter_id']);
 
@@ -138,9 +140,21 @@ class CommentLogic
             $this->formatBatchComments($comment->subComments, $user);
         }
 
+        $nickname = $commenter->{User::FIELD_NICKNAME};
+
+        if($obj){
+            if(isset($obj['private'])){
+                if($obj['private'] == 1){
+                    if($comment['commenter_id'] == $user->id){
+                        $nickname = '匿名の同学';
+                    }
+                }
+            }
+        }
+
         $comment['commenter'] = [
             'id'       => $commenter->{User::FIELD_ID},
-            'nickname' => $commenter->{User::FIELD_NICKNAME},
+            'nickname' => $nickname,
             'avatar'   => $commenter->{User::FIELD_AVATAR},
             'text'     => $comment[ Comment::FIELD_CONTENT ]
         ];
@@ -149,6 +163,19 @@ class CommentLogic
             $refComment = Comment::withTrashed()->find($comment[ Comment::FIELD_ID_REF_COMMENT ]);
             if ($refComment) {
                 $refComment->refCommenter = User::where(User::FIELD_ID, $refComment->{Comment::FIELD_ID_COMMENTER})->select('id', 'nickname', 'avatar')->first();
+
+                if($refComment->refCommenter){
+                    if($obj){
+                        if(isset($obj['private'])){
+                            if($obj['private'] == 1){
+                                if($refComment->refCommenter->id == $user->id){
+                                    $refComment->refCommenter->nickname = '匿名の同学';
+                                }
+                            }
+                        }
+                    }
+                }
+
                 $comment['ref_comment']   = $refComment;
             } else {
                 $comment['ref_comment'] = '';
@@ -195,7 +222,10 @@ class CommentLogic
                 break;
         }
 
-        return $userId;
+        return [
+            'userId'=>$userId,
+            'obj'=>$obj
+        ];
     }
 
 }
