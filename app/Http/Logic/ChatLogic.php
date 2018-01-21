@@ -141,6 +141,16 @@ class ChatLogic
         return $result;
     }
 
+    public function myNewLetter($userId)
+    {
+        $countNumber = ChatMessage::query()
+            ->where(ChatMessage::FIELD_ID_TO,$userId)
+            ->where(ChatMessage::FIELD_READ_AT,null)
+            ->count();
+
+        return $countNumber;
+    }
+
     /**
      * 格式化返回值
      *

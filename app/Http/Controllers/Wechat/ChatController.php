@@ -100,7 +100,8 @@ class ChatController extends Controller
             }
 
         });
-        $ids = collect(collect($newMessages)->pluck(ChatMessage::FIELD_ID))->toArray();
+
+        $ids = collect(collect($newMessages['page_data'])->pluck(ChatMessage::FIELD_ID))->toArray();
 
         $this->chat->readMessage($ids);
 
@@ -124,6 +125,13 @@ class ChatController extends Controller
         $data = array_reverse(collect($result)->toArray());
 
         return $data;
+    }
+
+    public function newLetter()
+    {
+        $user = request()->input('user');
+
+        return $this->chat->myNewLetter($user->id);
     }
 
     /**

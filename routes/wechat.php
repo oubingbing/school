@@ -148,6 +148,9 @@ $api->version('v1', function ($api) {
             /** 获取最新私信 */
             $api->get('/new/{id}/messages', ChatController::class . '@getNewMessage');
 
+            /** 获取发给我的私信 */
+            $api->get('/new_messages', ChatController::class . '@newLetter');
+
             /** 撤回消息 */
             $api->delete('delete/{id}/chat_message', ChatController::class . '@delete');
 
