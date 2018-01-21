@@ -98,6 +98,8 @@ class UserController extends Controller
         $user = request()->input('user');
         $name = request()->input('school_name');
 
+        return $name;
+
         if (empty($name)) {
             throw new ApiException('内容不能为空', '50005');
         }
