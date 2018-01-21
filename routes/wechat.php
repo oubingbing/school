@@ -71,7 +71,7 @@ $api->version('v1', function ($api) {
             $api->put('/set/{id}/college', UserController::class . '@setCollege');
 
             /** 搜索学校 */
-            $api->get('/search_college', UserController::class . '@searchCollege');
+            $api->get('/search/{name}/college', UserController::class . '@searchCollege');
 
             /** 获取七牛上传token */
             $api->get('/upload_token', QiNiuController::class . '@getUploadToken');
