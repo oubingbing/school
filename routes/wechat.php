@@ -68,7 +68,7 @@ $api->version('v1', function ($api) {
             $api->get('/recommend_school', UserController::class . '@recommendSchool');
 
             /** 设置学校 */
-            $api->patch('/set/{id}/college', UserController::class . '@setCollege');
+            $api->put('/set/{id}/college', UserController::class . '@setCollege');
 
             /** 搜索学校 */
             $api->get('search/{name}/college', UserController::class . '@searchCollege');
