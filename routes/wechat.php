@@ -40,20 +40,20 @@ $api->version('v1', function ($api) {
         $api->group(['prefix' => 'auth', 'middleware' => 'before'], function ($api) {
 
             /** 登录 */
-            $api->post('login', LoginController::class . '@login');
+            $api->post('/login', LoginController::class . '@login');
 
             /** 获取微信token */
-            $api->post('token', TokenController::class . '@createToken');
+            $api->post('/token', TokenController::class . '@createToken');
 
             /** 刷新微信token */
-            $api->get('refresh_token', TokenController::class . '@refreshToken');
+            $api->get('/refresh_token', TokenController::class . '@refreshToken');
 
         });
 
         $api->group(['middleware' => ['wechat', 'after', 'before']], function ($api) {
 
             /** 获取用户信息 */
-            $api->get('user/{id}', UserController::class . '@user');
+            $api->get('/user/{id}', UserController::class . '@user');
 
             /** 获取个人信息 */
             $api->get('/personal_info', UserController::class . '@personal');
@@ -71,10 +71,10 @@ $api->version('v1', function ($api) {
             $api->put('/set/{id}/college', UserController::class . '@setCollege');
 
             /** 搜索学校 */
-            $api->get('search/{name}/college', UserController::class . '@searchCollege');
+            $api->get('/search/{name}/college', UserController::class . '@searchCollege');
 
             /** 获取七牛上传token */
-            $api->get('upload_token', QiNiuController::class . '@getUploadToken');
+            $api->get('/upload_token', QiNiuController::class . '@getUploadToken');
 
             /** 发表贴子 */
             $api->post('post', PostController::class . '@store');
@@ -128,10 +128,10 @@ $api->version('v1', function ($api) {
             $api->delete('/delete/{id}/match_love', MatchLoveController::class . '@delete');
 
             /** 获取最新的匹配 */
-            $api->get('most_new_match_loves', MatchLoveController::class . '@newList');
+            $api->get('/most_new_match_loves', MatchLoveController::class . '@newList');
 
             /** 获取匹配成功的信息 */
-            $api->get('match/{id}/result', MatchLoveController::class . '@matchSuccess');
+            $api->get('/match/{id}/result', MatchLoveController::class . '@matchSuccess');
 
             /** 检测是否有新的消息 */
             $api->get('/new/{type}/inbox', InboxController::class . '@getNewInbox');
@@ -152,7 +152,7 @@ $api->version('v1', function ($api) {
             $api->get('/new_messages', ChatController::class . '@newLetter');
 
             /** 撤回消息 */
-            $api->delete('delete/{id}/chat_message', ChatController::class . '@delete');
+            $api->delete('/delete/{id}/chat_message', ChatController::class . '@delete');
 
             /** 私信好友列表 */
             $api->get('/friends', ChatController::class . '@friends');
