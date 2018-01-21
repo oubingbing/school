@@ -59,7 +59,7 @@ $api->version('v1', function ($api) {
             $api->get('/personal_info', UserController::class . '@personal');
 
             /** 选择所有学校 */
-            $api->patch('/clear_school',UserController::class . '@clearSchool');
+            $api->put('/clear_school',UserController::class . '@clearSchool');
 
             /** 获取个人学校 */
             $api->get('/school', UserController::class . '@school');
@@ -71,7 +71,7 @@ $api->version('v1', function ($api) {
             $api->put('/set/{id}/college', UserController::class . '@setCollege');
 
             /** 搜索学校 */
-            $api->get('/search/{name}/college', UserController::class . '@searchCollege');
+            $api->get('/search_college', UserController::class . '@searchCollege');
 
             /** 获取七牛上传token */
             $api->get('/upload_token', QiNiuController::class . '@getUploadToken');
@@ -161,7 +161,7 @@ $api->version('v1', function ($api) {
             $api->post('/follow', FollowController::class . '@contact');
 
             /** 取消关注 */
-            $api->patch('/cancel/{id}/follow/{type}', FollowController::class . '@cancelFollow');
+            $api->put('/cancel/{id}/follow/{type}', FollowController::class . '@cancelFollow');
 
         });
 
