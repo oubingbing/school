@@ -90,13 +90,13 @@ class UserController extends Controller
      *
      * @author yezi
      *
-     * @param $name
      * @return array
      * @throws ApiException
      */
-    public function searchCollege($name)
+    public function searchCollege()
     {
         $user = request()->input('user');
+        $name = request()->input('college');
 
         if (empty($name)) {
             throw new ApiException('内容不能为空', '50005');
