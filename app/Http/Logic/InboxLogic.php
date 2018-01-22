@@ -184,13 +184,33 @@ class InboxLogic
         return $result;
     }
 
+    /**
+     * 格式化消息盒子列表
+     *
+     * @author yezi
+     *
+     * @param $inboxList
+     *
+     * @return static
+     */
     public function formatInboxList($inboxList)
     {
-        return collect($inboxList)->map(function ($inbox) {
+        $result =  collect($inboxList)->map(function ($inbox) {
             return $this->formatInbox($inbox);
         });
+
+        return $result;
     }
 
+    /**
+     * 格式化单个消息盒子
+     *
+     * @author yezi
+     *
+     * @param $inbox
+     *
+     * @return mixed
+     */
     public function formatInbox($inbox)
     {
         $objType = $inbox->{Inbox::FIELD_OBJ_TYPE};
@@ -205,7 +225,16 @@ class InboxLogic
         return $inbox;
     }
 
-
+    /**
+     * 获取对象
+     *
+     * @author yezi
+     *
+     * @param $objId
+     * @param $objType
+     *
+     * @return static[]
+     */
     public function getObj($objId, $objType)
     {
         $obj = '';

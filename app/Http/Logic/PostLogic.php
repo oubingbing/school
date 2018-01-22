@@ -20,6 +20,7 @@ use App\User;
 class PostLogic
 {
     protected $commentLogic;
+    protected $builder;
 
     public function __construct(CommentLogic $commentLogic)
     {
@@ -37,6 +38,7 @@ class PostLogic
      * @param null $location
      * @param null $private
      * @param null $topic
+     *
      * @return mixed
      */
     public function save($user, $content, $imageUrls = null, $location = null, $private = null, $topic = null)
@@ -53,6 +55,80 @@ class PostLogic
         return $result;
     }
 
+    /**
+     * 构建查询
+     *
+     * @author yezi
+     *
+     * @param $user
+     * @param $type
+     * @param $just
+     *
+     * @return $this
+     */
+    public function builder($user, $type, $just)
+    {
+        $this->builder = Post::query()->with(['poster', 'praises', 'comments'])
+            ->when($type, function ($query) use ($user, $type) {
+                if ($type == 2) {
+                    $query->whereHas('follows', function ($query) use ($user, $type) {
+                        $query->where(Follow::FIELD_ID_USER, $user->id)->where(Follow::FIELD_STATUS, Follow::ENUM_STATUS_FOLLOW);
+                    });
+                }
+
+                return $query;
+            })
+            ->when($just, function ($query) use ($user) {
+                $query->where(Post::FIELD_ID_POSTER, $user->id);
+
+                return $query;
+            })
+            ->when($user->{User::FIELD_ID_COLLEGE}, function ($query) use ($user) {
+                return $query->where(Post::FIELD_ID_COLLEGE, $user->{User::FIELD_ID_COLLEGE});
+            });
+
+        return $this;
+    }
+
+    /**
+     * 排序
+     *
+     * @author yezi
+     *
+     * @param $orderBy
+     * @param $sortBy
+     *
+     * @return $this
+     */
+    public function sort($orderBy, $sortBy)
+    {
+        $this->builder->orderBy($orderBy, $sortBy);
+
+        return $this;
+    }
+
+    /**
+     * 返回查询构建
+     *
+     * @author yezi
+     *
+     * @return mixed
+     */
+    public function done()
+    {
+        return $this->builder;
+    }
+
+    /**
+     * 获取最新的贴子
+     *
+     * @author yezi
+     *
+     * @param $user
+     * @param null $time
+     *
+     * @return mixed
+     */
     public function getPostList($user, $time = null)
     {
         $posts = Post::with(['poster', 'praises', 'comments'])
@@ -74,6 +150,7 @@ class PostLogic
      *
      * @param $post
      * @param $user
+     *
      * @return $this
      */
     public function formatSinglePost($post, $user)
@@ -102,7 +179,7 @@ class PostLogic
 
             $post['praises'] = app(PraiseLogic::class)->formatBatchPraise($post['praises']);
 
-            $post['comments'] = $this->commentLogic->formatBatchComments($post['comments'], $user,$post);
+            $post['comments'] = $this->commentLogic->formatBatchComments($post['comments'], $user, $post);
 
             if ($post[ Post::FIELD_ID_POSTER ] == $user->{User::FIELD_ID}) {
                 $post['can_delete'] = true;
@@ -113,11 +190,11 @@ class PostLogic
             }
 
             $post['show_college'] = false;
-            $post['college'] = null;
-            if(!$user->{User::FIELD_ID_COLLEGE}){
-                if($post['college_id']){
+            $post['college']      = null;
+            if (!$user->{User::FIELD_ID_COLLEGE}) {
+                if ($post['college_id']) {
                     $post['show_college'] = true;
-                    $post['college'] = Colleges::where(Colleges::FIELD_ID,$post['college_id'])->value(Colleges::FIELD_NAME);
+                    $post['college']      = Colleges::where(Colleges::FIELD_ID, $post['college_id'])->value(Colleges::FIELD_NAME);
                 }
             }
 

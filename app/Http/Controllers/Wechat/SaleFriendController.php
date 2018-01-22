@@ -92,26 +92,7 @@ class SaleFriendController extends Controller
 
         $pageParams = ['page_size'=>$pageSize, 'page_number'=>$pageNumber];
 
-        $query = SaleFriend::query()
-            ->with(['poster','comments'])
-            ->when($type,function ($query)use($user,$type){
-                if($type == 2){
-                    $query->whereHas('follows',function ($query)use($user,$type){
-                        $query->where(Follow::FIELD_ID_USER,$user->id)->where(Follow::FIELD_STATUS,Follow::ENUM_STATUS_FOLLOW);
-                    });
-                }
-
-                return $query;
-            })
-            ->when($just,function ($query)use($user){
-                $query->where(SaleFriend::FIELD_ID_OWNER,$user->id);
-
-                return $query;
-            })
-            ->orderBy($orderBy,$sortBy);
-        if($user->{User::FIELD_ID_COLLEGE}){
-            $query->where(SaleFriend::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE});
-        }
+        $query = $this->saleFriendLogic->builder($user,$type,$just)->sort($orderBy,$sortBy)->done();
 
         $saleFriends = app(PaginateLogic::class)->paginate($query,$pageParams, '*',function($saleFriend)use($user){
             return $this->saleFriendLogic->formatSingle($saleFriend,$user);
@@ -176,7 +157,6 @@ class SaleFriendController extends Controller
         $result = SaleFriend::where(SaleFriend::FIELD_ID,$id)->where(SaleFriend::FIELD_ID_OWNER,$user->id)->delete();
 
         return $result;
-
     }
 
 }

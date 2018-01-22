@@ -17,6 +17,7 @@ use App\User;
 class MatchLoveLogic
 {
     protected $followLogic;
+    protected $builder;
 
     public function __construct(FollowLogic $followLogic)
     {
@@ -50,6 +51,70 @@ class MatchLoveLogic
         ]);
 
         return $result;
+    }
+
+    /**
+     * 构建查询语句
+     *
+     * @author yezi
+     *
+     * @param $user
+     * @param $type
+     * @param $just
+     *
+     * @return $this
+     */
+    public function builder($user,$type,$just)
+    {
+        $this->builder = MatchLove::query()->with(['user'])
+            ->when($type,function ($query)use($user,$type){
+                if($type == 2){
+                    $query->whereHas('follows',function ($query)use($user,$type){
+                        $query->where(Follow::FIELD_ID_USER,$user->id)->where(Follow::FIELD_STATUS,Follow::ENUM_STATUS_FOLLOW);
+                    });
+                }
+
+                return $query;
+            })
+            ->when($just,function ($query)use($user){
+                $query->where(MatchLove::FIELD_ID_OWNER,$user->id);
+
+                return $query;
+            })
+            ->when($user->{User::FIELD_ID_COLLEGE},function ($query)use($user){
+                return $query->where(MatchLove::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE});
+            });
+
+        return $this;
+    }
+
+    /**
+     * 排序
+     *
+     * @author yezi
+     *
+     * @param $orderBy
+     * @param $sortBy
+     *
+     * @return $this
+     */
+    public function sort($orderBy,$sortBy)
+    {
+        $this->builder->orderBy($orderBy,$sortBy);
+
+        return $this;
+    }
+
+    /**
+     * 返回查询语句
+     *
+     * @author yezi
+     *
+     * @return mixed
+     */
+    public function done()
+    {
+        return $this->builder;
     }
 
     /**

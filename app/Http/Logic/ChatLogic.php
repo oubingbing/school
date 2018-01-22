@@ -120,19 +120,15 @@ class ChatLogic
             })->orderBy(ChatMessage::FIELD_CREATED_AT, 'desc')->get();
 
         $result = collect($result)->map(function ($item) {
-
             return $this->format($item);
-
         });
 
         $newMessages = collect($result)->filter(function ($item) {
-
             if (empty($item->{ChatMessage::FIELD_READ_AT})) {
                 return true;
             } else {
                 return false;
             }
-
         });
         $ids = collect(collect($newMessages)->pluck(ChatMessage::FIELD_ID))->toArray();
 
@@ -141,6 +137,15 @@ class ChatLogic
         return $result;
     }
 
+    /**
+     * 个人私信
+     *
+     * @author yezi
+     *
+     * @param $userId
+     *
+     * @return int
+     */
     public function myNewLetter($userId)
     {
         $countNumber = ChatMessage::query()
@@ -167,6 +172,16 @@ class ChatLogic
         return $message;
     }
 
+    /**
+     * 删除
+     *
+     * @author yezi
+     *
+     * @param $userId
+     * @param $id
+     *
+     * @return mixed
+     */
     public function delete($userId, $id)
     {
         return ChatMessage::query()->where(ChatMessage::FIELD_ID, $id)->where(ChatMessage::FIELD_ID_FROM_USER, $userId)->delete();

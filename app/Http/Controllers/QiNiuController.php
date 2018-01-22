@@ -27,9 +27,4 @@ class QiNiuController extends Controller
 
         return ['uptoken'=>$token];
     }
-
-    public function getDownloadToken()
-    {
-        
-    }
 }

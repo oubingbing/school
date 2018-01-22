@@ -21,6 +21,13 @@ class FollowController extends Controller
         $this->follow = $followLogic;
     }
 
+    /**
+     * 关注
+     *
+     * @author yezi
+     *
+     * @return mixed
+     */
     public function contact()
     {
         $user = request()->input('user');
@@ -32,6 +39,16 @@ class FollowController extends Controller
         return $follow;
     }
 
+    /**
+     * 取消关注
+     *
+     * @author yezi
+     *
+     * @param $id
+     * @param $type
+     *
+     * @return array
+     */
     public function cancelFollow($id,$type)
     {
         $user = request()->input('user');

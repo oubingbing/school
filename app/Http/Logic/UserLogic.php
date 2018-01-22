@@ -14,6 +14,16 @@ use App\User;
 class UserLogic
 {
 
+    /**
+     * 新增用户
+     *
+     * @author yezi
+     *
+     * @param $openId
+     * @param $data
+     *
+     * @return mixed
+     */
     public function createWeChatUser($openId, $data)
     {
         $result = User::create([

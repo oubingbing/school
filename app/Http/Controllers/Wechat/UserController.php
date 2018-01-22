@@ -68,6 +68,16 @@ class UserController extends Controller
         return collect($colleges)->toArray();
     }
 
+    /**
+     * 设置学校
+     *
+     * @author yezi
+     *
+     * @param $id
+     *
+     * @return array
+     * @throws ApiException
+     */
     public function setCollege($id)
     {
         $user = request()->input('user');

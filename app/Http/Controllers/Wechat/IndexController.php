@@ -15,9 +15,4 @@ class IndexController extends Controller
         return $user;
     }
 
-    public function user()
-    {
-        dd(User::find(1));
-    }
-
 }

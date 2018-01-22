@@ -84,6 +84,4 @@ class EasemobAuthLogic
     {
         return $this->baseUrl;
     }
-
-
 }

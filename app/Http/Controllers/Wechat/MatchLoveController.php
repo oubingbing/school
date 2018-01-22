@@ -91,25 +91,7 @@ class MatchLoveController extends Controller
 
         $pageParams = ['page_size'=>$pageSize, 'page_number'=>$pageNumber];
 
-        $query = MatchLove::query()->with(['user'])
-            ->when($type,function ($query)use($user,$type){
-                if($type == 2){
-                    $query->whereHas('follows',function ($query)use($user,$type){
-                        $query->where(Follow::FIELD_ID_USER,$user->id)->where(Follow::FIELD_STATUS,Follow::ENUM_STATUS_FOLLOW);
-                    });
-                }
-
-                return $query;
-            })
-            ->when($just,function ($query)use($user){
-                $query->where(MatchLove::FIELD_ID_OWNER,$user->id);
-
-                return $query;
-            })
-            ->orderBy($orderBy,$sortBy);
-        if($user->{User::FIELD_ID_COLLEGE}){
-            $query->where(MatchLove::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE});
-        }
+        $query = $this->match->builder($user,$type,$just)->sort($orderBy,$sortBy)->done();
 
         $saleFriends = $this->paginate->paginate($query,$pageParams, '*',function($saleFriend)use($user){
             return $this->match->formatSingle($saleFriend,$user);
@@ -137,10 +119,10 @@ class MatchLoveController extends Controller
 
         $query = MatchLove::query()->with(['user'])
             ->where(MatchLove::FIELD_CREATED_AT,'>=',$time)
+            ->when($user->{User::FIELD_ID_COLLEGE},function ($query)use($user){
+                return $query->where(MatchLove::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE});;
+            })
             ->orderBy('created_at','desc');
-        if($user->{User::FIELD_ID_COLLEGE}){
-            $query->where(MatchLove::FIELD_ID_COLLEGE,$user->{User::FIELD_ID_COLLEGE});
-        }
 
         $result = $query->get();
 
@@ -186,6 +168,15 @@ class MatchLoveController extends Controller
         return $result;
     }
 
+    /**
+     * 匹配成功
+     *
+     * @author yezi
+     *
+     * @param $id
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
     public function matchSuccess($id)
     {
         $user = request()->input('user');

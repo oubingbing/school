@@ -103,13 +103,24 @@ class PraiseLogic
         return $praise;
     }
 
+    /**
+     * 批量格式化点赞
+     *
+     * @author yezi
+     *
+     * @param $praises
+     *
+     * @return static
+     */
     public function formatBatchPraise($praises)
     {
-        return collect($praises)->map(function ($item) {
+        $result = collect($praises)->map(function ($item) {
 
             return $this->formatSinglePraise($item);
 
         });
+
+        return $result;
     }
 
     /**
@@ -168,6 +179,17 @@ class PraiseLogic
         return $userId;
     }
 
+    /**
+     * 检测重复
+     *
+     * @author yezi
+     *
+     * @param $userId
+     * @param $objId
+     * @param $type
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null|static
+     */
     public function checkRepeat($userId, $objId, $type)
     {
         $result = Praise::query()

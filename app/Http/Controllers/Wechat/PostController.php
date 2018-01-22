@@ -84,25 +84,7 @@ class PostController extends Controller
 
         $pageParams = ['page_size' => $pageSize, 'page_number' => $pageNumber];
 
-        $query = Post::query()->with(['poster', 'praises', 'comments'])
-            ->when($type, function ($query) use ($user, $type) {
-                if ($type == 2) {
-                    $query->whereHas('follows', function ($query) use ($user, $type) {
-                        $query->where(Follow::FIELD_ID_USER, $user->id)->where(Follow::FIELD_STATUS, Follow::ENUM_STATUS_FOLLOW);
-                    });
-                }
-
-                return $query;
-            })
-            ->when($just, function ($query) use ($user) {
-                $query->where(Post::FIELD_ID_POSTER, $user->id);
-
-                return $query;
-            })
-            ->when($user->{User::FIELD_ID_COLLEGE},function ($query)use($user){
-                return $query->where(Post::FIELD_ID_COLLEGE, $user->{User::FIELD_ID_COLLEGE});
-            })
-            ->orderBy($orderBy, $sortBy);
+        $query = $this->postLogic->builder($user,$type,$just)->sort($orderBy, $sortBy)->done();
 
         $posts = $this->paginateLogic->paginate($query, $pageParams, '*', function ($post) use ($user) {
             return $this->postLogic->formatSinglePost($post, $user);
@@ -111,13 +93,21 @@ class PostController extends Controller
         return collect($posts)->toArray();
     }
 
+    /**
+     * 表白墙详情
+     *
+     * @author yezi
+     *
+     * @param $id
+     * @return mixed
+     */
     public function detail($id)
     {
         $user = request()->input('user');
 
         $post = Post::query()->with(['poster', 'praises', 'comments'])->find($id);
 
-        $result = app(PostLogic::class)->formatSinglePost($post, $user);
+        $result = $this->postLogic->formatSinglePost($post, $user);
 
         return $result;
     }
@@ -139,10 +129,10 @@ class PostController extends Controller
             throw new ApiException('参数错误', 60001);
         }
 
-        $posts = app(PostLogic::class)->getPostList($user, $time);
+        $posts = $this->postLogic->getPostList($user, $time);
 
         $posts = collect($posts)->map(function ($post) use ($user) {
-            return app(PostLogic::class)->formatSinglePost($post, $user);
+            return $this->postLogic->formatSinglePost($post, $user);
         });
 
         return $posts;
