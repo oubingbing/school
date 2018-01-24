@@ -133,7 +133,9 @@ class PostController extends Controller
         $posts = $this->postLogic->getPostList($user, $time);
 
         $posts = collect($posts)->map(function ($post) use ($user) {
+
             return $this->postLogic->formatSinglePost($post, $user);
+
         });
 
         return $posts;
