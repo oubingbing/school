@@ -38,6 +38,8 @@ class ChatTest extends TestCase
             app(FriendLogic::class)->createFriend($friendId,$userId);
         }
 
+        $result = 10 / 0;
+
         $result = app(ChatLogic::class)->sendMessage($userId,$friendId,$content,$attachments,$type,$postAt);
 
         return $result;
