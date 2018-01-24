@@ -86,7 +86,9 @@ class PostController extends Controller
         $query = $this->postLogic->builder($user,$type,$just)->sort($orderBy, $sortBy)->done();
 
         $posts = $this->paginateLogic->paginate($query, $pageParams, '*', function ($post) use ($user) {
+
             return $this->postLogic->formatSinglePost($post, $user);
+
         });
 
         return collect($posts)->toArray();
