@@ -56,7 +56,6 @@ class ChatController extends Controller
             $result = $this->chat->format($result);
 
             \DB::commit();
-
         }catch (Exception $exception){
             \DB::rollBack();
             throw new ApiException($exception);
