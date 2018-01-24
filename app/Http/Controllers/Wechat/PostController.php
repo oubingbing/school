@@ -53,7 +53,7 @@ class PostController extends Controller
                 throw new ApiException('内容不能为空', 6000);
             }
 
-            $result = $this->postLogic->save($user, $content, $imageUrls, $location, $private, $topic);
+            $result = $this->postLogic->save($user, $content, $imageUrls, $location, $private, $topi);
 
             \DB::commit();
         } catch (Exception $e) {
