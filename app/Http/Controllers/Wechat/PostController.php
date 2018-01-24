@@ -57,7 +57,6 @@ class PostController extends Controller
 
             \DB::commit();
         } catch (Exception $e) {
-
             \DB::rollBack();
             throw new ApiException($e, 60001);
         }
