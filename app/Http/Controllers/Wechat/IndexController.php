@@ -7,7 +7,13 @@ use App\User;
 
 class IndexController extends Controller
 {
-
+    /**
+     * 获取用户信息
+     *
+     * @author yezi
+     *
+     * @return mixed
+     */
     public function index()
     {
         $user = request()->get('user');

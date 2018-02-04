@@ -126,6 +126,13 @@ class ChatController extends Controller
         return $data;
     }
 
+    /**
+     * 获取新的聊天信息
+     *
+     * @author yezi
+     *
+     * @return int
+     */
     public function newLetter()
     {
         $user = request()->input('user');
@@ -156,6 +163,15 @@ class ChatController extends Controller
         return $friends;
     }
 
+    /**
+     * 删除聊天记录
+     *
+     * @author yezi
+     *
+     * @param $id
+     *
+     * @return mixed
+     */
     public function delete($id)
     {
         $user = request()->input('user');
