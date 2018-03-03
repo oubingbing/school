@@ -145,8 +145,7 @@ class CommentLogic
         if($obj){
             if(isset($obj['private'])){
                 if($obj['private'] == 1){
-                    //if($obj->poster_id != $user->id){//$obj['poster_id']
-                    if($obj['poster_id'] != $user->id){//$obj['poster_id']
+                    if($comment['commenter_id'] != $user->id && $obj['poster_id'] == $user->id){
                         $nickname = '匿名の同学';
                     }
                 }
@@ -169,7 +168,7 @@ class CommentLogic
                     if($obj){
                         if(isset($obj['private'])){
                             if($obj['private'] == 1){
-                                if($obj['poster_id'] != $user->id){
+                                if($refComment->refCommenter->id != $user->id && $obj['poster_id'] == $user->id){
                                     $refComment->refCommenter->nickname = '匿名の同学';
                                 }
                             }
