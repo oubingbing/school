@@ -57,7 +57,15 @@ class CommentController extends Controller
         }
 
         $fromId = $user->id;
-        $toId = $objUserId;
+
+        if($refCommentId){
+            //回复别人,要通知该条评论的主人
+            $refCommentObj = $this->comment->getObjUserId(Comment::ENUM_OBJ_TYPE_COMMENT, $refCommentId);
+            $toId = $refCommentObj['userId'];
+        }else{
+            $toId = $objUserId;
+        }
+
         $objType = Inbox::ENUM_OBJ_TYPE_COMMENT;
         $postAt = Carbon::now();
         $actionType = Inbox::ENUM_ACTION_TYPE_COMMENT;
