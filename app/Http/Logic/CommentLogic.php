@@ -145,7 +145,7 @@ class CommentLogic
         if($obj){
             if(isset($obj['private'])){
                 if($obj['private'] == 1){
-                    if($comment['commenter_id'] != $user->id && $obj['poster_id'] == $user->id){
+                    if($comment['commenter_id'] != $obj['poster_id'] && $obj['poster_id'] == $user->id){
                         $nickname = '匿名の同学';
                     }
                 }
