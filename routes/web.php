@@ -20,4 +20,8 @@ Route::get('/hui_yi_happy_birthday', function (){
     return view('birthday.flower');
 });
 
+Route::get('/hui_yi_de_cake', function (){
+    return view('birthday.cake');
+});
+
 

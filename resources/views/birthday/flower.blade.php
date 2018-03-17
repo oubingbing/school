@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="{{asset('css/flower.css')}}">
     <link href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
 <body>
 
 <canvas id="canvas"></canvas>
