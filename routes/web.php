@@ -16,7 +16,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/flower', function (){
+Route::get('/hui_yi_happy_birthday', function (){
     return view('birthday.flower');
 });
 

@@ -2,14 +2,14 @@
 <html lang="en" >
 <head>
     <meta charset="UTF-8">
-    <title>firework</title>
+    <title>慧怡,生日快乐</title>
     <link rel="stylesheet" href="{{asset('css/flower.css')}}">
     <link href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
 
-<canvas id="canvas" class="container"></canvas>
+<canvas id="canvas"></canvas>
 
 <div class="block-audio">
     <audio class="exp" src="{{asset('music/exp1.mp3')}}" controls></audio>
