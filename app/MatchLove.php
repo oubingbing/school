@@ -65,7 +65,7 @@ class MatchLove extends BaseModel
     const FIELD_DELETED_AT = 'deleted_at';
 
     /** 不匿名 */
-    const ENUM_NOT_PRIVATE = 1;
+    const ENUM_NOT_PRIVATE = 0;
     /** 匿名 */
     const ENUM_PRIVATE = 1;
 

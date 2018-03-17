@@ -55,6 +55,11 @@ class Post extends BaseModel
     /** field comment_number */
     const FIELD_COMMENT_NUMBER = 'comment_number';
 
+    /** 不匿名 */
+    const ENUM_NOT_PRIVATE = 0;
+    /** 匿名 */
+    const ENUM_PRIVATE = 1;
+
     protected $casts = [
         self::FIELD_ATTACHMENTS => 'array',
     ];

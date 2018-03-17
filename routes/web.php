@@ -16,5 +16,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/flower', function (){
+    return view('birthday.flower');
+});
 
 

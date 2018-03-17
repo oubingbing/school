@@ -49,6 +49,9 @@ class Inbox extends BaseModel
     /** field deleted_at */
     const FIELD_DELETED_AT = 'deleted_at';
 
+    /** field private 是否匿名,默认否 */
+    const FIELD_PRIVATE = 'private';
+
     /** 表白墙 */
     const ENUM_OBJ_TYPE_POST = 1;
     /** 卖舍友 */
@@ -65,6 +68,11 @@ class Inbox extends BaseModel
     /** 点赞对象 */
     const ENUM_ACTION_TYPE_PRAISE = 2;
 
+    /** 不匿名 */
+    const ENUM_NOT_PRIVATE = 0;
+    /** 匿名 */
+    const ENUM_PRIVATE = 1;
+
     protected $fillable = [
         self::FIELD_ID,
         self::FIELD_ID_FROM,
@@ -76,7 +84,8 @@ class Inbox extends BaseModel
         self::FIELD_POST_AT,
         self::FIELD_READ_AT,
         self::CREATED_AT,
-        self::FIELD_UPDATED_AT
+        self::FIELD_UPDATED_AT,
+        self::FIELD_PRIVATE
     ];
 
     public function fromUser()
