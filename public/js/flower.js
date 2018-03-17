@@ -185,7 +185,7 @@ $(function() {
 		}
 
 		setTimeout(function () {
-			window.location.href = "https://kucaroom.com/hui_yi_de_cake";
+			window.location.href = "https://kucaroom.com/hui_yi_song_ni_de_dang_gao";
 		}, 2500);
 	}
 
