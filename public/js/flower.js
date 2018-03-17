@@ -1,8 +1,6 @@
 $(function() {
 	var canvas = $('#canvas')[0];
 
-	var canvasContainer = document.getElementById('canvas-container');
-
 	console.log($(window).width());
 
 	canvas.width = $(window).width();
