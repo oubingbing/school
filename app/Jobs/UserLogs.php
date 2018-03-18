@@ -3,6 +3,8 @@
 namespace App\Jobs;
 
 use App\User;
+use App\UserVisitLog;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -32,8 +34,18 @@ class UserLogs implements ShouldQueue
      */
     public function handle()
     {
-        \Log::info('################### userId' . $this->user->id);
+        $user = $this->user;
 
-        dump('队列任务结束');
+        $visitLog = UserVisitLog::query()
+            ->where(UserVisitLog::FIELD_ID_USER,$user->id)
+            ->whereBetween(UserVisitLog::FIELD_CREATED_AT,[Carbon::now()->startOfDay(),Carbon::now()->endOfDay()])
+            ->value(UserVisitLog::FIELD_ID);
+
+        if(!$visitLog){
+            UserVisitLog::create([
+                UserVisitLog::FIELD_ID_USER=>$user->id,
+                UserVisitLog::FIELD_NICKNAME=>$user->{User::FIELD_NICKNAME}
+            ]);
+        }
     }
 }
