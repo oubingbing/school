@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Exceptions\ApiException;
+use App\Jobs\UserLogs;
 use App\User;
 use Closure;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -30,6 +31,8 @@ class Wechat
         }
 
         $user = User::where(User::FIELD_ID_OPENID,$user->{User::FIELD_ID_OPENID})->first();
+
+        dispatch((new UserLogs($user))->onQueue('record_visit_log'));
 
         $request->offsetSet('user',$user);
 
