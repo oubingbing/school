@@ -1,15 +1,7 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use App\Events\Chat;
+use Illuminate\Support\Facades\Redis;
 
 
 Route::get('/', function () {
@@ -23,5 +15,9 @@ Route::get('/hui_yi_happy_birthday', function (){
 Route::get('/hui_yi_song_ni_de_dang_gao', function (){
     return view('birthday.cake');
 });
+
+/** 测试 */
+//App\Http\Controllers\App\Http\IM\IndexController
+Route::get('test_socket','IM\IndexController@chatRoom');
 
 
