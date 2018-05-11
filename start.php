@@ -1,6 +1,8 @@
 
 <?php
 
+require_once __DIR__ . '/vendor/autoload.php';
+
 use Workerman\Worker;
 
 // 证书最好是申请的证书
