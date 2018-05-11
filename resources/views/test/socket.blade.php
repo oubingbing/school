@@ -43,7 +43,7 @@
 
     console.log('start');
 
-    ws = new WebSocket("wss://kucaroom.com:7272");
+    ws = new WebSocket("ws://kucaroom.com:7272");
 
     console.log('connect');
 
