@@ -26,15 +26,14 @@ class IndexController extends Controller
 
     public function bindSocket()
     {
-        Gateway::$registerAddress = '112.74.51.187:7272';
-
+        Gateway::$registerAddress = '112.74.51.187:1236';
 
         Gateway::bindUid('123', '22');
     }
 
     public function sendSocket()
     {
-        Gateway::$registerAddress = '112.74.51.187:7272';
+        Gateway::$registerAddress = '112.74.51.187:1236';
 
         Gateway::sendToUid('22', 'hello world');
     }
