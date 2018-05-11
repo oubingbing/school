@@ -18,4 +18,9 @@ class IndexController extends Controller
         event(new Chat('慧怡'));
     }
 
+    public function socket()
+    {
+        return view('test.socket');
+    }
+
 }

@@ -19,5 +19,6 @@ Route::get('/hui_yi_song_ni_de_dang_gao', function (){
 /** 测试 */
 //App\Http\Controllers\App\Http\IM\IndexController
 Route::get('test_socket','IM\IndexController@chatRoom');
+Route::get('socket','IM\IndexController@socket');
 
 
