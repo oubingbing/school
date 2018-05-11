@@ -40,7 +40,7 @@
      * start_gateway.php 中需要指定websocket协议，像这样
      * $gateway = new Gateway(websocket://0.0.0.0:7272);
      */
-    ws = new WebSocket("wss://kucaroom.com:7272");
+    ws = new WebSocket("wss://kucaroom.com:1236");
     // 服务端主动推送消息时会触发这里的onmessage
     ws.onmessage = function(e){
         // json数据转换成js对象
