@@ -49,7 +49,7 @@
             // Events.php中返回的init类型的消息，将client_id发给后台进行uid绑定
             case 'init':
                 // 利用jquery发起ajax请求，将client_id发给后端进行uid绑定
-                $.post('kucaroom.com/bind', {client_id: data.client_id}, function(data){}, 'json');
+                $.post('/bind', {client_id: data.client_id}, function(data){}, 'json');
                 break;
             // 当mvc框架调用GatewayClient发消息时直接alert出来
             default :
