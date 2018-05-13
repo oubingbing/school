@@ -34,23 +34,13 @@
 
 </body>
 <script>
-    /**
-     * 与GatewayWorker建立websocket连接，域名和端口改为你实际的域名端口，
-     * 其中端口为Gateway端口，即start_gateway.php指定的端口。
-     * start_gateway.php 中需要指定websocket协议，像这样
-     * $gateway = new Gateway(websocket://0.0.0.0:7272);
-     */
-
-    console.log('start');
 
     ws = new WebSocket("wss://kucaroom.com:8585");
-
-    console.log('connect');
 
     // 服务端主动推送消息时会触发这里的onmessage
     ws.onmessage = function(e){
 
-        console.log('on message');
+        console.log(e.data);
 
         // json数据转换成js对象
         var data = eval("("+e.data+")");

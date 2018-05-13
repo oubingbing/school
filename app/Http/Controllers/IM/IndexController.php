@@ -26,16 +26,14 @@ class IndexController extends Controller
 
     public function bindSocket()
     {
-        Gateway::$registerAddress = '112.74.51.187:1236';
+        $client_id = request()->post('client_id');
 
-        Gateway::bindUid('123', '22');
+        Gateway::sendToClient($client_id, json_encode([
+            'clientId' => $client_id,
+            'type' => 'message',
+            'data' => 'this is a message'
+        ]));
     }
 
-    public function sendSocket()
-    {
-        Gateway::$registerAddress = '112.74.51.187:1236';
-
-        Gateway::sendToUid('22', 'hello world');
-    }
 
 }
