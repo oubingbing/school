@@ -20,7 +20,7 @@ use \Workerman\Autoloader;
 // bussinessWorker 进程
 $worker = new BusinessWorker();
 // worker名称
-$worker->name = 'BusinessWorker';
+$worker->name = 'YourAppBusinessWorker';
 // bussinessWorker进程数量
 $worker->count = 4;
 // 服务注册地址

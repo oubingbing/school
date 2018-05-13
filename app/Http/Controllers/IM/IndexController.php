@@ -31,7 +31,7 @@ class IndexController extends Controller
 
         Log::info('client_id:'.$client_id);
 
-        Gateway::$registerAddress = '112.74.51.187:1236';
+        Gateway::$registerAddress = '112.74.51.187:1238';
 
         // 假设用户已经登录，用户uid和群组id在session中
         $uid      = 110;
