@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * This file is part of workerman.
  *
@@ -34,7 +34,7 @@ $gateway = new Gateway("websocket://0.0.0.0:8585",$context);
 $gateway->transport = 'ssl';
 
 // gateway名称，status方便查看
-$gateway->name = 'YourAppGateway';
+$gateway->name = 'bingbing';
 // gateway进程数
 $gateway->count = 4;
 // 本机ip，分布式部署时使用内网ip
