@@ -6,6 +6,7 @@ use App\Events\Chat;
 use App\Http\Controllers\Controller;
 use GatewayClient\Gateway;
 use Illuminate\Support\Facades\Log;
+use Workermen\GatewayHelper;
 
 class IndexController extends Controller
 {
@@ -27,19 +28,14 @@ class IndexController extends Controller
 
     public function bindSocket()
     {
-        $client_id = request()->get('client_id');
+        $clientId = request()->get('client_id');
+        $gatewayHelper = app(GatewayHelper::class);
 
-        Log::info('client_id:'.$client_id);
-
-        Gateway::$registerAddress = '112.74.51.187:1238';
-
-        // 假设用户已经登录，用户uid和群组id在session中
         $uid      = 110;
-        Gateway::bindUid($client_id, $uid);
+        $gatewayHelper->bindUser($clientId,$uid);
 
-        $message = ['client_id'=>$client_id,'type'=>'test'];
-        // 向任意uid的网站页面发送数据
-        Gateway::sendToUid($uid, json_encode($message));
+        $message = ['client_id'=>$clientId,'type'=>'test'];
+        $gatewayHelper->sendToUserId($uid,$message);
 
         return ['ok'];
     }

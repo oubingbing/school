@@ -36,7 +36,7 @@ class Events
      */
     public static function onConnect($client_id)
     {
-        // 向当前client_id发送数据
+        //浏览器获取client_Id
         Gateway::sendToClient($client_id, json_encode([
             'client_id' => $client_id,
             'type' => 'init'
