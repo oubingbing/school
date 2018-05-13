@@ -37,9 +37,12 @@ class IndexController extends Controller
         $uid      = 110;
         Gateway::bindUid($client_id, $uid);
 
-        $message = ['client_id'=>$client_id];
+        $message = ['client_id'=>$client_id,'type'=>'test'];
         // 向任意uid的网站页面发送数据
         Gateway::sendToUid($uid, $message);
+        Gateway::sendToAll($message);
+
+        return ['ok'];
     }
 
 
