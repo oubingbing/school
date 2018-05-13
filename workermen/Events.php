@@ -38,7 +38,7 @@ class Events
     {
         // 向当前client_id发送数据
         Gateway::sendToClient($client_id, json_encode([
-            'clientId' => $client_id,
+            'client_id' => $client_id,
             'type' => 'init'
         ]));
     }
