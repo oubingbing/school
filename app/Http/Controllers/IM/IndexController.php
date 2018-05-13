@@ -4,7 +4,7 @@ namespace App\Http\Controllers\IM;
 
 use App\Events\Chat;
 use App\Http\Controllers\Controller;
-use GatewayWorker\Lib\Gateway;
+use GatewayClient\Gateway;
 
 class IndexController extends Controller
 {
@@ -28,15 +28,15 @@ class IndexController extends Controller
     {
         $client_id = request()->post('client_id');
 
-        /*Gateway::sendToClient($client_id, json_encode([
-            'clientId' => $client_id,
-            'type' => 'message',
-            'data' => 'this is a message'
-        ]));*/
+        Gateway::$registerAddress = '127.0.0.1:1236';
 
-        return [
-            'client_id'=>$client_id
-        ];
+        // 假设用户已经登录，用户uid和群组id在session中
+        $uid      = 110;
+        Gateway::bindUid($client_id, $uid);
+
+        $message = ['client_id'=>$client_id];
+        // 向任意uid的网站页面发送数据
+        Gateway::sendToUid($uid, $message);
     }
 
 
