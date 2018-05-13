@@ -28,12 +28,12 @@ class IndexController extends Controller
     {
         $client_id = request()->post('client_id');
 
-        Gateway::sendToClient($client_id, json_encode([
+        /*Gateway::sendToClient($client_id, json_encode([
             'clientId' => $client_id,
             'type' => 'message',
             'data' => 'this is a message'
-        ]));
-        
+        ]));*/
+
         return [
             'client_id'=>$client_id
         ];
