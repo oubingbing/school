@@ -33,6 +33,10 @@ class IndexController extends Controller
             'type' => 'message',
             'data' => 'this is a message'
         ]));
+        
+        return [
+            'client_id'=>$client_id
+        ];
     }
 
 
