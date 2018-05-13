@@ -5,6 +5,7 @@ namespace App\Http\Controllers\IM;
 use App\Events\Chat;
 use App\Http\Controllers\Controller;
 use GatewayClient\Gateway;
+use Illuminate\Support\Facades\Log;
 
 class IndexController extends Controller
 {
@@ -26,9 +27,9 @@ class IndexController extends Controller
 
     public function bindSocket()
     {
-        $client_id = request()->post('client_id');
+        $client_id = request()->get('client_id');
 
-        \Log::info('client_id:'.$client_id);
+        Log::info('client_id:'.$client_id);
 
         Gateway::$registerAddress = '127.0.0.1:1236';
 

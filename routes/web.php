@@ -20,7 +20,7 @@ Route::get('/hui_yi_song_ni_de_dang_gao', function (){
 //App\Http\Controllers\App\Http\IM\IndexController
 Route::get('test_socket','IM\IndexController@chatRoom');
 Route::get('socket','IM\IndexController@socket');
-Route::post('bind','IM\IndexController@bindSocket');
+Route::get('bind','IM\IndexController@bindSocket');
 Route::post('send','IM\IndexController@sendSocket');
 
 
