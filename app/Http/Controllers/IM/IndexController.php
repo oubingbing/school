@@ -28,6 +28,8 @@ class IndexController extends Controller
     {
         $client_id = request()->post('client_id');
 
+        \Log::info('client_id:'.$client_id);
+
         Gateway::$registerAddress = '127.0.0.1:1236';
 
         // 假设用户已经登录，用户uid和群组id在session中

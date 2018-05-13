@@ -55,8 +55,6 @@ class LoginController extends Controller
     {
         $code = request()->input('code');
 
-        Log::info('wechat code:'.$code);
-
         $appId = env('WE_CHAT_APP_ID');
         $secret = env('WE_CHAT_SECRET');
 
