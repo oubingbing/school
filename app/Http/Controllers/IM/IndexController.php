@@ -4,7 +4,7 @@ namespace App\Http\Controllers\IM;
 
 use App\Events\Chat;
 use App\Http\Controllers\Controller;
-use GatewayClient\Gateway;
+use GatewayWorker\Lib\Gateway;
 
 class IndexController extends Controller
 {
