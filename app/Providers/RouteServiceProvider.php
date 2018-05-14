@@ -40,6 +40,8 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapWebRoutes();
 
         $this->mapWeChatRoutes();
+
+        $this->mapSignInGuardRoutes();
     }
 
     /**
@@ -71,8 +73,18 @@ class RouteServiceProvider extends ServiceProvider
              ->group(base_path('routes/api.php'));
     }
 
+    /**
+     * 校园小情书路由文件
+     *
+     * @author yezi
+     */
     protected function mapWeChatRoutes(){
         Route::namespace($this->namespace)
             ->group(base_path('routes/wechat.php'));
+    }
+
+    protected function mapSignInGuardRoutes(){
+        Route::namespace($this->namespace)
+            ->group(base_path('routes/signInGuard.php'));
     }
 }
