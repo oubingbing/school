@@ -4,9 +4,7 @@ namespace App\Http\Controllers\IM;
 
 use App\Events\Chat;
 use App\Http\Controllers\Controller;
-use GatewayClient\Gateway;
-use Illuminate\Support\Facades\Log;
-use Workermen\GatewayHelper;
+use App\Http\Logic\GatewayLogic;
 
 class IndexController extends Controller
 {
@@ -29,7 +27,7 @@ class IndexController extends Controller
     public function bindSocket()
     {
         $clientId = request()->get('client_id');
-        $gatewayHelper = app(GatewayHelper::class);
+        $gatewayHelper = app(GatewayLogic::class);
 
         $uid      = 110;
         $gatewayHelper->bindUser($clientId,$uid);

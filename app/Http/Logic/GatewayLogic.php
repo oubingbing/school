@@ -1,10 +1,10 @@
 <?php
 
-namespace Workermen;
+namespace App\Http\Logic;
 
 use GatewayClient\Gateway;
 
-class GatewayHelper
+class GatewayLogic
 {
     private $address = '112.74.51.187:1238';
 
