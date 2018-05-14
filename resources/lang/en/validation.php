@@ -103,6 +103,17 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'mobile' => [
+            'required' => '手机号码不能为空',
+            'unique' => '手机号码已存在',
+            'exists' => '手机号码不存在'
+        ],
+        'nickname' => [
+            'required' => '昵称不能为空'
+        ],
+        'code' => [
+            'required' => '验证码不能为空'
+        ],
     ],
 
     /*

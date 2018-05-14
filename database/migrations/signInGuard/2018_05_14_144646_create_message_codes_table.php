@@ -17,6 +17,7 @@ class CreateMessageCodesTable extends Migration
             $table->bigIncrements('id');
             $table->string('mobile')->index()->comment('手机号码');
             $table->string('code')->index()->comment('验证码');
+            $table->tinyInteger('status')->default(1)->comment('发送状态，1=成功，2=失败');
 
             $table->timestamp('created_at')->nullable()->index();
             $table->timestamp('updated_at')->nullable()->index();

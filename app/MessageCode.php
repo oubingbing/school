@@ -9,6 +9,8 @@
 namespace App;
 
 
+use Carbon\Carbon;
+
 class MessageCode extends BaseModel
 {
     const TABLE_NAME = 'message_codes';
@@ -23,6 +25,9 @@ class MessageCode extends BaseModel
     /** Field code */
     const FIELD_CODE = 'code';
 
+    /** Field status 发送状态1=成功，2=失败 */
+    const FIELD_STATUS = 'status';
+
     /** field created_at */
     const FIELD_CREATED_AT = 'created_at';
 
@@ -32,6 +37,11 @@ class MessageCode extends BaseModel
     /** field deleted_at */
     const FIELD_DELETED_AT = 'deleted_at';
 
+    /** 发送成功 */
+    const STATUS_SUCCESS = 1;
+    /** 发送失败 */
+    const STATUS_FAIL = 2;
+
     protected $fillable = [
         self::FIELD_ID,
         self::FIELD_CODE,
@@ -40,5 +50,16 @@ class MessageCode extends BaseModel
         self::FIELD_UPDATED_AT,
         self::FIELD_DELETED_AT
     ];
+
+    public static function getEffectMessageCode($mobile,$code)
+    {
+        $result = MessageCode::query()
+            ->where(MessageCode::FIELD_MOBILE,$mobile)
+            ->where(MessageCode::FIELD_CODE,$code)
+            ->where(MessageCode::FIELD_UPDATED_AT,'<=',Carbon::now())
+            ->first();
+
+        return $result;
+    }
 
 }
