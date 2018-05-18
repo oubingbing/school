@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', '校园小情书') }}</title>
-    <link rel="shortcut icon" href="http://image.kucaroom.com/256.jfif" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('img/logo.jfif') }}" type="image/x-icon">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     <style>
