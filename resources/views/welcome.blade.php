@@ -80,7 +80,7 @@
                 <div class="title m-b-md">
                     您好,欢迎来到叶子的个人站点。
                 </div>
-                <button class="test" name="test google analytics" onclick="test()" label="button1">测试谷歌分析</button>
+                <!--<button class="test" name="test google analytics" onclick="test()" label="button1">测试谷歌分析</button>-->
             </div>
         </div>
     </body>
