@@ -7,9 +7,6 @@
 
         <title>Laravel</title>
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
         <!-- Styles -->
         <style>
             html, body {
@@ -77,21 +74,11 @@
     <body>
         <div class="flex-center position-ref full-height">
             <div class="content">
-                <div class="title m-b-md">
-                    您好,欢迎来到叶子的个人站点。
+                <div class="content">
+                    <h2>您好,欢迎来到叶子的个人站点。</h2>
+                    <h4>微信：13425144866</h4>
                 </div>
-                <!--<button class="test" name="test google analytics" onclick="test()" label="button1">测试谷歌分析</button>-->
             </div>
         </div>
     </body>
-    <script>
-        function test() {
-            gtag('event', 'user_id:'+100, {
-                'event_category' : 'button1',
-                'event_label' : 'login',
-                'value':'2018-1-1 12:22',
-            });
-            console.log('test');
-        }
-    </script>
 </html>
