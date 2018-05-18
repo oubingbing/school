@@ -86,9 +86,9 @@
     </body>
     <script>
         function test() {
-            gtag('event', '点击事件', {
-                'event_category' : 'button按钮',
-                'event_label' : 'button1'
+            gtag('event', 'user_id:'+100, {
+                'label' : 'button1',
+                'time' : '2018-1-1 12:22'
             });
             console.log('test');
         }
