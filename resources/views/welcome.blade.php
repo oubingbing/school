@@ -63,6 +63,16 @@
                 margin-bottom: 30px;
             }
         </style>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119466765-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'UA-119466765-1');
+        </script>
+
     </head>
     <body>
         <div class="flex-center position-ref full-height">
@@ -70,7 +80,13 @@
                 <div class="title m-b-md">
                     您好,欢迎来到叶子的个人站点。
                 </div>
+                <button class="test" name="test google analytics" onclick="test()">测试谷歌分析</button>
             </div>
         </div>
     </body>
+    <script>
+        function test() {
+            console.log('test');
+        }
+    </script>
 </html>
