@@ -86,6 +86,7 @@
     </body>
     <script>
         function test() {
+            _gaq.push(['click', '测试', 'action', 'label', 'value', 'true']);
             console.log('test');
         }
     </script>
