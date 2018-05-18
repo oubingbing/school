@@ -86,7 +86,10 @@
     </body>
     <script>
         function test() {
-            _gaq.push(['click', '测试', 'action', 'label', 'value', 'true']);
+            gtag('event', 'aaa', {
+                'event_category' : 'bbb',
+                'event_label' : 'ccc'
+            });
             console.log('test');
         }
     </script>
