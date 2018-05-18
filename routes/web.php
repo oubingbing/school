@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Redis;
 
 
 Route::get('/', function () {
+    return collect(['name'=>'yezi','age'=>12]);
     return view('welcome');
 });
 
