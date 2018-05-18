@@ -5,7 +5,13 @@ use Illuminate\Support\Facades\Redis;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('gateway.home');
+});
+Route::get('/contact',function (){
+    return view('gateway.contact');
+});
+Route::get('/about',function (){
+    return view('gateway.about');
 });
 
 Route::get('/hui_yi_happy_birthday', function (){
