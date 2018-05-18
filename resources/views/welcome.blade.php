@@ -87,8 +87,9 @@
     <script>
         function test() {
             gtag('event', 'user_id:'+100, {
-                'label' : 'button1',
-                'time' : '2018-1-1 12:22'
+                'event_category' : 'button1',
+                'event_label' : 'login',
+                'value':'2018-1-1 12:22',
             });
             console.log('test');
         }
