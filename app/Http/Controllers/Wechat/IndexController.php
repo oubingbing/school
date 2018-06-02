@@ -37,7 +37,7 @@ class IndexController extends Controller
             throw new ApiException('app_id不能为空',500);
         }
 
-        return 3;
+        return env('WECHAT_AUDIT');
     }
 
     public function service()
