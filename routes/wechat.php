@@ -44,7 +44,7 @@ $api->version('v1', function ($api) {
             $api->post('/login', LoginController::class . '@Login');
 
             /** 登录 */
-            $api->post('/login_v2', LoginController::class . '@apiLogin');
+            $api->post('/login_new', LoginController::class . '@apiLogin');
 
             /** 获取微信token */
             $api->post('/token', TokenController::class . '@createToken');
