@@ -36,11 +36,15 @@ $api->version('v1', function ($api) {
 
     $api->group(['prefix' => 'wechat'], function ($api) {
 
+        $api->get('/config',\App\Http\Wechat\IndexController::class . '@config');
 
         $api->group(['prefix' => 'auth', 'middleware' => 'before'], function ($api) {
 
             /** 登录 */
-            $api->post('/login', LoginController::class . '@login');
+            $api->post('/login', LoginController::class . '@apiLogin');
+
+            /** 登录 */
+            $api->post('/login_v2', LoginController::class . '@apiLogin');
 
             /** 获取微信token */
             $api->post('/token', TokenController::class . '@createToken');
@@ -163,6 +167,8 @@ $api->version('v1', function ($api) {
             /** 取消关注 */
             $api->put('/cancel/{id}/follow/{type}', FollowController::class . '@cancelFollow');
 
+            /** 获取小程序的客服 */
+            $api->get('/service',\App\Http\Wechat\IndexController::class . '@service');
         });
 
     });
